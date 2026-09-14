@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ScrollExpand from '../components/ui/ScrollExpand';
 import ProjectsSection from '../components/projects/ProjectsSection';
 import VideosSection from '../components/videos/VideosSection';
+import ArticlesSection from '../components/articles/ArticlesSection';
 import cinematicEngineeringImg from '../assets/cinematic-engineering.jpg';
 import technoEnjazLogo from '../assets/Asset-1@4x.png';
 import './ScrollExpandPrototype.css';
@@ -118,6 +119,9 @@ const ScrollExpandPrototype = () => {
 
       {/* Dedicated Videos section using CardSwap */}
       <VideosSection />
+
+      {/* Dedicated Articles section using MagicBento */}
+      <ArticlesSection />
     </main>
   );
 };
