@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ScrollExpand from '../components/ui/ScrollExpand';
+import ProjectsSection from '../components/projects/ProjectsSection';
 import cinematicEngineeringImg from '../assets/cinematic-engineering.jpg';
 import './ScrollExpandPrototype.css';
 
@@ -61,7 +62,7 @@ const ScrollExpandPrototype = () => {
         key={`scroll-expand-${config.startWidth}`}
         src={cinematicEngineeringImg}
         mediaType="image"
-        alt="Engineering Workstation - TECHNO ENJAZ"
+        alt="محطة العمل الهندسية"
         startWidth={config.startWidth}
         startHeight={config.startHeight}
         startRadius={24}
@@ -74,44 +75,37 @@ const ScrollExpandPrototype = () => {
         useWindowScroll={true}
         title={
           <div className="initial-content-wrapper">
-            <div className="initial-eyebrow">
-              <span className="initial-eyebrow-dot" />
-              <span>TECHNO ENJAZ | هندسة البرمجيات والنظم</span>
-            </div>
-            <h1 className="initial-title">Engineering The Digital Core</h1>
-          </div>
-        }
-        scrollHint={
-          <div className="scroll-hint-wrapper">
-            <span className="scroll-hint-text">
-              تمرير للاستكشاف // SCROLL TO EXPAND
-            </span>
-            <div className="scroll-hint-arrow" aria-hidden="true">
-              ↓
-            </div>
+            <h1 className="initial-title">نحوّل الفكرة الهندسية إلى واقع</h1>
           </div>
         }
       >
         <div className="expanded-overlay-wrapper">
-          <h2 className="expanded-title">Empowering Scalable Innovation</h2>
           <div className="cta-group">
             <button
               type="button"
               className="cta-button cta-primary"
-              onClick={() => console.log('Explore Work clicked')}
+              onClick={() => {
+                const projEl = document.getElementById('projects');
+                if (projEl) {
+                  projEl.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
             >
-              استكشف أعمالنا / Explore Work
+              استكشف أعمالنا
             </button>
             <button
               type="button"
               className="cta-button cta-secondary"
-              onClick={() => console.log('Start a Project clicked')}
+              onClick={() => console.log('تقديم طلب مشروع')}
             >
-              تقديم طلب مشروع / Start a Project
+              تقديم طلب مشروع
             </button>
           </div>
         </div>
       </ScrollExpand>
+
+      {/* Dedicated Projects section placed immediately after Hero */}
+      <ProjectsSection />
     </main>
   );
 };
