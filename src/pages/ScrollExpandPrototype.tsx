@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ScrollExpand from '../components/ui/ScrollExpand';
 import ProjectsSection from '../components/projects/ProjectsSection';
 import cinematicEngineeringImg from '../assets/cinematic-engineering.jpg';
+import technoEnjazLogo from '../assets/Asset-1@4x.png';
 import './ScrollExpandPrototype.css';
 
 interface ResponsiveConfig {
@@ -80,6 +81,13 @@ const ScrollExpandPrototype = () => {
         }
       >
         <div className="expanded-overlay-wrapper">
+          <div className="expanded-logo-wrapper">
+            <img
+              src={technoEnjazLogo}
+              alt="شعار تكنو إنجاز"
+              className="expanded-logo"
+            />
+          </div>
           <div className="cta-group">
             <button
               type="button"
