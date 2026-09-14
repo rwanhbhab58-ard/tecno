@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ScrollExpand from '../components/ui/ScrollExpand';
 import ProjectsSection from '../components/projects/ProjectsSection';
+import VideosSection from '../components/videos/VideosSection';
 import cinematicEngineeringImg from '../assets/cinematic-engineering.jpg';
 import technoEnjazLogo from '../assets/Asset-1@4x.png';
 import './ScrollExpandPrototype.css';
@@ -114,6 +115,9 @@ const ScrollExpandPrototype = () => {
 
       {/* Dedicated Projects section placed immediately after Hero */}
       <ProjectsSection />
+
+      {/* Dedicated Videos section using CardSwap */}
+      <VideosSection />
     </main>
   );
 };
