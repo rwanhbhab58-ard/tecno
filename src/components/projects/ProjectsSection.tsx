@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import InfiniteSpiral, { type InfiniteSpiralItem } from '../ui/InfiniteSpiral';
 import './ProjectsSection.css';
 
-import ch4_01 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-01.webp';
-import ch4_02 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-02.webp';
-import ch4_03 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-03.webp';
-import ch4_04 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-04.webp';
-import ch4_05 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-05.webp';
-import ch4_06 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-06.webp';
+import ch4_01 from '../../assets/projects/techno-projects/chapter4-01.webp';
+import ch4_02 from '../../assets/projects/techno-projects/chapter4-02.webp';
+import ch4_03 from '../../assets/projects/techno-projects/chapter4-03.webp';
+import ch4_04 from '../../assets/projects/techno-projects/chapter4-04.webp';
+import ch4_05 from '../../assets/projects/techno-projects/chapter4-05.webp';
+import ch4_06 from '../../assets/projects/techno-projects/chapter4-06.webp';
 
 const projectImages: InfiniteSpiralItem[] = [
   {

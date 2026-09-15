@@ -1,13 +1,13 @@
-﻿import React, { useRef, useEffect, useCallback, useState } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { gsap } from 'gsap';
 import './MagicBento.css';
 
-import ch1 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-01.webp';
-import ch2 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-02.webp';
-import ch3 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-03.webp';
-import ch4 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-04.webp';
-import ch5 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-05.webp';
-import ch6 from '../../assets/projects/نظام أمني ذكي للتحكم في الدخول إلى خزينة بنك باستخدام تقنية التعرف/chapter4-06.webp';
+import ch1 from '../../assets/projects/techno-projects/chapter4-01.webp';
+import ch2 from '../../assets/projects/techno-projects/chapter4-02.webp';
+import ch3 from '../../assets/projects/techno-projects/chapter4-03.webp';
+import ch4 from '../../assets/projects/techno-projects/chapter4-04.webp';
+import ch5 from '../../assets/projects/techno-projects/chapter4-05.webp';
+import ch6 from '../../assets/projects/techno-projects/chapter4-06.webp';
 
 export interface BentoCardItem {
   color?: string;
