@@ -46,7 +46,11 @@ const getResponsiveConfig = (width: number): ResponsiveConfig => {
   }
 };
 
-const ScrollExpandPrototype = () => {
+interface ScrollExpandPrototypeProps {
+  onOpenContact?: () => void;
+}
+
+const ScrollExpandPrototype: React.FC<ScrollExpandPrototypeProps> = ({ onOpenContact }) => {
   const [config, setConfig] = useState<ResponsiveConfig>(() =>
     getResponsiveConfig(typeof window !== 'undefined' ? window.innerWidth : 1200)
   );
@@ -60,7 +64,7 @@ const ScrollExpandPrototype = () => {
   }, []);
 
   return (
-    <main className="prototype-root">
+    <div id="top" className="prototype-root">
       <ScrollExpand
         key={`scroll-expand-${config.startWidth}`}
         src={cinematicEngineeringImg}
@@ -106,7 +110,16 @@ const ScrollExpandPrototype = () => {
             <button
               type="button"
               className="cta-button cta-secondary"
-              onClick={() => console.log('تقديم طلب مشروع')}
+              onClick={() => {
+                if (onOpenContact) {
+                  onOpenContact();
+                } else {
+                  const contactEl = document.getElementById('about');
+                  if (contactEl) {
+                    contactEl.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }
+              }}
             >
               تقديم طلب مشروع
             </button>
@@ -122,7 +135,7 @@ const ScrollExpandPrototype = () => {
 
       {/* Dedicated Articles section using MagicBento */}
       <ArticlesSection />
-    </main>
+    </div>
   );
 };
 
