@@ -71,6 +71,36 @@
   max-width: 500px;
 }
 
+.projects-view-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 0.85rem 1.6rem;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(56, 189, 248, 0.25) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 999px;
+  color: #ffffff;
+  font-family: 'Readex Pro', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.projects-view-all-btn:hover {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.3) 0%, rgba(56, 189, 248, 0.45) 100%);
+  border-color: rgba(56, 189, 248, 0.8);
+  box-shadow: 0 6px 28px rgba(14, 165, 233, 0.4);
+  transform: translateY(-2px);
+}
+
+.projects-view-all-btn:active {
+  transform: translateY(0);
+}
+
 /* 3D Infinite Spiral Container */
 .projects-spiral-wrapper {
   position: relative;

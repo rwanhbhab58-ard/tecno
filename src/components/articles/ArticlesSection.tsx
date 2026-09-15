@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import MagicBento from './MagicBento';
 import './ArticlesSection.css';
 
@@ -8,10 +8,6 @@ const ArticlesSection: React.FC = () => {
       <div className="articles-container">
         {/* Section Header */}
         <div className="articles-header">
-          <div className="articles-badge">
-            <span className="articles-badge-dot" />
-            <span>المقالات والأبحاث // ARTICLES & RESEARCH</span>
-          </div>
           <h2 className="articles-title">مقالاتنا الهندسية</h2>
           <p className="articles-subtitle">
             دراسات وأبحاث تقنية توثق التجارب المعمارية والخوارزميات المبتكرة في مشاريع تكنو إنجاز

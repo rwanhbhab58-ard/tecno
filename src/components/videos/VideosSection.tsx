@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import CardSwap, { Card } from './CardSwap';
 import './VideosSection.css';
 
@@ -8,29 +8,10 @@ const VideosSection: React.FC = () => {
       <div className="videos-container">
         {/* Info Column */}
         <div className="videos-info-col">
-          <div className="videos-badge">
-            <span className="videos-badge-dot" />
-            <span>مكتبة العروض التفاعلية // VIDEO SHOWCASE</span>
-          </div>
           <h2 className="videos-title">فيديوهاتنا الهندسية</h2>
           <p className="videos-subtitle">
             عروض حية وتجارب تطبيقية توثق مراحل البناء والتكامل البرمجي لأحدث أنظمتنا
           </p>
-
-          <div className="videos-stats-row">
-            <div className="videos-stat-card">
-              <span className="videos-stat-value">4K</span>
-              <span className="videos-stat-label">دقة عالية</span>
-            </div>
-            <div className="videos-stat-card">
-              <span className="videos-stat-value">3D</span>
-              <span className="videos-stat-label">محاكاة تفاعلية</span>
-            </div>
-            <div className="videos-stat-card">
-              <span className="videos-stat-value">LIVE</span>
-              <span className="videos-stat-label">تجارب حية</span>
-            </div>
-          </div>
         </div>
 
         {/* CardSwap Column */}

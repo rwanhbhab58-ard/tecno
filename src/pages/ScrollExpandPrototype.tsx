@@ -48,9 +48,10 @@ const getResponsiveConfig = (width: number): ResponsiveConfig => {
 
 interface ScrollExpandPrototypeProps {
   onOpenContact?: () => void;
+  onNavigateToProjects?: () => void;
 }
 
-const ScrollExpandPrototype: React.FC<ScrollExpandPrototypeProps> = ({ onOpenContact }) => {
+const ScrollExpandPrototype: React.FC<ScrollExpandPrototypeProps> = ({ onOpenContact, onNavigateToProjects }) => {
   const [config, setConfig] = useState<ResponsiveConfig>(() =>
     getResponsiveConfig(typeof window !== 'undefined' ? window.innerWidth : 1200)
   );
@@ -128,7 +129,7 @@ const ScrollExpandPrototype: React.FC<ScrollExpandPrototypeProps> = ({ onOpenCon
       </ScrollExpand>
 
       {/* Dedicated Projects section placed immediately after Hero */}
-      <ProjectsSection />
+      <ProjectsSection onNavigateToProjects={onNavigateToProjects} />
 
       {/* Dedicated Videos section using CardSwap */}
       <VideosSection />

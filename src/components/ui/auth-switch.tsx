@@ -10,7 +10,6 @@ import {
   UserPlus,
   ArrowLeft,
   ArrowRight,
-  Sparkles,
   CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -66,6 +65,7 @@ export function AuthSwitch({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [submitted, setSubmitted] = useState<string | null>(null);
+  const [welcomeToast, setWelcomeToast] = useState<string | null>(null);
 
   const [signInData, setSignInData] = useState({
     email: "",
@@ -83,8 +83,11 @@ export function AuthSwitch({
   const handleSignInSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted("signIn");
+    const displayName = signInData.email ? signInData.email.split('@')[0] : "زائرنا الكريم";
+    setWelcomeToast(`مرحباً بك يا ${displayName}! سعداء بتواجدك معنا مجدداً.`);
     if (onSignIn) onSignIn(signInData);
     setTimeout(() => setSubmitted(null), 3500);
+    setTimeout(() => setWelcomeToast(null), 4500);
   };
 
   const handleSignUpSubmit = (e: React.FormEvent) => {
@@ -143,18 +146,18 @@ export function AuthSwitch({
               <button
                 type="button"
                 className="auth-switch-social-btn"
-                onClick={() => alert("تسجيل الدخول عبر Google متاح للمستخدمين")}
+                onClick={() => alert("تسجيل الدخول عبر جوجل متاح للمستخدمين")}
               >
                 <GoogleIcon />
-                <span>Google</span>
+                <span>جوجل</span>
               </button>
               <button
                 type="button"
                 className="auth-switch-social-btn"
-                onClick={() => alert("تسجيل الدخول عبر GitHub متاح للمطورين")}
+                onClick={() => alert("تسجيل الدخول عبر غيت هاب متاح للمطورين")}
               >
                 <GitHubIcon />
-                <span>GitHub</span>
+                <span>غيت هاب</span>
               </button>
             </div>
 
@@ -262,18 +265,18 @@ export function AuthSwitch({
               <button
                 type="button"
                 className="auth-switch-social-btn"
-                onClick={() => alert("التسجيل عبر Google")}
+                onClick={() => alert("التسجيل عبر جوجل")}
               >
                 <GoogleIcon />
-                <span>Google</span>
+                <span>جوجل</span>
               </button>
               <button
                 type="button"
                 className="auth-switch-social-btn"
-                onClick={() => alert("التسجيل عبر GitHub")}
+                onClick={() => alert("التسجيل عبر غيت هاب")}
               >
                 <GitHubIcon />
-                <span>GitHub</span>
+                <span>غيت هاب</span>
               </button>
             </div>
 
@@ -382,10 +385,6 @@ export function AuthSwitch({
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.25 }}
               >
-                <div className="auth-switch-overlay-badge">
-                  <Sparkles size={14} />
-                  <span>تكنو إنجاز</span>
-                </div>
                 <h3 className="auth-switch-overlay-title">جديد في تكنو إنجاز؟</h3>
                 <p className="auth-switch-overlay-desc">
                   أنشئ حسابك الشخصي الآن وانضم إلى مجتمعنا التقني المتطور للوصول إلى كافة الميزات والمشاريع.
@@ -411,10 +410,6 @@ export function AuthSwitch({
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.25 }}
               >
-                <div className="auth-switch-overlay-badge">
-                  <Sparkles size={14} />
-                  <span>مرحباً بعودتك</span>
-                </div>
                 <h3 className="auth-switch-overlay-title">لديك حساب بالفعل؟</h3>
                 <p className="auth-switch-overlay-desc">
                   سجّل دخولك الآن لمتابعة مشاريعك، الوصول إلى لوحة التحكم، والتواصل المباشر مع فريقنا.
@@ -435,6 +430,24 @@ export function AuthSwitch({
           </AnimatePresence>
         </motion.div>
       </div>
+
+      {/* رسالة ترحيبية مؤقتة بالاسم في الأسفل عند تسجيل الدخول */}
+      <AnimatePresence>
+        {welcomeToast && (
+          <motion.div
+            className="auth-bottom-toast"
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 30, scale: 0.95 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+          >
+            <div className="auth-bottom-toast-content">
+              <CheckCircle2 className="auth-toast-icon" size={20} />
+              <span>{welcomeToast}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

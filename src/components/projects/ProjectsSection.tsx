@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import InfiniteSpiral, { type InfiniteSpiralItem } from '../ui/InfiniteSpiral';
 import './ProjectsSection.css';
 
@@ -36,7 +37,11 @@ const projectImages: InfiniteSpiralItem[] = [
   }
 ];
 
-const ProjectsSection = () => {
+export interface ProjectsSectionProps {
+  onNavigateToProjects?: () => void;
+}
+
+const ProjectsSection = ({ onNavigateToProjects }: ProjectsSectionProps) => {
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth < 640 : false));
 
   useEffect(() => {
@@ -55,6 +60,14 @@ const ProjectsSection = () => {
           <p className="projects-statement">
             أفكار هندسية تتحول إلى حلول واقعية
           </p>
+          <button
+            type="button"
+            className="projects-view-all-btn"
+            onClick={onNavigateToProjects || (() => { window.location.hash = '#projects'; })}
+          >
+            <span>استكشف كافة المشاريع في صفحة المشاريع</span>
+            <ArrowLeft size={18} />
+          </button>
         </div>
 
         <div className="projects-spiral-wrapper">
