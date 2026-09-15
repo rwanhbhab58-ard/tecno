@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import InfiniteSpiral, { type InfiniteSpiralItem } from '../ui/InfiniteSpiral';
+import GridDistortion from '../ui/GridDistortion';
+import heroBgDistortion from '../../assets/hero-bg-distortion.png';
 import './ProjectsSection.css';
 
 import ch4_01 from '../../assets/projects/techno-projects/chapter4-01.webp';
@@ -54,6 +56,21 @@ const ProjectsSection = ({ onNavigateToProjects }: ProjectsSectionProps) => {
 
   return (
     <section className="projects-section" id="projects" aria-label="قسم المشاريع">
+      {/* Interactive Grid Distortion Background right after Hero */}
+      <div className="projects-grid-distortion-wrapper">
+        <div className="projects-grid-distortion-inner">
+          <GridDistortion
+            imageSrc={heroBgDistortion}
+            grid={49}
+            mouse={0.1}
+            strength={0.05}
+            relaxation={0.53}
+          />
+        </div>
+        {/* Ambient vignette and smooth dark gradient blend */}
+        <div className="projects-grid-distortion-vignette" />
+      </div>
+
       <div className="projects-container">
         <div className="projects-intro">
           <h2 className="projects-heading">مشاريعنا</h2>
