@@ -10,10 +10,10 @@ import CinematicFooter from './components/CinematicFooter';
 import ProfilePage from './ProfilePage';
 import ContactPage from './ContactPage';
 import AuthPage from './AuthPage';
-import ProjectsSection from './components/projects/ProjectsSection';
+import LiveProjectsShowcase from './components/projects/LiveProjectsShowcase';
 import VideosSection from './components/videos/VideosSection';
 import ArticlesSection from './components/articles/ArticlesSection';
-import { LogIn, Cpu, Database, ShieldCheck, Activity, Video, Sparkles, BookOpen } from 'lucide-react';
+import { LogIn, Cpu, Video, Sparkles, BookOpen } from 'lucide-react';
 import { teamMembers } from './data/teamData';
 
 interface NavItem {
@@ -251,55 +251,13 @@ export default function App() {
       ) : currentTab === 'projects' ? (
         <div className="tab-page-container">
           <div className="tab-page-header">
-            <h1 className="tab-page-title">مشاريع تكنو إنجاز</h1>
+            <h1 className="tab-page-title">مشاريع ومنظومات تكنو إنجاز</h1>
             <p className="tab-page-subtitle">
-              أفكار هندسية تتحول إلى أنظمة رقمية متقدمة وحلول برمجية ذكية فائقة الأمان والأداء
+              استكشف 13 مشروعاً برمجياً ومنظومة هندسية تعمل الآن ومتاحة للتجربة الحية والمباشرة
             </p>
           </div>
 
-          <ProjectsSection showNavigateButton={false} />
-
-          <div className="tab-page-cards-grid">
-            <div className="tab-page-card">
-              <div className="tab-page-card-icon">
-                <Cpu size={26} />
-              </div>
-              <h3 className="tab-page-card-title">نظام التحقق والتعرف البيومتري</h3>
-              <p className="tab-page-card-desc">
-                خوارزميات رؤية حاسوبية فائقة الدقة للتعرف على الوجوه ومطابقتها لحظياً مع قواعد البيانات المشفرة مع كشف التزييف.
-              </p>
-            </div>
-
-            <div className="tab-page-card">
-              <div className="tab-page-card-icon">
-                <Database size={26} />
-              </div>
-              <h3 className="tab-page-card-title">بنية البيانات السحابية الموزعة</h3>
-              <p className="tab-page-card-desc">
-                معمارية قواعد بيانات سحابية هجينة تضمن معالجة متزامنة بمعدل تأخير شبه منعدم واستمرارية أعمال بدون توقف.
-              </p>
-            </div>
-
-            <div className="tab-page-card">
-              <div className="tab-page-card-icon">
-                <ShieldCheck size={26} />
-              </div>
-              <h3 className="tab-page-card-title">منظومة الحماية والإنذار المبكر</h3>
-              <p className="tab-page-card-desc">
-                كشف تلقائي لمحاولات الوصول غير المصرح بها وإطلاق تنبيهات أمنية فورية مع تسجيل مرئي رقمي كامل للأحداث.
-              </p>
-            </div>
-
-            <div className="tab-page-card">
-              <div className="tab-page-card-icon">
-                <Activity size={26} />
-              </div>
-              <h3 className="tab-page-card-title">منصة القيادة والتحكم الإشرافي</h3>
-              <p className="tab-page-card-desc">
-                لوحة تحكم تفاعلية متقدمة تعرض المؤشرات الحيوية وسجلات النظام في الوقت الفعلي مع تحليلات ذكاء الأعمال.
-              </p>
-            </div>
-          </div>
+          <LiveProjectsShowcase />
         </div>
       ) : currentTab === 'videos' ? (
         <div className="tab-page-container">
