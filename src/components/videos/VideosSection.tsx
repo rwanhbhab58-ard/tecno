@@ -1,17 +1,54 @@
 import React from 'react';
+import { ArrowLeft } from 'lucide-react';
 import CardSwap, { Card } from './CardSwap';
+import GridDistortion from '../ui/GridDistortion';
+import heroBgDistortion from '../../assets/hero-bg-distortion.png';
+import '../projects/ProjectsSection.css';
 import './VideosSection.css';
 
-const VideosSection: React.FC = () => {
+export interface VideosSectionProps {
+  onNavigateToVideos?: () => void;
+  showNavigateButton?: boolean;
+}
+
+const VideosSection: React.FC<VideosSectionProps> = ({
+  onNavigateToVideos,
+  showNavigateButton = true
+}) => {
   return (
     <section id="videos" className="videos-section">
+      {/* Interactive Grid Distortion Background */}
+      <div className="projects-grid-distortion-wrapper">
+        <div className="projects-grid-distortion-inner">
+          <GridDistortion
+            imageSrc={heroBgDistortion}
+            grid={49}
+            mouse={0.1}
+            strength={0.05}
+            relaxation={0.53}
+          />
+        </div>
+        {/* Ambient vignette and smooth dark gradient blend */}
+        <div className="projects-grid-distortion-vignette" />
+      </div>
+
       <div className="videos-container">
         {/* Info Column */}
         <div className="videos-info-col">
-          <h2 className="videos-title">فيديوهاتنا الهندسية</h2>
+          <h2 className="videos-title">شاهد تجاربنا</h2>
           <p className="videos-subtitle">
             عروض حية وتجارب تطبيقية توثق مراحل البناء والتكامل البرمجي لأحدث أنظمتنا
           </p>
+          {showNavigateButton && (
+            <button
+              type="button"
+              className="projects-view-all-btn"
+              onClick={onNavigateToVideos || (() => { window.location.hash = '#videos'; })}
+            >
+              <span>استكشف كافة الفيديوهات في صفحة الفيديوهات</span>
+              <ArrowLeft size={18} />
+            </button>
+          )}
         </div>
 
         {/* CardSwap Column */}

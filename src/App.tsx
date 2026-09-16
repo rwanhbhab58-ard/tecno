@@ -257,7 +257,7 @@ export default function App() {
             </p>
           </div>
 
-          <ProjectsSection />
+          <ProjectsSection showNavigateButton={false} />
 
           <div className="tab-page-cards-grid">
             <div className="tab-page-card">
@@ -310,7 +310,7 @@ export default function App() {
             </p>
           </div>
 
-          <VideosSection />
+          <VideosSection showNavigateButton={false} />
 
           <div className="tab-page-cards-grid">
             <div className="tab-page-card">
@@ -550,6 +550,7 @@ export default function App() {
           <ScrollExpandPrototype 
             onOpenContact={() => handleNavItemSelect(navItems[5], 5)}
             onNavigateToProjects={() => handleNavItemSelect(navItems[1], 1)} 
+            onNavigateToVideos={() => handleNavItemSelect(navItems[2], 2)}
           />
 
           {/* 2. "من نحن" (About Us / Team Showcase) */}

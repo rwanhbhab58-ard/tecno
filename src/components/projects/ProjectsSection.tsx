@@ -41,9 +41,13 @@ const projectImages: InfiniteSpiralItem[] = [
 
 export interface ProjectsSectionProps {
   onNavigateToProjects?: () => void;
+  showNavigateButton?: boolean;
 }
 
-const ProjectsSection = ({ onNavigateToProjects }: ProjectsSectionProps) => {
+const ProjectsSection = ({
+  onNavigateToProjects,
+  showNavigateButton = true
+}: ProjectsSectionProps) => {
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth < 640 : false));
 
   useEffect(() => {
@@ -77,14 +81,16 @@ const ProjectsSection = ({ onNavigateToProjects }: ProjectsSectionProps) => {
           <p className="projects-statement">
             أفكار هندسية تتحول إلى حلول واقعية
           </p>
-          <button
-            type="button"
-            className="projects-view-all-btn"
-            onClick={onNavigateToProjects || (() => { window.location.hash = '#projects'; })}
-          >
-            <span>استكشف كافة المشاريع في صفحة المشاريع</span>
-            <ArrowLeft size={18} />
-          </button>
+          {showNavigateButton && (
+            <button
+              type="button"
+              className="projects-view-all-btn"
+              onClick={onNavigateToProjects || (() => { window.location.hash = '#projects'; })}
+            >
+              <span>استكشف كافة المشاريع في صفحة المشاريع</span>
+              <ArrowLeft size={18} />
+            </button>
+          )}
         </div>
 
         <div className="projects-spiral-wrapper">
