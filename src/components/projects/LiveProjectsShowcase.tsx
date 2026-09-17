@@ -5,10 +5,8 @@ import {
   Pause, 
   ChevronRight, 
   ChevronLeft, 
-  LayoutGrid, 
   Sparkles, 
-  Radio,
-  Bookmark,
+  Bookmark, 
   BookmarkCheck
 } from 'lucide-react';
 import { useThemeLanguage } from '../../context/ThemeLanguageContext';
@@ -206,7 +204,6 @@ const AUTO_INTERVAL_MS = 4500;
 
 export const LiveProjectsShowcase: React.FC = () => {
   const { lang, t } = useThemeLanguage();
-  const [viewMode, setViewMode] = useState<'animated' | 'grid'>('animated');
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -225,7 +222,7 @@ export const LiveProjectsShowcase: React.FC = () => {
 
   // Automatic transition timer
   useEffect(() => {
-    if (!isPlaying || isHovered || viewMode !== 'animated') {
+    if (!isPlaying || isHovered) {
       return;
     }
 
@@ -243,7 +240,7 @@ export const LiveProjectsShowcase: React.FC = () => {
     }, stepMs);
 
     return () => clearInterval(timer);
-  }, [isPlaying, isHovered, viewMode]);
+  }, [isPlaying, isHovered]);
 
   const handleNext = () => {
     setProgress(0);
@@ -265,36 +262,9 @@ export const LiveProjectsShowcase: React.FC = () => {
 
   return (
     <div className="live-projects-container" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      {/* Control Toolbar */}
-      <div className="live-projects-toolbar">
-        {/* View Mode Toggle */}
-        <div className="live-projects-view-toggle">
-          <button
-            type="button"
-            className={`view-toggle-btn ${viewMode === 'animated' ? 'active' : ''}`}
-            onClick={() => setViewMode('animated')}
-            title={t.liveProjects.autoMode}
-          >
-            <Radio size={16} />
-            <span>{t.liveProjects.autoMode}</span>
-          </button>
-          <button
-            type="button"
-            className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
-            onClick={() => setViewMode('grid')}
-            title={t.liveProjects.gridMode}
-          >
-            <LayoutGrid size={16} />
-            <span>{t.liveProjects.gridMode}</span>
-          </button>
-        </div>
-      </div>
-
-      {viewMode === 'animated' ? (
-        <>
-          {/* Featured Auto-Advancing Spotlight */}
-          <div 
-            className="spotlight-hero"
+      {/* Featured Auto-Advancing Spotlight */}
+      <div 
+        className="spotlight-hero"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             style={{ borderColor: `${activeProject.color}40` }}
@@ -528,82 +498,8 @@ export const LiveProjectsShowcase: React.FC = () => {
               })}
             </div>
           </div>
-        </>
-      ) : (
-        /* Full Grid Mode */
-        <div className="live-projects-grid">
-          {liveProjectsList.map(project => {
-            const pTrans = t.liveProjects.projects[project.id];
-            const pTitle = pTrans?.title || project.title;
-            const pDesc = pTrans?.description || project.description;
-            const pHighlights = pTrans?.highlights || project.highlights;
-            return (
-              <div key={project.id} className="grid-card" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-                <div className="grid-card-thumb">
-                  <img src={project.image} alt={pTitle} className="grid-card-img" loading="lazy" />
-                </div>
-                <h3 className="grid-card-title">{pTitle}</h3>
-                <p className="grid-card-desc">{pDesc}</p>
-                <div className="spotlight-tags" style={{ margin: 0 }}>
-                  {pHighlights.map(tag => (
-                    <span key={tag} className="spotlight-tag-item">#{tag}</span>
-                  ))}
-                </div>
-                <div className="grid-card-footer" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="grid-card-btn"
-                    style={{ flex: 1 }}
-                  >
-                    <span>{t.liveProjects.openProject}</span>
-                    <ExternalLink size={15} />
-                  </a>
-
-                  <Button
-                    variant={isSaved(project.id) ? "default" : "outline"}
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleSave({
-                        id: project.id,
-                        title: pTitle,
-                        titleEn: project.title,
-                        category: project.category,
-                        description: pDesc,
-                        descriptionEn: project.description,
-                        type: 'live',
-                        url: project.url,
-                        image: project.image,
-                        tags: pHighlights
-                      });
-                    }}
-                    title={isSaved(project.id) 
-                      ? (lang === 'ar' ? 'تم الحفظ في المفضلة' : 'Saved to Favorites') 
-                      : (lang === 'ar' ? 'حفظ المشروع في المفضلة' : 'Save Project to Favorites')}
-                    style={{ height: '36px', padding: '0 10px', gap: '5px' }}
-                  >
-                    {isSaved(project.id) ? (
-                      <>
-                        <BookmarkCheck size={14} />
-                        <span>{lang === 'ar' ? 'محفوظ' : 'Saved'}</span>
-                      </>
-                    ) : (
-                      <>
-                        <Bookmark size={14} />
-                        <span>{lang === 'ar' ? 'حفظ' : 'Save'}</span>
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
         </div>
-      )}
-    </div>
-  );
-};
+      );
+    };
 
 export default LiveProjectsShowcase;

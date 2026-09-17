@@ -306,7 +306,14 @@ body {
   padding-bottom: 5rem;
   box-sizing: border-box;
   position: relative;
+}
+
+[dir="rtl"] .tab-page-container {
   direction: rtl;
+}
+
+[dir="ltr"] .tab-page-container {
+  direction: ltr;
 }
 
 .tab-page-header {
@@ -343,7 +350,14 @@ body {
   max-width: 1200px;
   margin: 3rem auto 0 auto;
   padding: 0 1.5rem;
+}
+
+[dir="rtl"] .tab-page-cards-grid {
   direction: rtl;
+}
+
+[dir="ltr"] .tab-page-cards-grid {
+  direction: ltr;
 }
 
 .tab-page-card {
@@ -357,7 +371,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+[dir="rtl"] .tab-page-card {
   text-align: right;
+}
+
+[dir="ltr"] .tab-page-card {
+  text-align: left;
 }
 
 .tab-page-card:hover {

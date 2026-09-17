@@ -19,8 +19,15 @@
   margin: 0 auto;
   font-size: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
   box-sizing: border-box;
-  direction: rtl;
   font-family: var(--font-arabic);
+}
+
+[dir="rtl"] .card-grid {
+  direction: rtl;
+}
+
+[dir="ltr"] .card-grid {
+  direction: ltr;
 }
 
 .magic-bento-card {
@@ -40,13 +47,21 @@
   overflow: hidden;
   transition: all 0.3s ease;
   box-sizing: border-box;
-  direction: rtl;
-  text-align: right;
 
   --glow-x: 50%;
   --glow-y: 50%;
   --glow-intensity: 0;
   --glow-radius: 200px;
+}
+
+[dir="rtl"] .magic-bento-card {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="ltr"] .magic-bento-card {
+  direction: ltr;
+  text-align: left;
 }
 
 .magic-bento-card:hover {

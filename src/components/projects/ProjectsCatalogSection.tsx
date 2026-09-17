@@ -142,10 +142,6 @@ export const ProjectsCatalogSection: React.FC = () => {
       <div className="catalog-container">
         {/* Section Header */}
         <div className="catalog-header-wrap">
-          <div className="catalog-section-badge">
-            <BookOpen size={16} />
-            <span>{lang === 'ar' ? 'المكتبة الأكاديمية والبحثية' : 'Engineering & Academic Library'}</span>
-          </div>
           <h2 className="catalog-title">
             {lang === 'ar' ? 'مكتبة مشاريع التخرج والبحوث الهندسية' : 'Graduation Projects & Research Library'}
           </h2>

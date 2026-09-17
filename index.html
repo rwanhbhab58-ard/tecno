@@ -24,6 +24,15 @@
           document.documentElement.setAttribute('data-theme', theme);
           document.documentElement.classList.toggle('dark', theme === 'dark');
           document.documentElement.classList.toggle('light', theme === 'light');
+
+          var savedLang = localStorage.getItem('techno_lang');
+          if (savedLang === 'en') {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.documentElement.setAttribute('lang', 'en');
+          } else {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', 'ar');
+          }
         } catch (e) {}
       })();
     </script>

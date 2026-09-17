@@ -6,9 +6,16 @@
   background-color: var(--bg-dark);
   color: var(--text-pure);
   font-family: var(--font-arabic);
-  direction: rtl;
   overflow: hidden;
   box-sizing: border-box;
+}
+
+[dir="rtl"] .videos-section {
+  direction: rtl;
+}
+
+[dir="ltr"] .videos-section {
+  direction: ltr;
 }
 
 .videos-container {
@@ -28,7 +35,16 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 1.5rem;
+}
+
+[dir="rtl"] .videos-info-col {
   text-align: right;
+  align-items: flex-start;
+}
+
+[dir="ltr"] .videos-info-col {
+  text-align: left;
+  align-items: flex-start;
 }
 
 .videos-info-col .projects-view-all-btn {
@@ -157,8 +173,16 @@
   cursor: pointer;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   padding: 0 !important;
+}
+
+[dir="rtl"] .video-card {
   direction: rtl;
   text-align: right;
+}
+
+[dir="ltr"] .video-card {
+  direction: ltr;
+  text-align: left;
 }
 
 .video-card:hover {
