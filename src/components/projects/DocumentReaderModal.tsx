@@ -22,46 +22,6 @@ interface DocumentReaderModalProps {
   onClose: () => void;
 }
 
-// Generate realistic paper rustle sound using Web Audio API (no external asset dependencies)
-function playRealisticPaperSound() {
-  try {
-    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
-    const ctx = new AudioContextClass();
-    
-    // Create subtle white noise burst
-    const bufferSize = Math.floor(ctx.sampleRate * 0.14);
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      const env = Math.exp(-i / (bufferSize * 0.3));
-      data[i] = (Math.random() * 2 - 1) * env * 0.45;
-    }
-    
-    const noise = ctx.createBufferSource();
-    noise.buffer = buffer;
-    
-    // Lowpass filter to simulate soft paper texture
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(1400, ctx.currentTime);
-    filter.frequency.exponentialRampToValueAtTime(450, ctx.currentTime + 0.14);
-    filter.Q.setValueAtTime(1.2, ctx.currentTime);
-    
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.22, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.005, ctx.currentTime + 0.14);
-    
-    noise.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-    
-    noise.start();
-    noise.stop(ctx.currentTime + 0.15);
-  } catch {
-    // AudioContext blocked by browser policy
-  }
-}
 
 export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
   project,
@@ -162,7 +122,6 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
       pageFlip.on('flip', (e: any) => {
         const pageIdx = typeof e.data === 'number' ? e.data : 0;
         setCurrentPage(pageIdx + 1);
-        playRealisticPaperSound();
       });
 
       pageFlipRef.current = pageFlip;

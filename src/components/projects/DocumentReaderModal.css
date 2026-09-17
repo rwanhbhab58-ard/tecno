@@ -252,27 +252,6 @@
   color: #0f172a;
 }
 
-.flipbook-tool-btn.sound-active {
-  border-color: rgba(10, 238, 195, 0.4);
-  color: #0aeec3;
-  background: rgba(10, 238, 195, 0.1);
-}
-
-[data-theme="light"] .flipbook-tool-btn.sound-active {
-  border-color: rgba(2, 132, 199, 0.4);
-  color: #0284c7;
-  background: rgba(2, 132, 199, 0.1);
-}
-
-.flipbook-tool-btn.upload-btn:hover {
-  border-color: rgba(10, 238, 195, 0.4);
-  color: #0aeec3;
-}
-
-.flipbook-tool-btn.reset-btn {
-  color: #fb923c;
-  border-color: rgba(251, 146, 60, 0.3);
-}
 
 .flipbook-tool-btn.close-btn:hover {
   background: rgba(239, 68, 68, 0.2);
