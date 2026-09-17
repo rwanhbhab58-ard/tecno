@@ -399,3 +399,176 @@
 @media (max-width: 380px) {
   #te-loader { --rocket-width: 175px; }
 }
+
+/* ==========================================================================
+   LIGHT MODE STYLES FOR LOADING SCREEN
+   ========================================================================== */
+
+[data-theme="light"] #te-loader,
+html.light #te-loader {
+  --bg: #f8fafc;
+  --text: #0f172a;
+  --muted: #64748b;
+  --teal: #0284c7;
+  --violet: #6366f1;
+  --line: #e2e8f0;
+  color-scheme: light;
+  background: radial-gradient(circle at 50% 45%, #ffffff 0%, #f0f7ff 55%, #e2e8f0 100%);
+  color: var(--text);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) #te-loader {
+    --bg: #f8fafc;
+    --text: #0f172a;
+    --muted: #64748b;
+    --teal: #0284c7;
+    --violet: #6366f1;
+    --line: #e2e8f0;
+    color-scheme: light;
+    background: radial-gradient(circle at 50% 45%, #ffffff 0%, #f0f7ff 55%, #e2e8f0 100%);
+    color: var(--text);
+  }
+}
+
+[data-theme="light"] #te-loader .ambient,
+html.light #te-loader .ambient {
+  background:
+    radial-gradient(ellipse 650px 500px at 50% 45%, rgba(14, 165, 233, 0.12), transparent 75%),
+    radial-gradient(ellipse 550px 350px at 50% 70%, rgba(99, 102, 241, 0.08), transparent 75%),
+    radial-gradient(circle 350px at 50% 45%, rgba(255, 255, 255, 0.85), transparent 80%);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) #te-loader .ambient {
+    background:
+      radial-gradient(ellipse 650px 500px at 50% 45%, rgba(14, 165, 233, 0.12), transparent 75%),
+      radial-gradient(ellipse 550px 350px at 50% 70%, rgba(99, 102, 241, 0.08), transparent 75%),
+      radial-gradient(circle 350px at 50% 45%, rgba(255, 255, 255, 0.85), transparent 80%);
+  }
+}
+
+/* Orbit system in light mode */
+[data-theme="light"] #te-loader .orbit-system,
+html.light #te-loader .orbit-system {
+  opacity: 0.95;
+}
+
+[data-theme="light"] #te-loader .orbit-static circle:first-of-type,
+html.light #te-loader .orbit-static circle:first-of-type {
+  stroke: rgba(2, 132, 199, 0.28);
+  stroke-width: 1px;
+}
+
+[data-theme="light"] #te-loader .orbit-static circle[stroke-dasharray],
+html.light #te-loader .orbit-static circle[stroke-dasharray] {
+  stroke: #0284c7;
+  stroke-opacity: 0.25;
+}
+
+[data-theme="light"] #te-loader .orbit-static path,
+html.light #te-loader .orbit-static path {
+  stroke: #0284c7;
+  stroke-opacity: 0.55;
+}
+
+[data-theme="light"] #te-loader .orbit-rotating path:first-of-type,
+html.light #te-loader .orbit-rotating path:first-of-type {
+  stroke: #0284c7;
+  stroke-opacity: 0.85;
+}
+
+[data-theme="light"] #te-loader .orbit-rotating circle:first-of-type,
+html.light #te-loader .orbit-rotating circle:first-of-type {
+  fill: #0284c7;
+  filter: drop-shadow(0 0 6px rgba(2, 132, 199, 0.7));
+}
+
+[data-theme="light"] #te-loader .orbit-rotating path:last-of-type,
+html.light #te-loader .orbit-rotating path:last-of-type {
+  stroke: #6366f1;
+  stroke-opacity: 0.85;
+}
+
+[data-theme="light"] #te-loader .orbit-rotating circle:last-of-type,
+html.light #te-loader .orbit-rotating circle:last-of-type {
+  fill: #6366f1;
+  filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.7));
+}
+
+/* Launch floor in light mode */
+[data-theme="light"] #te-loader .launch-floor,
+html.light #te-loader .launch-floor {
+  border-color: rgba(2, 132, 199, 0.35);
+  background: radial-gradient(ellipse, rgba(14, 165, 233, 0.16), transparent 67%);
+  box-shadow: 0 4px 20px rgba(2, 132, 199, 0.12);
+}
+
+[data-theme="light"] #te-loader .launch-floor::before,
+html.light #te-loader .launch-floor::before {
+  border-color: rgba(2, 132, 199, 0.2);
+}
+
+[data-theme="light"] #te-loader .launch-floor div,
+html.light #te-loader .launch-floor div {
+  border-color: rgba(13, 148, 136, 0.28);
+}
+
+[data-theme="light"] #te-loader .launch-floor span,
+html.light #te-loader .launch-floor span {
+  background: radial-gradient(ellipse, rgba(2, 132, 199, 0.45), transparent 65%);
+}
+
+/* Cruise halo in light mode */
+[data-theme="light"] #te-loader .cruise-halo,
+html.light #te-loader .cruise-halo {
+  background: radial-gradient(circle, transparent 35%, rgba(2, 132, 199, 0.2) 48%, transparent 65%);
+}
+
+/* Rocket backlight in light mode */
+[data-theme="light"] #te-loader .rocket-backlight,
+html.light #te-loader .rocket-backlight {
+  background: radial-gradient(ellipse, rgba(2, 132, 199, 0.28) 0%, rgba(99, 102, 241, 0.1) 45%, transparent 70%);
+}
+
+/* Rocket body & core button shadow in light mode */
+[data-theme="light"] #te-loader .rocket-body,
+html.light #te-loader .rocket-body {
+  filter: drop-shadow(0 14px 30px rgba(2, 132, 199, 0.22)) drop-shadow(0 4px 10px rgba(15, 23, 42, 0.08));
+}
+
+[data-theme="light"] #te-loader .button-art,
+html.light #te-loader .button-art {
+  filter: drop-shadow(0 4px 12px rgba(2, 132, 199, 0.3));
+}
+
+/* Charge gauge in light mode */
+[data-theme="light"] #te-loader .gauge-track,
+html.light #te-loader .gauge-track {
+  stroke: rgba(2, 132, 199, 0.25);
+}
+
+[data-theme="light"] #te-loader .gauge-fill,
+html.light #te-loader .gauge-fill {
+  stroke: #0284c7;
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 4px rgba(2, 132, 199, 0.6));
+}
+
+/* Engine exhausts & thrusters in light mode */
+[data-theme="light"] #te-loader .engine-plume,
+html.light #te-loader .engine-plume {
+  background: linear-gradient(#38bdf8, #0ea5e9 12%, #0284c7 35%, rgba(99, 102, 241, 0.8) 68%, transparent);
+  filter: drop-shadow(0 4px 14px rgba(2, 132, 199, 0.45));
+}
+
+[data-theme="light"] #te-loader .engine-core,
+html.light #te-loader .engine-core {
+  background: linear-gradient(#ffffff, #bae6fd 25%, rgba(14, 165, 233, 0.9) 60%, transparent);
+}
+
+[data-theme="light"] #te-loader .engine-aura,
+html.light #te-loader .engine-aura {
+  background: radial-gradient(ellipse at 50% 20%, rgba(14, 165, 233, 0.35), rgba(99, 102, 241, 0.16) 35%, transparent 67%);
+}
+
