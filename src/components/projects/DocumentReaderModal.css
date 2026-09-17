@@ -466,10 +466,13 @@
   background: rgba(15, 23, 42, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #ffffff;
-  width: 44px;
-  height: 72px;
+  min-width: 50px;
+  height: 78px;
+  padding: 0 8px;
   border-radius: 14px;
   display: flex;
+  flex-direction: column;
+  gap: 2px;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -499,16 +502,52 @@
 }
 
 .flipbook-curl-nav:disabled {
-  opacity: 0.2;
+  opacity: 0.18;
   cursor: not-allowed;
+  pointer-events: none;
 }
 
-.flipbook-curl-nav.prev {
-  right: 16px;
+.nav-btn-caption {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
 }
 
-.flipbook-curl-nav.next {
-  left: 16px;
+.flipbook-curl-nav.nav-right {
+  right: 18px;
+}
+
+.flipbook-curl-nav.nav-left {
+  left: 18px;
+}
+
+.academic-seal-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.rtl-page-hint-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 238, 195, 0.08);
+  border: 1px solid rgba(10, 238, 195, 0.25);
+  color: #0e7490;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-top: 14px;
+}
+
+[data-theme="dark"] .rtl-page-hint-box {
+  color: #0aeec3;
 }
 
 /* Realistic 3D Book Stage Container */

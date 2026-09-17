@@ -16,7 +16,8 @@ import {
   Upload,
   Layers,
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  Info
 } from 'lucide-react';
 import { PageFlip } from 'page-flip';
 import { useThemeLanguage } from '../../context/ThemeLanguageContext';
@@ -41,7 +42,6 @@ function playRealisticPaperSound() {
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
-      // Exponential decay envelope
       const env = Math.exp(-i / (bufferSize * 0.3));
       data[i] = (Math.random() * 2 - 1) * env * 0.45;
     }
@@ -77,6 +77,8 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
   onClose
 }) => {
   const { lang } = useThemeLanguage();
+  const isRtl = lang === 'ar';
+
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [viewMode, setViewMode] = useState<'flipbook' | 'original'>('flipbook');
   const [currentPage, setCurrentPage] = useState(1);
@@ -94,7 +96,7 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
   const soundEnabledRef = useRef(soundEnabled);
   soundEnabledRef.current = soundEnabled;
 
-  // Handle ESC key to close modal or exit fullscreen
+  // Handle ESC and Arrow keys for turning
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isOpen) return;
@@ -104,9 +106,11 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
         } else {
           onClose();
         }
-      } else if (e.key === 'ArrowRight') {
-        pageFlipRef.current?.flipNext();
       } else if (e.key === 'ArrowLeft') {
+        // In Arabic reading: Left arrow advances forward (flipping from right to left)
+        pageFlipRef.current?.flipNext();
+      } else if (e.key === 'ArrowRight') {
+        // In Arabic reading: Right arrow goes back to previous page
         pageFlipRef.current?.flipPrev();
       }
     };
@@ -147,7 +151,6 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
     }
 
     try {
-      // Create StPageFlip instance
       const pageFlip = new PageFlip(bookContainerRef.current, {
         width: 480,
         height: 640,
@@ -189,11 +192,10 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
     }
   }, []);
 
-  // Run initialization when flipbook view becomes active and DOM elements are rendered
+  // Run initialization when flipbook view becomes active
   useEffect(() => {
     if (!isOpen || viewMode !== 'flipbook') return;
 
-    // Wait a frame for DOM to populate pages inside container
     const timer = setTimeout(() => {
       initPageFlip();
     }, 60);
@@ -269,10 +271,12 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
   const pptxDownloadUrl = project.pptxId ? `https://drive.google.com/uc?export=download&id=${project.pptxId}` : null;
   const docxDownloadUrl = project.docxId ? `https://drive.google.com/uc?export=download&id=${project.docxId}` : null;
 
+  // Next Page: Turns from Right to Left (تقدم في القراءة لليسار)
   const handleNextPage = () => {
     pageFlipRef.current?.flipNext();
   };
 
+  // Prev Page: Turns back to the Right (رجوع لليمين)
   const handlePrevPage = () => {
     pageFlipRef.current?.flipPrev();
   };
@@ -285,8 +289,6 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
   };
-
-  const isRtl = lang === 'ar';
 
   return (
     <div 
@@ -302,7 +304,7 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
           <div className="flipbook-header-left">
             <div className="flipbook-book-badge">
               <BookOpen size={17} className="text-cyan-400" />
-              <span>{isRtl ? 'قارئ المستندات ثلاثي الأبعاد (StPageFlip)' : '3D Document Flipbook (StPageFlip)'}</span>
+              <span>{isRtl ? 'قارئ المستندات ثلاثي الأبعاد (تقليب من اليمين إلى اليسار)' : '3D Document Flipbook (Right-to-Left Mode)'}</span>
             </div>
             <div className="flipbook-ip-badge">
               <ShieldCheck size={15} />
@@ -464,20 +466,20 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
         {/* View Mode 1: 3D Flipbook using StPageFlip Engine */}
         {viewMode === 'flipbook' && (
           <div className="flipbook-stage-wrapper">
-            {/* Left Nav Arrow */}
+            {/* LEFT NAV BUTTON: In Arabic RTL, this is PREVIOUS (turns back to the right) */}
             <button 
               type="button" 
-              className="flipbook-curl-nav prev"
+              className="flipbook-curl-nav nav-left"
               onClick={handlePrevPage}
               disabled={currentPage <= 1}
-              title={isRtl ? 'الصفحة السابقة' : 'Previous Page'}
+              title={isRtl ? 'الصفحة السابقة (الرجوع لليمين →)' : 'Previous Page'}
             >
-              {isRtl ? <ChevronRight size={28} /> : <ChevronLeft size={28} />}
+              <ChevronRight size={28} />
+              <span className="nav-btn-caption">{isRtl ? 'السابق' : 'Prev'}</span>
             </button>
 
             {/* Realistic Book Stage */}
             <div className="flipbook-3d-stage">
-              {/* Outer Leather Book Cover Edge Frame */}
               <div className="flipbook-outer-case">
                 <div className="flipbook-spine-binding" />
                 
@@ -510,9 +512,9 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                       );
                     })
                   ) : (
-                    // High-Fidelity Default Project 8-Page Technical Document
+                    // High-Fidelity Default Project Document (RTL Reading Order: Right Page first, Left Page second)
                     <>
-                      {/* PAGE 1: Hard Front Cover */}
+                      {/* P0: Hard Front Cover (Opens from Right to Left) */}
                       <div className="st-page hard-cover front-cover" data-density="hard">
                         <div className="cover-card-art">
                           <div className="cover-circuit-overlay" />
@@ -552,22 +554,70 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                                 <ShieldCheck size={26} />
                                 <span>TECHNO ENJAZ SEAL</span>
                               </div>
-                              <div className="cover-hint-peel">
-                                <span>{isRtl ? 'اضغط أو اسحب زاوية الغلاف للفتح ↗' : 'Drag corner or click to open ↗'}</span>
+                              <div className="cover-hint-peel rtl-direction-prompt">
+                                <span>{isRtl ? 'اقلب الغلاف من اليمين إلى اليسار ◂' : 'Drag corner or click next ↗'}</span>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* PAGE 2: Executive Summary & Abstract (Soft) */}
+                      {/* P1: Inside Cover Left Page (معايير التوثيق والاعتماد الأكاديمي) */}
                       <div className="st-page inner-page" data-density="soft">
                         <div className="page-header-strip">
-                          <span className="doc-section-name">{isRtl ? 'الفصل الأول: الملخص التنفيذي' : 'Chapter 1: Executive Summary'}</span>
+                          <span className="doc-section-name">{isRtl ? 'بيان الاعتماد والملكية الفكرية' : 'Certification & Compliance'}</span>
                           <span className="doc-page-badge">02</span>
                         </div>
                         <div className="page-text-content">
-                          <h3 className="page-section-title">{isRtl ? '١.١ الإطار العام والنطاق العملي' : '1.1 Project Overview & Scope'}</h3>
+                          <div className="academic-seal-banner">
+                            <ShieldCheck size={32} className="text-cyan-400" />
+                            <div>
+                              <h4 style={{ margin: 0, color: '#0f172a', fontSize: '13px' }}>{isRtl ? 'منظومة تكنو إنجاز للابتكار الهندسي' : 'Techno Enjaz Engineering Monograph'}</h4>
+                              <p style={{ margin: '3px 0 0 0', fontSize: '10.5px', color: '#64748b' }}>{isRtl ? 'سجل التوثيق البرمجي — معيار ISO/IEC 25010' : 'Software Quality Standard ISO/IEC 25010'}</p>
+                            </div>
+                          </div>
+
+                          <h4 className="page-sub-title">{isRtl ? 'منهجية الفحص والتدقيق' : 'Verification Methodology'}</h4>
+                          <p className="page-lead-para">{isRtl ? 'تمت مراجعة هذا المشروع وتدقيق كافة خوارزمياته عبر منصات المحاكاة المعملية لضمان أعلى معايير الاستقرار والأمان.' : 'All algorithms and architectures undergo rigorous verification and simulation testing.'}</p>
+
+                          <div className="page-spec-table-wrapper">
+                            <table className="page-spec-table">
+                              <tbody>
+                                <tr>
+                                  <td><strong>{isRtl ? 'تاريخ الإصدار' : 'Issue Date'}</strong></td>
+                                  <td>2026-09-17</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>{isRtl ? 'الجهة المطورة' : 'Dev Organisation'}</strong></td>
+                                  <td>Techno Enjaz Labs (Riyadh)</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>{isRtl ? 'مستوى الفحص' : 'Audit Status'}</strong></td>
+                                  <td><span style={{ color: '#059669', fontWeight: 'bold' }}>✓ {isRtl ? 'معتمد ومكتمل بنجاح' : 'Passed & Verified'}</span></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+
+                          <div className="rtl-page-hint-box">
+                            <Info size={14} className="text-cyan-600" />
+                            <span>{isRtl ? '👈 تصفح مستمر: تقلب الصفحات من اليمين نحو اليسار' : 'Reading order progresses Right to Left'}</span>
+                          </div>
+                        </div>
+                        <div className="page-footer-strip">
+                          <span>{isRtl ? 'منظومة تكنو إنجاز' : 'Techno Enjaz'}</span>
+                          <span>2</span>
+                        </div>
+                      </div>
+
+                      {/* P2: Spread 1 Right Page (الفصل الأول: الملخص التنفيذي والأهداف - يقرأ أولاً في اليمين) */}
+                      <div className="st-page inner-page" data-density="soft">
+                        <div className="page-header-strip">
+                          <span className="doc-section-name">{isRtl ? 'الفصل الأول: الملخص التنفيذي' : 'Chapter 1: Executive Summary'}</span>
+                          <span className="doc-page-badge">01</span>
+                        </div>
+                        <div className="page-text-content">
+                          <h3 className="page-section-title">{isRtl ? '١.١ الإطار العام والنطاق العملي للمشروع' : '1.1 Project Overview & Scope'}</h3>
                           <p className="page-lead-para">{desc}</p>
 
                           <h4 className="page-sub-title">{isRtl ? 'الأهداف الهندسية الاستراتيجية' : 'Strategic Engineering Objectives'}</h4>
@@ -584,10 +634,6 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                               <CheckCircle2 size={14} className="bullet-icon" />
                               <span>{isRtl ? 'تطبيق معايير الأمان السيبراني وعزل الصلاحيات وحماية البيانات الحساسة.' : 'Enforce zero-trust cyber protocols and granular identity management.'}</span>
                             </li>
-                            <li>
-                              <CheckCircle2 size={14} className="bullet-icon" />
-                              <span>{isRtl ? 'توفير واجهات تفاعلية تدعم التكامل البرمجي عبر واجهات برمجة التطبيقات (RESTful & WebSockets).' : 'Deliver high-throughput RESTful and WebSocket API endpoints.'}</span>
-                            </li>
                           </ul>
 
                           <div className="page-callout-box">
@@ -601,82 +647,19 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                         </div>
                         <div className="page-footer-strip">
                           <span>{isRtl ? 'منظومة تكنو إنجاز للحلول الهندسية' : 'Techno Enjaz Engineering Platform'}</span>
-                          <span>2</span>
+                          <span>1</span>
                         </div>
                       </div>
 
-                      {/* PAGE 3: System Architecture & Technical Specifications (Soft) */}
+                      {/* P3: Spread 2 Left Page (الفصل الثالث: الخوارزميات والمنطق البرمجي) */}
                       <div className="st-page inner-page" data-density="soft">
                         <div className="page-header-strip">
-                          <span className="doc-section-name">{isRtl ? 'الفصل الثاني: المعمارية التقنية' : 'Chapter 2: System Architecture'}</span>
-                          <span className="doc-page-badge">03</span>
-                        </div>
-                        <div className="page-text-content">
-                          <h3 className="page-section-title">{isRtl ? '٢.١ هيكلية الطبقات البرمجية (Layered Architecture)' : '2.1 Layered System Architecture'}</h3>
-                          
-                          <div className="arch-blueprint-card">
-                            <div className="arch-layer">
-                              <span className="layer-tag">Layer 01</span>
-                              <div className="layer-details">
-                                <strong>{isRtl ? 'طبقة العرض والواجهات (Presentation Layer)' : 'Presentation UI / UX Layer'}</strong>
-                                <p>{isRtl ? 'تطبيقات الويب التفاعلية، لوحات التحكم الحركية، وأنظمة العرض ثلاثي الأبعاد (React 19 / GSAP / Three.js).' : 'Interactive dashboards, 3D render engine and telemetry feeds.'}</p>
-                              </div>
-                            </div>
-                            <div className="arch-layer">
-                              <span className="layer-tag">Layer 02</span>
-                              <div className="layer-details">
-                                <strong>{isRtl ? 'طبقة الخوادم والمنطق البرمجي (Backend Core)' : 'Core Service Engine & Microservices'}</strong>
-                                <p>{isRtl ? 'خوادم معالجة الطلبات عالية الكفاءة مع خوارزميات التوزيع ومزامنة الحالات اللحظية.' : 'High-concurrency event-driven logic with state synchronization.'}</p>
-                              </div>
-                            </div>
-                            <div className="arch-layer">
-                              <span className="layer-tag">Layer 03</span>
-                              <div className="layer-details">
-                                <strong>{isRtl ? 'محرك الذكاء الاصطناعي والحسابات (AI & Compute Engine)' : 'AI Model & Computational Runtime'}</strong>
-                                <p>{isRtl ? 'شبكات عصبية مخصصة، خطوط استدلال مسرعة عبر وحدات GPU مع معالجة المتجهات.' : 'TensorRT accelerated neural inferencing with vector indexing.'}</p>
-                              </div>
-                            </div>
-                          </div>
-
-                          <h4 className="page-sub-title">{isRtl ? 'متطلبات التشغيل والمواصفات' : 'Hardware & Runtime Requirements'}</h4>
-                          <table className="page-spec-table">
-                            <thead>
-                              <tr>
-                                <th>{isRtl ? 'العنصر' : 'Component'}</th>
-                                <th>{isRtl ? 'المواصفة الموصى بها' : 'Recommended Spec'}</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>CPU Runtime</td>
-                                <td>8-Core 3.2GHz+ (AVX-512 support)</td>
-                              </tr>
-                              <tr>
-                                <td>Inference GPU</td>
-                                <td>NVIDIA RTX / CUDA 12.x / TensorRT</td>
-                              </tr>
-                              <tr>
-                                <td>Memory (RAM)</td>
-                                <td>16GB DDR5 Dual Channel</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <div className="page-footer-strip">
-                          <span>{isRtl ? 'منظومة تكنو إنجاز للحلول الهندسية' : 'Techno Enjaz Engineering Platform'}</span>
-                          <span>3</span>
-                        </div>
-                      </div>
-
-                      {/* PAGE 4: Algorithms & Mathematical Modeling (Soft) */}
-                      <div className="st-page inner-page" data-density="soft">
-                        <div className="page-header-strip">
-                          <span className="doc-section-name">{isRtl ? 'الفصل الثالث: الخوارزميات والمنهجية' : 'Chapter 3: Algorithmic Pipeline'}</span>
+                          <span className="doc-section-name">{isRtl ? 'الفصل الثالث: الخوارزميات والمنطق' : 'Chapter 3: Algorithmic Logic'}</span>
                           <span className="doc-page-badge">04</span>
                         </div>
                         <div className="page-text-content">
                           <h3 className="page-section-title">{isRtl ? '٣.١ خط التدفق الرياضي واستخراج السمات' : '3.1 Mathematical Formulation'}</h3>
-                          <p>{isRtl ? 'تعتمد المنظومة على دالة تقارب متري مع تطبيق التحسين التدرجي لتقليل نسبة الخطأ إلى الحد الأدنى:' : 'Optimization framework relies on metric loss minimization with cosine distance projection:'}</p>
+                          <p className="page-lead-para">{isRtl ? 'تعتمد المنظومة على دالة تقارب متري مع تطبيق التحسين التدرجي لتقليل نسبة الخطأ إلى الحد الأدنى:' : 'Optimization framework relies on metric loss minimization:'}</p>
 
                           <div className="page-formula-card">
                             <code>
@@ -700,10 +683,102 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                         </div>
                       </div>
 
-                      {/* PAGE 5: Empirical Benchmarks & Results (Soft) */}
+                      {/* P4: Spread 2 Right Page (الفصل الثاني: المعمارية التقنية - يقرأ في اليمين أولاً) */}
                       <div className="st-page inner-page" data-density="soft">
                         <div className="page-header-strip">
-                          <span className="doc-section-name">{isRtl ? 'الفصل الرابع: مؤشرات الأداء والنتائج' : 'Chapter 4: Live Benchmarks'}</span>
+                          <span className="doc-section-name">{isRtl ? 'الفصل الثاني: المعمارية التقنية' : 'Chapter 2: System Architecture'}</span>
+                          <span className="doc-page-badge">03</span>
+                        </div>
+                        <div className="page-text-content">
+                          <h3 className="page-section-title">{isRtl ? '٢.١ هيكلية الطبقات البرمجية (Layered Architecture)' : '2.1 Layered System Architecture'}</h3>
+                          
+                          <div className="arch-blueprint-card">
+                            <div className="arch-layer">
+                              <span className="layer-tag">Layer 01</span>
+                              <div className="layer-details">
+                                <strong>{isRtl ? 'طبقة العرض والواجهات (Presentation Layer)' : 'Presentation UI / UX Layer'}</strong>
+                                <p>{isRtl ? 'واجهات تفاعلية وأنظمة عرض ثلاثية الأبعاد (React 19 / GSAP / Three.js).' : 'Interactive dashboards and 3D render engine.'}</p>
+                              </div>
+                            </div>
+                            <div className="arch-layer">
+                              <span className="layer-tag">Layer 02</span>
+                              <div className="layer-details">
+                                <strong>{isRtl ? 'طبقة الخوادم والمنطق (Backend Core)' : 'Core Service Engine'}</strong>
+                                <p>{isRtl ? 'خوادم معالجة الطلبات عالية الكفاءة مع خوارزميات التوزيع ومزامنة الحالات.' : 'High-concurrency event-driven logic.'}</p>
+                              </div>
+                            </div>
+                            <div className="arch-layer">
+                              <span className="layer-tag">Layer 03</span>
+                              <div className="layer-details">
+                                <strong>{isRtl ? 'محرك الحسابات والاستدلال (AI & Compute Engine)' : 'AI Model & Runtime'}</strong>
+                                <p>{isRtl ? 'شبكات عصبية مخصصة واستدلال مسرع عبر وحدات GPU.' : 'Accelerated neural inferencing with vector indexing.'}</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <h4 className="page-sub-title">{isRtl ? 'متطلبات التشغيل والمواصفات' : 'Hardware Requirements'}</h4>
+                          <table className="page-spec-table">
+                            <thead>
+                              <tr>
+                                <th>{isRtl ? 'العنصر' : 'Component'}</th>
+                                <th>{isRtl ? 'المواصفة الموصى بها' : 'Recommended Spec'}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>CPU Runtime</td>
+                                <td>8-Core 3.2GHz+ (AVX-512)</td>
+                              </tr>
+                              <tr>
+                                <td>Inference GPU</td>
+                                <td>NVIDIA RTX / CUDA 12.x</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="page-footer-strip">
+                          <span>{isRtl ? 'منظومة تكنو إنجاز للحلول الهندسية' : 'Techno Enjaz Engineering Platform'}</span>
+                          <span>3</span>
+                        </div>
+                      </div>
+
+                      {/* P5: Spread 3 Left Page (الفصل الخامس: الأمان وحوكمة البيانات) */}
+                      <div className="st-page inner-page" data-density="soft">
+                        <div className="page-header-strip">
+                          <span className="doc-section-name">{isRtl ? 'الفصل الخامس: الأمان والحوكمة' : 'Chapter 5: Security & Compliance'}</span>
+                          <span className="doc-page-badge">06</span>
+                        </div>
+                        <div className="page-text-content">
+                          <h3 className="page-section-title">{isRtl ? '٥.١ بروتوكولات حماية البيانات المشفرة' : '5.1 Cryptographic Standards'}</h3>
+                          <p className="page-lead-para">{isRtl ? 'تخضع كافة مخرجات المنظومة لمعايير التشفير المتطورة لضمان الخصوصية والامتثال للمواصفات العالمية:' : 'All payloads are secured with enterprise cryptographic controls:'}</p>
+
+                          <div className="security-badges-container">
+                            <div className="sec-badge-card">
+                              <ShieldCheck size={20} className="text-cyan-400" />
+                              <div>
+                                <strong>AES-256 GCM</strong>
+                                <p>{isRtl ? 'تشفير شامل للبيانات المخزنة والمتبادلة عبر الشبكة.' : 'End-to-end payload encryption.'}</p>
+                              </div>
+                            </div>
+                            <div className="sec-badge-card">
+                              <ShieldCheck size={20} className="text-cyan-400" />
+                              <div>
+                                <strong>Zero-Trust RBAC</strong>
+                                <p>{isRtl ? 'صلاحيات وصول دقيقة تعتمد على التوثيق متعدد العوامل.' : 'Strict multi-factor role-based access verification.'}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="page-footer-strip">
+                          <span>{isRtl ? 'منظومة تكنو إنجاز للحلول الهندسية' : 'Techno Enjaz Engineering Platform'}</span>
+                          <span>6</span>
+                        </div>
+                      </div>
+
+                      {/* P6: Spread 3 Right Page (الفصل الرابع: مؤشرات الأداء والنتائج - يقرأ في اليمين أولاً) */}
+                      <div className="st-page inner-page" data-density="soft">
+                        <div className="page-header-strip">
+                          <span className="doc-section-name">{isRtl ? 'الفصل الرابع: مؤشرات الأداء' : 'Chapter 4: Live Benchmarks'}</span>
                           <span className="doc-page-badge">05</span>
                         </div>
                         <div className="page-text-content">
@@ -712,19 +787,19 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                           <div className="metrics-summary-grid">
                             <div className="metric-box">
                               <span className="metric-num">98.6%</span>
-                              <span className="metric-label">{isRtl ? 'دقة الاستدلال (Accuracy)' : 'Model Accuracy'}</span>
+                              <span className="metric-label">{isRtl ? 'دقة الاستدلال' : 'Accuracy'}</span>
                             </div>
                             <div className="metric-box">
                               <span className="metric-num">&lt;16ms</span>
-                              <span className="metric-label">{isRtl ? 'زمن الاستجابة (Latency)' : 'Inference Latency'}</span>
+                              <span className="metric-label">{isRtl ? 'زمن الاستجابة' : 'Latency'}</span>
                             </div>
                             <div className="metric-box">
                               <span className="metric-num">60 FPS</span>
-                              <span className="metric-label">{isRtl ? 'معدل المعالجة اللحظية' : 'Realtime Frame Rate'}</span>
+                              <span className="metric-label">{isRtl ? 'المعالجة اللحظية' : 'Frame Rate'}</span>
                             </div>
                             <div className="metric-box">
                               <span className="metric-num">0.992</span>
-                              <span className="metric-label">{isRtl ? 'معامل الثقة (F1-Score)' : 'F1 Confidence'}</span>
+                              <span className="metric-label">{isRtl ? 'معامل الثقة' : 'F1 Confidence'}</span>
                             </div>
                           </div>
 
@@ -752,77 +827,7 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                         </div>
                       </div>
 
-                      {/* PAGE 6: Security, Compliance & Governance (Soft) */}
-                      <div className="st-page inner-page" data-density="soft">
-                        <div className="page-header-strip">
-                          <span className="doc-section-name">{isRtl ? 'الفصل الخامس: الأمان والحوكمة' : 'Chapter 5: Security & Compliance'}</span>
-                          <span className="doc-page-badge">06</span>
-                        </div>
-                        <div className="page-text-content">
-                          <h3 className="page-section-title">{isRtl ? '٥.١ بروتوكولات حماية البيانات المشفرة' : '5.1 Cryptographic Standards'}</h3>
-                          <p>{isRtl ? 'تخضع كافة مخرجات المنظومة لمعايير التشفير المتطورة لضمان الخصوصية والامتثال للمواصفات العالمية:' : 'All payloads are secured with enterprise cryptographic controls and audited pipelines:'}</p>
-
-                          <div className="security-badges-container">
-                            <div className="sec-badge-card">
-                              <ShieldCheck size={20} className="text-cyan-400" />
-                              <div>
-                                <strong>AES-256 GCM</strong>
-                                <p>{isRtl ? 'تشفير شامل للبيانات المخزنة والمتبادلة عبر الشبكة.' : 'End-to-end at-rest and in-transit payload encryption.'}</p>
-                              </div>
-                            </div>
-                            <div className="sec-badge-card">
-                              <ShieldCheck size={20} className="text-cyan-400" />
-                              <div>
-                                <strong>Zero-Trust RBAC</strong>
-                                <p>{isRtl ? 'صلاحيات وصول دقيقة تعتمد على التوثيق متعدد العوامل.' : 'Strict multi-factor role-based access verification.'}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="page-footer-strip">
-                          <span>{isRtl ? 'منظومة تكنو إنجاز للحلول الهندسية' : 'Techno Enjaz Engineering Platform'}</span>
-                          <span>6</span>
-                        </div>
-                      </div>
-
-                      {/* PAGE 7: Roadmap, Future Scope & Citations (Soft) */}
-                      <div className="st-page inner-page" data-density="soft">
-                        <div className="page-header-strip">
-                          <span className="doc-section-name">{isRtl ? 'الفصل السادس: التوصيات والمراجع' : 'Chapter 6: Roadmap & Citations'}</span>
-                          <span className="doc-page-badge">07</span>
-                        </div>
-                        <div className="page-text-content">
-                          <h3 className="page-section-title">{isRtl ? '٦.١ مراحل التطوير والتوسع القادمة' : '6.1 Strategic Expansion Phases'}</h3>
-                          <div className="roadmap-mini-steps">
-                            <div className="roadmap-step">
-                              <span className="step-num">01</span>
-                              <div>
-                                <strong>{isRtl ? 'التكامل السحابي الموزع' : 'Edge Distributed Mesh'}</strong>
-                                <p>{isRtl ? 'نشر وحدات المعالجة الذكية الطرفية.' : 'Deploying decentralized edge computing nodes.'}</p>
-                              </div>
-                            </div>
-                            <div className="roadmap-step">
-                              <span className="step-num">02</span>
-                              <div>
-                                <strong>{isRtl ? 'المحاكاة ثلاثية الأبعاد المؤتمتة' : 'Autonomous 3D Simulation'}</strong>
-                                <p>{isRtl ? 'توليد سيناريوهات فحص افتراضية تعزز دقة النظم.' : 'Synthetic scenario generation for robust model tuning.'}</p>
-                              </div>
-                            </div>
-                          </div>
-
-                          <h4 className="page-sub-title">{isRtl ? 'المراجع الأكاديمية والتوثيق' : 'Scholarly References'}</h4>
-                          <ol className="citations-list">
-                            <li>IEEE Transactions on Neural Networks & Intelligent Systems (2025).</li>
-                            <li>ACM Digital Library - Modern Engineering Architectures & Scalable Pipelines (2026).</li>
-                          </ol>
-                        </div>
-                        <div className="page-footer-strip">
-                          <span>{isRtl ? 'منظومة تكنو إنجاز للحلول الهندسية' : 'Techno Enjaz Engineering Platform'}</span>
-                          <span>7</span>
-                        </div>
-                      </div>
-
-                      {/* PAGE 8: Hard Back Cover */}
+                      {/* P7: Spread 4 Left Page (الغلاف الخلفي المقوى والختم الرقمي) */}
                       <div className="st-page hard-cover back-cover" data-density="hard">
                         <div className="back-cover-art">
                           <div className="back-circuit-pattern" />
@@ -836,7 +841,7 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                             <p className="back-disclaimer">
                               {isRtl 
                                 ? 'هذا المستند التقني صادر رسمياً وموثق ضمن سجلات منظومة تكنو إنجاز للحلول البرمجية والهندسية. جميع حقوق الملكية الفكرية والعلامات التجارية محفوظة ومحمية دولياً.'
-                                : 'Official monograph issued under Techno Enjaz Engineering & Software Systems. All intellectual property and trademarks strictly reserved.'}
+                                : 'Official monograph issued under Techno Enjaz Engineering & Software Systems. All intellectual property strictly reserved.'}
                             </p>
 
                             <div className="back-qr-block">
@@ -854,20 +859,59 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                           </div>
                         </div>
                       </div>
+
+                      {/* P8: Spread 4 Right Page (الفصل السادس: خارطة الطريق والمراجع - يقرأ في اليمين أولاً) */}
+                      <div className="st-page inner-page" data-density="soft">
+                        <div className="page-header-strip">
+                          <span className="doc-section-name">{isRtl ? 'الفصل السادس: التوصيات والمراجع' : 'Chapter 6: Roadmap & Citations'}</span>
+                          <span className="doc-page-badge">07</span>
+                        </div>
+                        <div className="page-text-content">
+                          <h3 className="page-section-title">{isRtl ? '٦.١ مراحل التطوير والتوسع القادمة' : '6.1 Strategic Expansion Phases'}</h3>
+                          <div className="roadmap-mini-steps">
+                            <div className="roadmap-step">
+                              <span className="step-num">01</span>
+                              <div>
+                                <strong>{isRtl ? 'التكامل السحابي الموزع' : 'Edge Distributed Mesh'}</strong>
+                                <p>{isRtl ? 'نشر وحدات المعالجة الذكية الطرفية.' : 'Deploying decentralized edge nodes.'}</p>
+                              </div>
+                            </div>
+                            <div className="roadmap-step">
+                              <span className="step-num">02</span>
+                              <div>
+                                <strong>{isRtl ? 'المحاكاة ثلاثية الأبعاد المؤتمتة' : 'Autonomous 3D Simulation'}</strong>
+                                <p>{isRtl ? 'توليد سيناريوهات فحص افتراضية.' : 'Synthetic scenario generation.'}</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <h4 className="page-sub-title">{isRtl ? 'المراجع الأكاديمية والتوثيق' : 'Scholarly References'}</h4>
+                          <ol className="citations-list">
+                            <li>IEEE Transactions on Neural Networks & Intelligent Systems (2025).</li>
+                            <li>ACM Digital Library - Modern Scalable Architectures (2026).</li>
+                          </ol>
+                        </div>
+                        <div className="page-footer-strip">
+                          <span>{isRtl ? 'منظومة تكنو إنجاز للحلول الهندسية' : 'Techno Enjaz Engineering Platform'}</span>
+                          <span>7</span>
+                        </div>
+                      </div>
                     </>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Right Nav Arrow */}
+            {/* RIGHT NAV BUTTON: In Arabic RTL, this is NEXT (flips from Right to Left ◂) */}
             <button 
               type="button" 
-              className="flipbook-curl-nav next"
+              className="flipbook-curl-nav nav-right"
               onClick={handleNextPage}
-              title={isRtl ? 'الصفحة التالية' : 'Next Page'}
+              disabled={currentPage >= totalPages}
+              title={isRtl ? 'الصفحة التالية (قلب من اليمين إلى اليسار ◂)' : 'Next Page'}
             >
-              {isRtl ? <ChevronLeft size={28} /> : <ChevronRight size={28} />}
+              <ChevronLeft size={28} />
+              <span className="nav-btn-caption">{isRtl ? 'التالي ◂' : 'Next'}</span>
             </button>
           </div>
         )}
@@ -911,26 +955,26 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                         <button type="button" onClick={() => handleJumpToPage(1)} className={currentPage === 1 ? 'active' : ''}>
                           <span>01. {isRtl ? 'الغلاف الخارجي' : 'Front Cover'}</span>
                         </button>
-                        <button type="button" onClick={() => handleJumpToPage(2)} className={currentPage === 2 ? 'active' : ''}>
-                          <span>02. {isRtl ? 'الملخص التنفيذي' : 'Executive Summary'}</span>
+                        <button type="button" onClick={() => handleJumpToPage(2)} className={currentPage === 2 || currentPage === 3 ? 'active' : ''}>
+                          <span>02. {isRtl ? 'الفصل الأول: الملخص التنفيذي' : 'Chapter 1: Summary'}</span>
                         </button>
-                        <button type="button" onClick={() => handleJumpToPage(3)} className={currentPage === 3 ? 'active' : ''}>
-                          <span>03. {isRtl ? 'المعمارية التقنية' : 'System Architecture'}</span>
+                        <button type="button" onClick={() => handleJumpToPage(4)} className={currentPage === 4 || currentPage === 5 ? 'active' : ''}>
+                          <span>03. {isRtl ? 'الفصل الثاني: المعمارية التقنية' : 'Chapter 2: Architecture'}</span>
                         </button>
-                        <button type="button" onClick={() => handleJumpToPage(4)} className={currentPage === 4 ? 'active' : ''}>
-                          <span>04. {isRtl ? 'الخوارزميات والمنطق' : 'Algorithmic Pipeline'}</span>
+                        <button type="button" onClick={() => handleJumpToPage(4)} className={currentPage === 4 || currentPage === 5 ? 'active' : ''}>
+                          <span>04. {isRtl ? 'الفصل الثالث: الخوارزميات والمنطق' : 'Chapter 3: Pipeline'}</span>
                         </button>
-                        <button type="button" onClick={() => handleJumpToPage(5)} className={currentPage === 5 ? 'active' : ''}>
-                          <span>05. {isRtl ? 'مؤشرات الأداء والنتائج' : 'Live Benchmarks'}</span>
+                        <button type="button" onClick={() => handleJumpToPage(6)} className={currentPage === 6 || currentPage === 7 ? 'active' : ''}>
+                          <span>05. {isRtl ? 'الفصل الرابع: مؤشرات الأداء' : 'Chapter 4: Benchmarks'}</span>
                         </button>
-                        <button type="button" onClick={() => handleJumpToPage(6)} className={currentPage === 6 ? 'active' : ''}>
-                          <span>06. {isRtl ? 'الأمان والحوكمة' : 'Security & Compliance'}</span>
-                        </button>
-                        <button type="button" onClick={() => handleJumpToPage(7)} className={currentPage === 7 ? 'active' : ''}>
-                          <span>07. {isRtl ? 'خارطة الطريق والمراجع' : 'Roadmap & Citations'}</span>
+                        <button type="button" onClick={() => handleJumpToPage(6)} className={currentPage === 6 || currentPage === 7 ? 'active' : ''}>
+                          <span>06. {isRtl ? 'الفصل الخامس: الأمان والحوكمة' : 'Chapter 5: Security'}</span>
                         </button>
                         <button type="button" onClick={() => handleJumpToPage(8)} className={currentPage === 8 ? 'active' : ''}>
-                          <span>08. {isRtl ? 'الغلاف الخلفي والختم' : 'Back Cover & Seal'}</span>
+                          <span>07. {isRtl ? 'الفصل السادس: التوصيات والمراجع' : 'Chapter 6: Roadmap'}</span>
+                        </button>
+                        <button type="button" onClick={() => handleJumpToPage(8)} className={currentPage === 8 ? 'active' : ''}>
+                          <span>08. {isRtl ? 'الغلاف الخلفي والختم الرسمي' : 'Back Cover & Seal'}</span>
                         </button>
                       </div>
                     </div>
@@ -957,7 +1001,7 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
           <div className="flipbook-bottom-right">
             <span className="flipbook-help-hint">
               {viewMode === 'flipbook' 
-                ? (isRtl ? '💡 نصيحة: يمكنك سحب أطراف الصفحات بالماوس للمحاكاة الواقعية ثلاثية الأبعاد' : '💡 Tip: Drag page corners with mouse to fold and curl in 3D')
+                ? (isRtl ? '💡 اتجاه التصفح: اقلب من اليمين إلى اليسار بواسطة زر "التالي ◂" على اليمين أو بسحب زوايا الورق' : '💡 Tip: Drag page corners from right to left or click Next button on the right')
                 : (isRtl ? 'معاينة مباشرة من سحابة تكنو إنجاز' : 'Direct secure cloud stream')}
             </span>
           </div>
