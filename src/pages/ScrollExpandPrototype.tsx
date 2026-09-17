@@ -109,9 +109,10 @@ const ScrollExpandPrototype: React.FC<ScrollExpandPrototypeProps> = ({
               type="button"
               className="cta-button cta-primary"
               onClick={() => {
-                const projEl = document.getElementById('projects');
-                if (projEl) {
-                  projEl.scrollIntoView({ behavior: 'smooth' });
+                if (onNavigateToProjects) {
+                  onNavigateToProjects();
+                } else {
+                  window.location.hash = '#projects';
                 }
               }}
             >
