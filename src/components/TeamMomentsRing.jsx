@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
+import { useThemeLanguage } from '../context/ThemeLanguageContext';
 import './TeamMomentsRing.css';
 
 export default function TeamMomentsRing({ onScrollDown }) {
+  const { lang } = useThemeLanguage();
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -264,7 +266,7 @@ export default function TeamMomentsRing({ onScrollDown }) {
       textGrad.addColorStop(1, '#c4b5fd');
 
       x.fillStyle = textGrad;
-      x.fillText('لحظات الفريق', cx, cy);
+      x.fillText(lang === 'ar' ? 'لحظات الفريق' : 'Team Moments', cx, cy);
 
       // سطر تعريفي أنيق تحته بخط Readex Pro
       x.restore();
@@ -277,7 +279,7 @@ export default function TeamMomentsRing({ onScrollDown }) {
 
 
     function resize() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       W = Math.round(window.innerWidth * dpr);
       H = Math.round(window.innerHeight * dpr);
       cv.width = W;
@@ -353,13 +355,35 @@ export default function TeamMomentsRing({ onScrollDown }) {
       if (labelLayer) ctx.drawImage(labelLayer, 0, 0);
     }
 
+    let isVisible = false;
     const t0 = performance.now();
     function frame(now) {
-      if (!isMounted) return;
+      if (!isMounted || !isVisible) {
+        animId = null;
+        return;
+      }
       const tNow = ((now - t0) / 1000) % DUR;
       render(tNow);
       animId = requestAnimationFrame(frame);
     }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          if (!animId) {
+            animId = requestAnimationFrame(frame);
+          }
+        } else {
+          if (animId) {
+            cancelAnimationFrame(animId);
+            animId = null;
+          }
+        }
+      },
+      { threshold: 0.02 }
+    );
+    observer.observe(cv);
 
     window.addEventListener('resize', resize);
     resize();
@@ -373,11 +397,10 @@ export default function TeamMomentsRing({ onScrollDown }) {
       });
     }
 
-    animId = requestAnimationFrame(frame);
-
     return () => {
       isMounted = false;
-      cancelAnimationFrame(animId);
+      observer.disconnect();
+      if (animId) cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
     };
   }, []);

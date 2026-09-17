@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { mat4, quat, vec2, vec3 } from 'gl-matrix';
 import SocialButtons from './components/SocialButtons';
 import { InteractiveHoverButton } from "@/registry/magicui/interactive-hover-button";
+import { useThemeLanguage } from './context/ThemeLanguageContext';
 import './InfiniteMenu.css';
 
 
@@ -621,7 +622,14 @@ class InfiniteGridMenu {
     this.#updateProjectionMatrix(gl);
   }
 
+  isPlaying = false;
+  rafId = null;
+
   run(time = 0) {
+    if (!this.isPlaying) {
+      this.rafId = null;
+      return;
+    }
     this.#deltaTime = Math.min(32, time - this.#time);
     this.#time = time;
     this.#deltaFrames = this.#deltaTime / this.TARGET_FRAME_DURATION;
@@ -630,7 +638,26 @@ class InfiniteGridMenu {
     this.#animate(this.#deltaTime);
     this.#render();
 
-    requestAnimationFrame(t => this.run(t));
+    this.rafId = requestAnimationFrame(t => this.run(t));
+  }
+
+  play() {
+    if (this.isPlaying) return;
+    this.isPlaying = true;
+    this.#time = performance.now();
+    this.rafId = requestAnimationFrame(t => this.run(t));
+  }
+
+  pause() {
+    this.isPlaying = false;
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+  }
+
+  destroy() {
+    this.pause();
   }
 
   #init(onInit) {
@@ -935,6 +962,8 @@ export default function InfiniteMenu({
   backgroundColor = '#000000',
   onSelectMember
 }) {
+  const { lang } = useThemeLanguage();
+  const isEn = lang === 'en';
   const canvasRef = useRef(null);
   const [activeItem, setActiveItem] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
@@ -948,15 +977,28 @@ export default function InfiniteMenu({
       setActiveItem(items[itemIndex]);
     };
 
+    let observer;
     if (canvas) {
       sketch = new InfiniteGridMenu(
         canvas,
         items.length ? items : defaultItems,
         handleActiveItem,
         setIsMoving,
-        sk => sk.run(),
+        null,
         scale
       );
+
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            sketch?.play();
+          } else {
+            sketch?.pause();
+          }
+        },
+        { threshold: 0.02 }
+      );
+      observer.observe(canvas);
     }
 
     const handleResize = () => {
@@ -969,7 +1011,9 @@ export default function InfiniteMenu({
     handleResize();
 
     return () => {
+      observer?.disconnect();
       window.removeEventListener('resize', handleResize);
+      sketch?.destroy();
     };
   }, [items, scale]);
 
@@ -1001,11 +1045,15 @@ export default function InfiniteMenu({
       <canvas id="infinite-grid-menu-canvas" ref={canvasRef} />
 
       {activeItem && (
-        <div className={`active-member-card ${isMoving ? 'inactive' : 'active'}`}>
+        <div className={`active-member-card ${isMoving ? 'inactive' : 'active'}`} dir={isEn ? 'ltr' : 'rtl'}>
           <div className="active-member-content">
-            <span className="member-label">{activeItem.id === 'abdulghani' ? 'قائد ومؤسس الفريق' : 'عضو الفريق'}</span>
-            <h2 className="member-name">{activeItem.title || activeItem.name}</h2>
-            <p className="member-role">{activeItem.description || activeItem.role}</p>
+            <span className="member-label">
+              {activeItem.id === 'abdulghani'
+                ? (isEn ? 'Team Founder & Leader' : 'قائد ومؤسس الفريق')
+                : (isEn ? 'Team Member' : 'عضو الفريق')}
+            </span>
+            <h2 className="member-name">{isEn ? (activeItem.nameEn || activeItem.titleEn || activeItem.title || activeItem.name) : (activeItem.title || activeItem.name)}</h2>
+            <p className="member-role">{isEn ? (activeItem.roleEn || activeItem.descriptionEn || activeItem.description || activeItem.role) : (activeItem.description || activeItem.role)}</p>
 
             {/* أيقونات السوشل ميديا: لينكد إن، إيميل، وغيت هاب تحت المسمى الوظيفي */}
             {activeItem.socials && (
@@ -1017,10 +1065,10 @@ export default function InfiniteMenu({
             type="button"
             onClick={handleButtonClick}
             className="member-profile-btn"
-            title={`عرض الملف التعريفي لـ ${activeItem.title || activeItem.name}`}
-            aria-label="عرض الملف التعريفي"
+            title={isEn ? `View profile for ${activeItem.nameEn || activeItem.title || activeItem.name}` : `عرض الملف التعريفي لـ ${activeItem.title || activeItem.name}`}
+            aria-label={isEn ? "View Profile" : "عرض الملف التعريفي"}
           >
-            عرض الملف
+            {isEn ? 'View Profile' : 'عرض الملف'}
           </InteractiveHoverButton>
         </div>
       )}

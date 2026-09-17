@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import ScrollProgress from '@/registry/magicui/scroll-progress';
 import { Skiper19 } from '@/components/ui/svg-follow-scroll';
 import GooeyNav from './GooeyNav';
@@ -7,36 +7,71 @@ import TeamMomentsRing from './components/TeamMomentsRing';
 import InfiniteMenu from './InfiniteMenu';
 import Orb from './Orb';
 import CinematicFooter from './components/CinematicFooter';
-import ProfilePage from './ProfilePage';
-import ContactPage from './ContactPage';
-import AuthPage from './AuthPage';
-import LiveProjectsShowcase from './components/projects/LiveProjectsShowcase';
 import VideosSection from './components/videos/VideosSection';
 import ArticlesSection from './components/articles/ArticlesSection';
-import { LogIn, Cpu, Video, Sparkles, BookOpen } from 'lucide-react';
+import { Cpu, Video, Sparkles, BookOpen, User, BookmarkCheck } from 'lucide-react';
 import { teamMembers } from './data/teamData';
+import { useThemeLanguage } from './context/ThemeLanguageContext';
+import ThemeSwitch from './components/ui/ThemeSwitch';
+import { Button } from './components/ui/button';
+import { useSavedProjects } from './hooks/useSavedProjects';
+
+const ProfilePage = lazy(() => import('./ProfilePage'));
+const ContactPage = lazy(() => import('./ContactPage'));
+const AuthPage = lazy(() => import('./AuthPage'));
+const UserProfilePage = lazy(() => import('./UserProfilePage'));
+const LiveProjectsShowcase = lazy(() => import('./components/projects/LiveProjectsShowcase'));
+const ProjectsCatalogSection = lazy(() => import('./components/projects/ProjectsCatalogSection'));
 
 interface NavItem {
   label: string;
   href: string;
 }
 
-const navItems: NavItem[] = [
-  { label: 'الرئيسية', href: '#top' },
-  { label: 'المشاريع', href: '#projects' },
-  { label: 'الفيديوهات', href: '#videos' },
-  { label: 'المقالات', href: '#articles' },
-  { label: 'من نحن', href: '#about' },
-  { label: 'تواصل معنا', href: '#contact' },
-];
-
 export default function App() {
+  const { theme, lang, setLang, t } = useThemeLanguage();
+  const [isLoaderDone, setIsLoaderDone] = useState(false);
   const [currentTab, setCurrentTab] = useState<'home' | 'projects' | 'videos' | 'articles' | 'about'>('home');
   const [selectedMember, setSelectedMember] = useState<any>(null);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [isUserProfileOpen, setIsUserProfileOpen] = useState(false);
   const [activeNavIndex, setActiveNavIndex] = useState(0);
+  const { count: savedCount } = useSavedProjects();
+
+  const localizedTeamMembers = teamMembers.map((m: any) => ({
+    ...m,
+    name: lang === 'en' ? (m.nameEn || m.name) : m.name,
+    title: lang === 'en' ? (m.titleEn || m.title || m.nameEn || m.name) : (m.title || m.name),
+    role: lang === 'en' ? (m.roleEn || m.role) : m.role,
+    description: lang === 'en' ? (m.descriptionEn || m.description) : m.description,
+    department: lang === 'en' ? (m.departmentEn || m.department) : m.department,
+    bio: lang === 'en' ? (m.bioEn || m.bio) : m.bio,
+    skills: lang === 'en' ? (m.skillsEn || m.skills) : m.skills,
+    location: lang === 'en' ? (m.locationEn || m.location) : m.location,
+    projects: lang === 'en' ? (m.projectsEn || m.projects) : m.projects,
+  }));
+
+  // Defer heavy 3D canvases until rocket loader finishes
+  useEffect(() => {
+    const onLoaderComplete = () => setIsLoaderDone(true);
+    window.addEventListener('techno:completed', onLoaderComplete);
+    const timer = setTimeout(() => setIsLoaderDone(true), 2700);
+    return () => {
+      window.removeEventListener('techno:completed', onLoaderComplete);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  const navItems: NavItem[] = [
+    { label: t.nav.home, href: '#top' },
+    { label: t.nav.projects, href: '#projects' },
+    { label: t.nav.videos, href: '#videos' },
+    { label: t.nav.articles, href: '#articles' },
+    { label: t.nav.about, href: '#about' },
+    { label: t.nav.contact, href: '#contact' },
+  ];
 
   // Synchronize hash for back-forward and direct link navigation
   useEffect(() => {
@@ -63,8 +98,17 @@ export default function App() {
       if (hash === '#auth' || hash === '#login' || hash === '#register') {
         setSelectedMember(null);
         setIsContactOpen(false);
+        setIsUserProfileOpen(false);
         setIsAuthOpen(true);
         setAuthMode(hash === '#register' ? 'register' : 'login');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      if (hash === '#my-profile' || hash === '#favorites' || hash === '#profile') {
+        setSelectedMember(null);
+        setIsContactOpen(false);
+        setIsAuthOpen(false);
+        setIsUserProfileOpen(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
@@ -72,6 +116,7 @@ export default function App() {
       setSelectedMember(null);
       setIsContactOpen(false);
       setIsAuthOpen(false);
+      setIsUserProfileOpen(false);
 
       if (hash === '#projects') {
         setCurrentTab('projects');
@@ -180,11 +225,38 @@ export default function App() {
 
   // If a team member is selected, show their full profile page
   if (selectedMember) {
-    return <ProfilePage member={selectedMember} onBack={handleBackToMenu} />;
+    return (
+      <Suspense fallback={<div style={{ minHeight: '100vh', backgroundColor: theme === 'light' ? '#f8fafc' : '#050508' }} />}>
+        <ProfilePage member={selectedMember} onBack={handleBackToMenu} />
+      </Suspense>
+    );
+  }
+
+  // If the user's personal profile & favorites page is opened
+  if (isUserProfileOpen) {
+    return (
+      <Suspense fallback={<div style={{ minHeight: '100vh', backgroundColor: theme === 'light' ? '#f8fafc' : '#050508' }} />}>
+        <UserProfilePage
+          onBack={() => {
+            setIsUserProfileOpen(false);
+            window.location.hash = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onOpenReader={() => {
+            setIsUserProfileOpen(false);
+            window.location.hash = '#academic-projects';
+          }}
+          onExploreProjects={() => {
+            setIsUserProfileOpen(false);
+            window.location.hash = '#projects';
+          }}
+        />
+      </Suspense>
+    );
   }
 
   return (
-    <main style={{ width: '100%', minHeight: '100vh', backgroundColor: '#050508' }}>
+    <main style={{ width: '100%', minHeight: '100vh', backgroundColor: 'var(--bg-main)' }} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       {/* Scroll indicator */}
       <ScrollProgress className="top-0" />
 
@@ -198,14 +270,14 @@ export default function App() {
             e.preventDefault();
             handleNavItemSelect(navItems[0], 0);
           }}
-          title="تكنو إنجاز | الرئيسية"
+          title={`${t.nav.brand} | ${t.nav.home}`}
         >
           <img
             src="/techno-logo.png"
-            alt="شعار تكنو إنجاز"
+            alt={t.nav.brand}
             className="navbar-brand-logo"
           />
-          <span className="navbar-brand-text">تكنو إنجاز</span>
+          <span className="navbar-brand-text">{t.nav.brand}</span>
         </a>
 
         {/* Center Interactive GooeyNav Menu */}
@@ -224,48 +296,140 @@ export default function App() {
           />
         </div>
 
-        {/* End Actions: Login / Register Button */}
+        {/* End Actions: Language Switcher, Theme Toggle, Login / User Profile */}
         <div className="navbar-end-actions">
+          {/* Language Switcher using shadcn Button */}
+          <div className="lang-capsule-toggle" title="Switch Language / تبديل اللغة" style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', background: 'rgba(255,255,255,0.06)', padding: '2px 4px', borderRadius: '9999px', border: '1px solid var(--border-subtle)' }}>
+            <Button
+              variant={lang === 'ar' ? 'default' : 'ghost'}
+              size="sm"
+              className={`lang-pill-btn ${lang === 'ar' ? 'active' : ''}`}
+              onClick={() => setLang('ar')}
+              aria-label={lang === 'ar' ? "اللغة العربية" : "Arabic"}
+              style={{
+                height: '26px',
+                padding: '0 10px',
+                borderRadius: '9999px',
+                fontSize: '0.75rem',
+                fontWeight: lang === 'ar' ? 700 : 500,
+                cursor: 'pointer'
+              }}
+            >
+              عربي
+            </Button>
+            <Button
+              variant={lang === 'en' ? 'default' : 'ghost'}
+              size="sm"
+              className={`lang-pill-btn ${lang === 'en' ? 'active' : ''}`}
+              onClick={() => setLang('en')}
+              aria-label="English Language"
+              style={{
+                height: '26px',
+                padding: '0 10px',
+                borderRadius: '9999px',
+                fontSize: '0.75rem',
+                fontWeight: lang === 'en' ? 700 : 500,
+                cursor: 'pointer'
+              }}
+            >
+              EN
+            </Button>
+          </div>
+
+          {/* Animated Sun / Moon Theme Switch Component */}
+          <ThemeSwitch />
+
+          {/* User Profile / Saved Projects / Auth Button */}
           <button
             type="button"
-            className={`navbar-auth-btn ${isAuthOpen ? 'active' : ''}`}
-            onClick={() => handleOpenAuth('login')}
-            title="تسجيل الدخول أو إنشاء حساب جديد"
+            className={`navbar-auth-btn ${isUserProfileOpen || isAuthOpen ? 'active' : ''}`}
+            onClick={() => {
+              if (savedCount > 0 || (typeof window !== 'undefined' && localStorage.getItem('techno_user'))) {
+                setIsContactOpen(false);
+                setSelectedMember(null);
+                setIsAuthOpen(false);
+                setIsUserProfileOpen(true);
+                window.location.hash = '#my-profile';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              } else {
+                handleOpenAuth('login');
+              }
+            }}
+            title={savedCount > 0 
+              ? (lang === 'en' ? `My Profile & Saved Projects (${savedCount})` : `حسابي والمشاريع المحفوظة (${savedCount})`) 
+              : t.nav.login}
+            style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           >
             <span className="navbar-auth-btn-icon">
-              <LogIn size={15} />
+              {savedCount > 0 ? <BookmarkCheck size={15} /> : <User size={15} />}
             </span>
-            <span>تسجيل الدخول</span>
+            <span>
+              {savedCount > 0 
+                ? (lang === 'en' ? 'My Profile' : 'حسابي') 
+                : t.nav.login}
+            </span>
+            {savedCount > 0 && (
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minWidth: '18px',
+                  height: '18px',
+                  padding: '0 5px',
+                  borderRadius: '9999px',
+                  fontSize: '0.7rem',
+                  fontWeight: 700,
+                  backgroundColor: 'var(--accent-cyan)',
+                  color: '#030508',
+                  lineHeight: 1
+                }}
+              >
+                {savedCount}
+              </span>
+            )}
           </button>
         </div>
       </nav>
 
       {/* Page Content: AuthPage, ContactPage, Dedicated Tabs, or Homepage */}
       {isAuthOpen ? (
-        <AuthPage
-          initialMode={authMode}
-          onBack={handleBackFromAuth}
-        />
+        <Suspense fallback={<div style={{ minHeight: '60vh', backgroundColor: 'var(--bg-main)' }} />}>
+          <AuthPage
+            initialMode={authMode}
+            onBack={handleBackFromAuth}
+            onSuccess={() => {
+              setIsAuthOpen(false);
+              setIsUserProfileOpen(true);
+              window.location.hash = '#my-profile';
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        </Suspense>
       ) : isContactOpen ? (
-        <ContactPage onBack={handleBackFromContact} />
+        <Suspense fallback={<div style={{ minHeight: '60vh', backgroundColor: 'var(--bg-main)' }} />}>
+          <ContactPage onBack={handleBackFromContact} />
+        </Suspense>
       ) : currentTab === 'projects' ? (
         <div className="tab-page-container">
           <div className="tab-page-header">
-            <h1 className="tab-page-title">مشاريع ومنظومات تكنو إنجاز</h1>
-            <p className="tab-page-subtitle">
-              استكشف 13 مشروعاً برمجياً ومنظومة هندسية تعمل الآن ومتاحة للتجربة الحية والمباشرة
-            </p>
+            <h1 className="tab-page-title">{t.liveProjects.pageTitle}</h1>
+            <p className="tab-page-subtitle">{t.liveProjects.pageSubtitle}</p>
           </div>
 
-          <LiveProjectsShowcase />
+          <Suspense fallback={<div style={{ minHeight: '60vh', backgroundColor: 'var(--bg-main)' }} />}>
+            <LiveProjectsShowcase />
+          </Suspense>
+
+          <Suspense fallback={<div style={{ minHeight: '40vh', backgroundColor: 'var(--bg-main)' }} />}>
+            <ProjectsCatalogSection />
+          </Suspense>
         </div>
       ) : currentTab === 'videos' ? (
         <div className="tab-page-container">
           <div className="tab-page-header">
-            <h1 className="tab-page-title">فيديوهات وعروض تكنو إنجاز</h1>
-            <p className="tab-page-subtitle">
-              عروض مرئية تفاعلية توثق إنجازاتنا الهندسية ومراحل تطوير الأنظمة والبرمجيات المتقدمة
-            </p>
+            <h1 className="tab-page-title">{t.videos.pageTitle}</h1>
+            <p className="tab-page-subtitle">{t.videos.pageSubtitle}</p>
           </div>
 
           <VideosSection showNavigateButton={false} />
@@ -275,30 +439,24 @@ export default function App() {
               <div className="tab-page-card-icon">
                 <Video size={26} />
               </div>
-              <h3 className="tab-page-card-title">عروض تفاعلية ثلاثية الأبعاد</h3>
-              <p className="tab-page-card-desc">
-                استكشف مجسمات الأنظمة والمعماريات الهندسية بتفاصيل واقعية تحاكي تشغيل البرمجيات في بيئات العمل الحقيقية.
-              </p>
+              <h3 className="tab-page-card-title">{t.videos.card1Title}</h3>
+              <p className="tab-page-card-desc">{t.videos.card1Desc}</p>
             </div>
 
             <div className="tab-page-card">
               <div className="tab-page-card-icon">
                 <Sparkles size={26} />
               </div>
-              <h3 className="tab-page-card-title">عروض مرئية فائقة الوضوح</h3>
-              <p className="tab-page-card-desc">
-                توثيق عالي الدقة يوضح طريقة تفاعل المستخدمين مع منصاتنا وتكامل الحلول البرمجية مع مختلف الأجهزة.
-              </p>
+              <h3 className="tab-page-card-title">{t.videos.card2Title}</h3>
+              <p className="tab-page-card-desc">{t.videos.card2Desc}</p>
             </div>
           </div>
         </div>
       ) : currentTab === 'articles' ? (
         <div className="tab-page-container">
           <div className="tab-page-header">
-            <h1 className="tab-page-title">مقالات وأبحاث تكنو إنجاز</h1>
-            <p className="tab-page-subtitle">
-              دراسات وأبحاث تقنية توثق التجارب المعمارية والخوارزميات المبتكرة في مشاريع تكنو إنجاز
-            </p>
+            <h1 className="tab-page-title">{t.articles.pageTitle}</h1>
+            <p className="tab-page-subtitle">{t.articles.pageSubtitle}</p>
           </div>
 
           <ArticlesSection />
@@ -308,9 +466,13 @@ export default function App() {
               <div className="tab-page-card-icon">
                 <BookOpen size={26} />
               </div>
-              <h3 className="tab-page-card-title">أبحاث الذكاء الاصطناعي التوليدي</h3>
+              <h3 className="tab-page-card-title">
+                {lang === 'ar' ? 'أبحاث الذكاء الاصطناعي التوليدي' : 'Generative AI Research'}
+              </h3>
               <p className="tab-page-card-desc">
-                سلسلة مقالات تخصصية تناقش بنية النماذج العصبية المتقدمة وكيفية تسخيرها في تسريع دورة الإنتاج البرمجي.
+                {lang === 'ar' 
+                  ? 'سلسلة مقالات تخصصية تناقش بنية النماذج العصبية المتقدمة وكيفية تسخيرها في تسريع دورة الإنتاج البرمجي.' 
+                  : 'Specialized articles discussing neural models and their application in accelerating development cycles.'}
               </p>
             </div>
 
@@ -318,9 +480,13 @@ export default function App() {
               <div className="tab-page-card-icon">
                 <Cpu size={26} />
               </div>
-              <h3 className="tab-page-card-title">المعمارية النظيفة وهندسة النظم</h3>
+              <h3 className="tab-page-card-title">
+                {lang === 'ar' ? 'المعمارية النظيفة وهندسة النظم' : 'Clean Architecture & Systems'}
+              </h3>
               <p className="tab-page-card-desc">
-                رؤى هندسية تطبيقية حول بناء أنظمة قابلة للتوسع وتصميم واجهات برمجية متماسكة ومرنة للمستقبل.
+                {lang === 'ar'
+                  ? 'رؤى هندسية تطبيقية حول بناء أنظمة قابلة للتوسع وتصميم واجهات برمجية متماسكة ومرنة للمستقبل.'
+                  : 'Engineering insights on building scalable systems and cohesive, future-proof APIs.'}
               </p>
             </div>
           </div>
@@ -328,10 +494,11 @@ export default function App() {
       ) : currentTab === 'about' ? (
         <section
           id="about"
+          className="scroll-deferred-section"
           style={{
             position: 'relative',
             width: '100%',
-            backgroundColor: '#050508'
+            backgroundColor: theme === 'light' ? '#f8fafc' : '#050508'
           }}
         >
           {/* Header for About Us Section */}
@@ -341,29 +508,29 @@ export default function App() {
               textAlign: 'center',
               maxWidth: '850px',
               margin: '0 auto',
-              direction: 'rtl'
+              direction: lang === 'ar' ? 'rtl' : 'ltr'
             }}
           >
             <h2
               style={{
                 fontSize: 'clamp(2rem, 3.5vw, 3rem)',
                 fontWeight: 800,
-                color: '#ffffff',
+                color: 'var(--text-main)',
                 marginBottom: '14px',
                 letterSpacing: '-0.02em',
                 textShadow: '0 0 25px rgba(0, 210, 255, 0.2)'
               }}
             >
-              من نحن
+              {t.about.heading}
             </h2>
             <p
               style={{
                 fontSize: 'clamp(1rem, 1.3vw, 1.15rem)',
-                color: 'rgba(255, 255, 255, 0.72)',
+                color: 'var(--text-muted)',
                 lineHeight: 1.7
               }}
             >
-              نخبة من المهندسين والمبتكرين في تكنو إنجاز يسخّرون الذكاء الاصطناعي والهندسة المتطورة لبناء حلول تقنية استثنائية
+              {t.about.subtitle}
             </p>
           </div>
 
@@ -376,7 +543,7 @@ export default function App() {
               height: '100vh',
               minHeight: '700px',
               overflow: 'hidden',
-              backgroundColor: '#050508'
+              backgroundColor: theme === 'light' ? '#f8fafc' : '#050508'
             }}
           >
             <TeamMomentsRing onScrollDown={scrollToTeam} />
@@ -389,7 +556,7 @@ export default function App() {
                 left: 0,
                 right: 0,
                 height: '320px',
-                background: 'linear-gradient(to bottom, transparent 0%, rgba(5, 5, 8, 0.3) 30%, rgba(0, 0, 0, 0.8) 70%, #000000 100%)',
+                background: theme === 'light' ? 'linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.4) 30%, rgba(241, 245, 249, 0.9) 70%, #f8fafc 100%)' : 'linear-gradient(to bottom, transparent 0%, rgba(5, 5, 8, 0.3) 30%, rgba(0, 0, 0, 0.8) 70%, #000000 100%)',
                 pointerEvents: 'none',
                 zIndex: 10
               }}
@@ -402,7 +569,7 @@ export default function App() {
             style={{
               position: 'relative',
               width: '100%',
-              backgroundColor: '#000000',
+              backgroundColor: theme === 'light' ? '#f8fafc' : '#000000',
               overflow: 'hidden',
               zIndex: 15
             }}
@@ -418,7 +585,7 @@ export default function App() {
               width: '100%',
               height: '100vh',
               minHeight: '700px',
-              backgroundColor: '#000000',
+              backgroundColor: theme === 'light' ? '#f8fafc' : '#000000',
               overflow: 'hidden',
               display: 'flex',
               flexDirection: 'column'
@@ -432,13 +599,13 @@ export default function App() {
                 left: 0,
                 right: 0,
                 height: '240px',
-                background: 'linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.25) 75%, transparent 100%)',
+                background: theme === 'light' ? 'linear-gradient(to bottom, #f8fafc 0%, rgba(248, 250, 252, 0.85) 45%, rgba(248, 250, 252, 0.25) 75%, transparent 100%)' : 'linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.25) 75%, transparent 100%)',
                 pointerEvents: 'none',
                 zIndex: 20
               }}
             />
 
-            {/* Space Orb Background */}
+            {/* Space Orb Background (deferred until loader done) */}
             <div
               style={{
                 position: 'absolute',
@@ -450,13 +617,15 @@ export default function App() {
                 overflow: 'hidden'
               }}
             >
-              <Orb
-                hoverIntensity={0.24}
-                rotateOnHover
-                hue={360}
-                forceHoverState={false}
-                backgroundColor="#000000"
-              />
+              {isLoaderDone && (
+                <Orb
+                  hoverIntensity={0.24}
+                  rotateOnHover
+                  hue={360}
+                  forceHoverState={false}
+                  backgroundColor={theme === 'light' ? '#f8fafc' : '#000000'}
+                />
+              )}
             </div>
 
             {/* Members Count Badge */}
@@ -472,14 +641,13 @@ export default function App() {
                 justifyContent: 'flex-end',
                 alignItems: 'center',
                 pointerEvents: 'none',
-                direction: 'rtl'
+                direction: lang === 'ar' ? 'rtl' : 'ltr'
               }}
             >
               <div
                 style={{
                   padding: '6px 14px',
-                  background: 'rgba(255, 255, 255, 0.06)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  background: theme === 'light' ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.06)', border: theme === 'light' ? '1px solid rgba(0, 0, 0, 0.1)' : '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: '999px',
                   color: '#c4b5fd',
                   fontSize: '12px',
@@ -487,14 +655,14 @@ export default function App() {
                   backdropFilter: 'blur(10px)'
                 }}
               >
-                {teamMembers.length} أعضاء متاحين
+                {teamMembers.length} {lang === 'ar' ? 'أعضاء متاحين' : 'Available Members'}
               </div>
             </header>
 
             {/* 3D Circular Team Carousel */}
             <div style={{ position: 'relative', width: '100%', height: '100%', flex: 1, zIndex: 1 }}>
               <InfiniteMenu
-                items={teamMembers as any}
+                items={localizedTeamMembers as any}
                 scale={1.4}
                 backgroundColor="transparent"
                 onSelectMember={handleSelectMember}
@@ -514,10 +682,11 @@ export default function App() {
           {/* 2. "من نحن" (About Us / Team Showcase) */}
           <section
             id="about"
+            className="scroll-deferred-section"
             style={{
               position: 'relative',
               width: '100%',
-              backgroundColor: '#050508'
+              backgroundColor: theme === 'light' ? '#f8fafc' : '#050508'
             }}
           >
             {/* Header for About Us Section */}
@@ -527,29 +696,29 @@ export default function App() {
                 textAlign: 'center',
                 maxWidth: '850px',
                 margin: '0 auto',
-                direction: 'rtl'
+                direction: lang === 'ar' ? 'rtl' : 'ltr'
               }}
             >
               <h2
                 style={{
                   fontSize: 'clamp(2rem, 3.5vw, 3rem)',
                   fontWeight: 800,
-                  color: '#ffffff',
+                  color: 'var(--text-main)',
                   marginBottom: '14px',
                   letterSpacing: '-0.02em',
                   textShadow: '0 0 25px rgba(0, 210, 255, 0.2)'
                 }}
               >
-                من نحن
+                {t.about.heading}
               </h2>
               <p
                 style={{
                   fontSize: 'clamp(1rem, 1.3vw, 1.15rem)',
-                  color: 'rgba(255, 255, 255, 0.72)',
+                  color: 'var(--text-muted)',
                   lineHeight: 1.7
                 }}
               >
-                نخبة من المهندسين والمبتكرين في تكنو إنجاز يسخّرون الذكاء الاصطناعي والهندسة المتطورة لبناء حلول تقنية استثنائية
+                {t.about.subtitle}
               </p>
             </div>
 
@@ -562,7 +731,7 @@ export default function App() {
                 height: '100vh',
                 minHeight: '700px',
                 overflow: 'hidden',
-                backgroundColor: '#050508'
+                backgroundColor: theme === 'light' ? '#f8fafc' : '#050508'
               }}
             >
               <TeamMomentsRing onScrollDown={scrollToTeam} />
@@ -575,7 +744,7 @@ export default function App() {
                   left: 0,
                   right: 0,
                   height: '320px',
-                  background: 'linear-gradient(to bottom, transparent 0%, rgba(5, 5, 8, 0.3) 30%, rgba(0, 0, 0, 0.8) 70%, #000000 100%)',
+                  background: theme === 'light' ? 'linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.4) 30%, rgba(241, 245, 249, 0.9) 70%, #f8fafc 100%)' : 'linear-gradient(to bottom, transparent 0%, rgba(5, 5, 8, 0.3) 30%, rgba(0, 0, 0, 0.8) 70%, #000000 100%)',
                   pointerEvents: 'none',
                   zIndex: 10
                 }}
@@ -588,7 +757,7 @@ export default function App() {
               style={{
                 position: 'relative',
                 width: '100%',
-                backgroundColor: '#000000',
+                backgroundColor: theme === 'light' ? '#f8fafc' : '#000000',
                 overflow: 'hidden',
                 zIndex: 15
               }}
@@ -604,7 +773,7 @@ export default function App() {
                 width: '100%',
                 height: '100vh',
                 minHeight: '700px',
-                backgroundColor: '#000000',
+                backgroundColor: theme === 'light' ? '#f8fafc' : '#000000',
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column'
@@ -618,13 +787,13 @@ export default function App() {
                   left: 0,
                   right: 0,
                   height: '240px',
-                  background: 'linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.25) 75%, transparent 100%)',
+                  background: theme === 'light' ? 'linear-gradient(to bottom, #f8fafc 0%, rgba(248, 250, 252, 0.85) 45%, rgba(248, 250, 252, 0.25) 75%, transparent 100%)' : 'linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.25) 75%, transparent 100%)',
                   pointerEvents: 'none',
                   zIndex: 20
                 }}
               />
 
-              {/* Space Orb Background */}
+              {/* Space Orb Background (deferred until loader done) */}
               <div
                 style={{
                   position: 'absolute',
@@ -636,13 +805,15 @@ export default function App() {
                   overflow: 'hidden'
                 }}
               >
-                <Orb
-                  hoverIntensity={0.24}
-                  rotateOnHover
-                  hue={360}
-                  forceHoverState={false}
-                  backgroundColor="#000000"
-                />
+                {isLoaderDone && (
+                  <Orb
+                    hoverIntensity={0.24}
+                    rotateOnHover
+                    hue={360}
+                    forceHoverState={false}
+                    backgroundColor={theme === 'light' ? '#f8fafc' : '#000000'}
+                  />
+                )}
               </div>
 
               {/* Members Count Badge */}
@@ -658,14 +829,13 @@ export default function App() {
                   justifyContent: 'flex-end',
                   alignItems: 'center',
                   pointerEvents: 'none',
-                  direction: 'rtl'
+                  direction: lang === 'ar' ? 'rtl' : 'ltr'
                 }}
               >
                 <div
                   style={{
                     padding: '6px 14px',
-                    background: 'rgba(255, 255, 255, 0.06)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    background: theme === 'light' ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.06)', border: theme === 'light' ? '1px solid rgba(0, 0, 0, 0.1)' : '1px solid rgba(255, 255, 255, 0.12)',
                     borderRadius: '999px',
                     color: '#c4b5fd',
                     fontSize: '12px',
@@ -673,14 +843,14 @@ export default function App() {
                     backdropFilter: 'blur(10px)'
                   }}
                 >
-                  {teamMembers.length} أعضاء متاحين
+                  {teamMembers.length} {lang === 'ar' ? 'أعضاء متاحين' : 'Available Members'}
                 </div>
               </header>
 
               {/* 3D Circular Team Carousel */}
               <div style={{ position: 'relative', width: '100%', height: '100%', flex: 1, zIndex: 1 }}>
                 <InfiniteMenu
-                  items={teamMembers as any}
+                  items={localizedTeamMembers as any}
                   scale={1.4}
                   backgroundColor="transparent"
                   onSelectMember={handleSelectMember}
