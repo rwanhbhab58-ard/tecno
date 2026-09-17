@@ -4,6 +4,7 @@ import ProjectsSection from '../components/projects/ProjectsSection';
 import VideosSection from '../components/videos/VideosSection';
 import ArticlesSection from '../components/articles/ArticlesSection';
 import cinematicEngineeringImg from '../assets/cinematic-engineering.jpg';
+import im2Img from '../assets/im2.png';
 import technoEnjazLogo from '../assets/Asset-1@4x.png';
 import { useThemeLanguage } from '../context/ThemeLanguageContext';
 import './ScrollExpandPrototype.css';
@@ -58,7 +59,7 @@ const ScrollExpandPrototype: React.FC<ScrollExpandPrototypeProps> = ({
   onNavigateToProjects,
   onNavigateToVideos
 }) => {
-  const { lang, t } = useThemeLanguage();
+  const { theme, lang, t } = useThemeLanguage();
   const [config, setConfig] = useState<ResponsiveConfig>(() =>
     getResponsiveConfig(typeof window !== 'undefined' ? window.innerWidth : 1200)
   );
@@ -75,7 +76,7 @@ const ScrollExpandPrototype: React.FC<ScrollExpandPrototypeProps> = ({
     <div id="top" className="prototype-root">
       <ScrollExpand
         key={`scroll-expand-${config.startWidth}`}
-        src={cinematicEngineeringImg}
+        src={theme === 'light' ? im2Img : cinematicEngineeringImg}
         mediaType="image"
         alt={lang === 'ar' ? "محطة العمل الهندسية" : "Engineering Workstation"}
         startWidth={config.startWidth}
