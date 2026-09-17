@@ -288,12 +288,12 @@
 .flipbook-meta-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 10px 24px;
   background: rgba(10, 15, 26, 0.85);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  gap: 16px;
   flex-shrink: 0;
+  min-height: 42px;
 }
 
 [data-theme="light"] .flipbook-meta-bar {
@@ -301,145 +301,16 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.flipbook-title-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .flipbook-project-title {
   font-size: 15px;
   font-weight: 700;
   color: #ffffff;
   margin: 0;
+  letter-spacing: -0.2px;
 }
 
 [data-theme="light"] .flipbook-project-title {
   color: #0f172a;
-}
-
-.flipbook-category-tag {
-  font-size: 10px;
-  font-weight: 800;
-  background: rgba(10, 238, 195, 0.15);
-  color: #0aeec3;
-  padding: 2px 8px;
-  border-radius: 6px;
-  letter-spacing: 0.5px;
-}
-
-[data-theme="light"] .flipbook-category-tag {
-  background: rgba(2, 132, 199, 0.12);
-  color: #0284c7;
-}
-
-.flipbook-project-summary {
-  font-size: 12px;
-  color: #94a3b8;
-  margin: 3px 0 0 0;
-  max-width: 680px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.flipbook-downloads-cluster {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.flipbook-action-download-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.flipbook-action-download-btn.docx {
-  background: rgba(59, 130, 246, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.35);
-  color: #60a5fa;
-}
-
-.flipbook-action-download-btn.docx:hover {
-  background: rgba(59, 130, 246, 0.25);
-  transform: translateY(-1px);
-}
-
-.flipbook-action-download-btn.pptx {
-  background: rgba(249, 115, 22, 0.15);
-  border: 1px solid rgba(249, 115, 22, 0.35);
-  color: #fb923c;
-}
-
-.flipbook-action-download-btn.pptx:hover {
-  background: rgba(249, 115, 22, 0.25);
-  transform: translateY(-1px);
-}
-
-.flipbook-action-download-btn.pdf {
-  background: rgba(10, 238, 195, 0.15);
-  border: 1px solid rgba(10, 238, 195, 0.35);
-  color: #0aeec3;
-}
-
-[data-theme="light"] .flipbook-action-download-btn.pdf {
-  background: rgba(2, 132, 199, 0.12);
-  border: 1px solid rgba(2, 132, 199, 0.35);
-  color: #0284c7;
-}
-
-.flipbook-action-download-btn.pdf:hover {
-  background: rgba(10, 238, 195, 0.25);
-  transform: translateY(-1px);
-}
-
-/* Loading & Error Overlays */
-.flipbook-loading-overlay {
-  position: absolute;
-  top: 55px;
-  left: 0;
-  right: 0;
-  background: rgba(10, 238, 195, 0.9);
-  color: #040810;
-  font-weight: 700;
-  font-size: 13px;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  z-index: 50;
-}
-
-.flipbook-spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid #040810;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.flipbook-error-banner {
-  background: rgba(239, 68, 68, 0.15);
-  border-bottom: 1px solid rgba(239, 68, 68, 0.4);
-  color: #f87171;
-  font-size: 12px;
-  padding: 6px 20px;
-  text-align: center;
 }
 
 /* STAGE: 3D Flipbook Stage */

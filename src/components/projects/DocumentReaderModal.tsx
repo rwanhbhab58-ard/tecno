@@ -3,17 +3,10 @@ import {
   X, 
   ChevronRight, 
   ChevronLeft, 
-  Download, 
-  BookOpen, 
   Maximize2, 
   Minimize2, 
   ShieldCheck, 
-  FileText,
-  Volume2,
-  VolumeX,
   List,
-  RotateCcw,
-  Upload,
   Layers,
   Sparkles,
   CheckCircle2
@@ -82,18 +75,11 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
   const [viewMode, setViewMode] = useState<'flipbook' | 'original'>('flipbook');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(8);
-  const [soundEnabled, setSoundEnabled] = useState(true);
   const [tocOpen, setTocOpen] = useState(false);
-  const [customPdfPages, setCustomPdfPages] = useState<string[] | null>(null);
-  const [isLoadingPdf, setIsLoadingPdf] = useState(false);
-  const [pdfLoadError, setPdfLoadError] = useState<string | null>(null);
 
   const modalRef = useRef<HTMLDivElement>(null);
   const bookContainerRef = useRef<HTMLDivElement>(null);
   const pageFlipRef = useRef<PageFlip | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const soundEnabledRef = useRef(soundEnabled);
-  soundEnabledRef.current = soundEnabled;
 
   // Handle ESC and Arrow keys for turning
   useEffect(() => {
@@ -126,8 +112,6 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
         pageFlipRef.current.destroy();
         pageFlipRef.current = null;
       }
-      setCustomPdfPages(null);
-      setPdfLoadError(null);
     }
     return () => {
       document.body.style.overflow = '';
@@ -178,9 +162,7 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
       pageFlip.on('flip', (e: any) => {
         const pageIdx = typeof e.data === 'number' ? e.data : 0;
         setCurrentPage(pageIdx + 1);
-        if (soundEnabledRef.current) {
-          playRealisticPaperSound();
-        }
+        playRealisticPaperSound();
       });
 
       pageFlipRef.current = pageFlip;
@@ -208,55 +190,7 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
         pageFlipRef.current = null;
       }
     };
-  }, [isOpen, viewMode, customPdfPages, initPageFlip]);
-
-  // Handle custom PDF upload via PDF.js
-  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setIsLoadingPdf(true);
-    setPdfLoadError(null);
-
-    try {
-      const pdfjsLib = await import('pdfjs-dist');
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-
-      const arrayBuffer = await file.arrayBuffer();
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-      const pdf = await loadingTask.promise;
-
-      const pageImages: string[] = [];
-      const pagesToRender = Math.min(pdf.numPages, 30);
-
-      for (let i = 1; i <= pagesToRender; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 1.5 });
-        const canvas = document.createElement('canvas');
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          await page.render({ canvasContext: ctx, viewport }).promise;
-          pageImages.push(canvas.toDataURL('image/jpeg', 0.92));
-        }
-      }
-
-      setCustomPdfPages(pageImages);
-      setViewMode('flipbook');
-    } catch (err: any) {
-      console.error('Failed to load custom PDF:', err);
-      setPdfLoadError(lang === 'ar' ? 'تعذر قراءة ملف PDF. يرجى تجربة ملف آخر.' : 'Failed to parse PDF. Please try another file.');
-    } finally {
-      setIsLoadingPdf(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
-  };
-
-  const handleResetDefault = () => {
-    setCustomPdfPages(null);
-    setPdfLoadError(null);
-  };
+  }, [isOpen, viewMode, initPageFlip]);
 
   if (!isOpen || !project) return null;
 
@@ -264,9 +198,6 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
   const desc = lang === 'ar' ? project.description : project.descriptionEn;
   const pdfId = project.pdfId || '1edEWYRLqtgSVRw0Eq7NmCldb_fxzi5OW';
   const previewUrl = `https://drive.google.com/file/d/${pdfId}/preview`;
-  const downloadUrl = `https://drive.google.com/uc?export=download&id=${pdfId}`;
-  const pptxDownloadUrl = project.pptxId ? `https://drive.google.com/uc?export=download&id=${project.pptxId}` : null;
-  const docxDownloadUrl = project.docxId ? `https://drive.google.com/uc?export=download&id=${project.docxId}` : null;
 
   // Next Page: Turns forward (LTR)
   const handleNextPage = () => {
@@ -298,12 +229,7 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
       <div ref={modalRef} className="flipbook-modal-window">
         {/* Top Metallic Engineering Bar */}
         <header className="flipbook-header">
-          <div className="flipbook-header-left">
-            <div className="flipbook-book-badge">
-              <BookOpen size={17} className="text-cyan-400" />
-              <span>{title}</span>
-            </div>
-          </div>
+          <div className="flipbook-header-left" />
 
           {/* Center Mode Switch: 3D Flipbook vs Drive Original */}
           <div className="flipbook-view-switcher">
@@ -329,47 +255,6 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
 
           {/* Action buttons on header right */}
           <div className="flipbook-header-actions">
-            {/* Custom PDF Upload */}
-            <input 
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf"
-              style={{ display: 'none' }}
-              onChange={handlePdfUpload}
-            />
-            <button
-              type="button"
-              className="flipbook-tool-btn upload-btn"
-              onClick={() => fileInputRef.current?.click()}
-              title={isRtl ? 'رفع ملف PDF محلي للمعاينة في الكتاب 3D' : 'Upload custom PDF to view in 3D'}
-            >
-              <Upload size={16} />
-              <span className="btn-label-hidden">{isRtl ? 'فتح PDF' : 'Open PDF'}</span>
-            </button>
-
-            {customPdfPages && (
-              <button
-                type="button"
-                className="flipbook-tool-btn reset-btn"
-                onClick={handleResetDefault}
-                title={isRtl ? 'استعادة وثيقة المشروع الافتراضية' : 'Reset to default project book'}
-              >
-                <RotateCcw size={16} />
-              </button>
-            )}
-
-            {/* Sound Toggle */}
-            {viewMode === 'flipbook' && (
-              <button
-                type="button"
-                className={`flipbook-tool-btn ${soundEnabled ? 'sound-active' : ''}`}
-                onClick={() => setSoundEnabled(!soundEnabled)}
-                title={soundEnabled ? (isRtl ? 'كتم صوت الورق' : 'Mute Sound') : (isRtl ? 'تفعيل صوت تقليب الورق' : 'Enable Flip Sound')}
-              >
-                {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-              </button>
-            )}
-
             {/* Fullscreen Toggle */}
             <button
               type="button"
@@ -392,69 +277,10 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
           </div>
         </header>
 
-        {/* Project Meta Info Header */}
+        {/* Project Title Bar: Simple & clean with no extra buttons */}
         <div className="flipbook-meta-bar">
-          <div className="flipbook-title-info">
-            <div className="flipbook-title-row">
-              <h2 className="flipbook-project-title">{title}</h2>
-              <span className="flipbook-category-tag">
-                {project.category.toUpperCase()}
-              </span>
-            </div>
-            <p className="flipbook-project-summary">{desc}</p>
-          </div>
-
-          <div className="flipbook-downloads-cluster">
-            {docxDownloadUrl && (
-              <a
-                href={docxDownloadUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flipbook-action-download-btn docx"
-                title={isRtl ? 'تحميل ملف الوورد DOCX' : 'Download DOCX'}
-              >
-                <Download size={14} />
-                <span>DOCX</span>
-              </a>
-            )}
-            {pptxDownloadUrl && (
-              <a
-                href={pptxDownloadUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flipbook-action-download-btn pptx"
-                title={isRtl ? 'تحميل العرض التقديمي PPTX' : 'Download PPTX'}
-              >
-                <Download size={14} />
-                <span>PPTX</span>
-              </a>
-            )}
-            <a
-              href={downloadUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flipbook-action-download-btn pdf"
-              title={isRtl ? 'تحميل ملف المستند PDF' : 'Download Document PDF'}
-            >
-              <FileText size={14} />
-              <span>PDF</span>
-            </a>
-          </div>
+          <h2 className="flipbook-project-title">{title}</h2>
         </div>
-
-        {/* PDF Loading / Error notification */}
-        {isLoadingPdf && (
-          <div className="flipbook-loading-overlay">
-            <div className="flipbook-spinner" />
-            <span>{isRtl ? 'جاري تحويل صفحات الـ PDF إلى محرك 3D...' : 'Rendering PDF pages into 3D Flipbook...'}</span>
-          </div>
-        )}
-
-        {pdfLoadError && (
-          <div className="flipbook-error-banner">
-            <span>{pdfLoadError}</span>
-          </div>
-        )}
 
         {/* View Mode 1: 3D Flipbook using StPageFlip Engine */}
         {viewMode === 'flipbook' && (
@@ -482,31 +308,8 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                   className="stpageflip-book-container"
                   dir="ltr"
                 >
-                  {customPdfPages ? (
-                    // Custom Uploaded PDF Pages
-                    customPdfPages.map((imgUrl, index) => {
-                      const isCover = index === 0 || index === customPdfPages.length - 1;
-                      return (
-                        <div 
-                          key={`custom-page-${index}`}
-                          className={`st-page ${isCover ? 'cover-page' : 'inner-page'}`}
-                          data-density={isCover ? 'hard' : 'soft'}
-                        >
-                          <div className="st-page-inner custom-pdf-content">
-                            <img 
-                              src={imgUrl} 
-                              alt={`Page ${index + 1}`} 
-                              className="custom-pdf-page-img"
-                              loading="eager"
-                            />
-                          </div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    // High-Fidelity Default Project 8-Page Technical Document (LTR Progression)
-                    <>
-                      {/* PAGE 1: Hard Front Cover */}
+                  {/* High-Fidelity Default Project 8-Page Technical Document (LTR Progression) */}
+                  {/* PAGE 1: Hard Front Cover */}
                       <div className="st-page hard-cover front-cover" data-density="hard">
                         <div className="cover-card-art">
                           <div className="cover-circuit-overlay" />
@@ -828,8 +631,6 @@ export const DocumentReaderModal: React.FC<DocumentReaderModalProps> = ({
                           </div>
                         </div>
                       </div>
-                    </>
-                  )}
                 </div>
               </div>
             </div>
