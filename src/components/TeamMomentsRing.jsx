@@ -244,15 +244,16 @@ export default function TeamMomentsRing({ onScrollDown }) {
       const cx = d2sx(RING.cx);
       const cy = d2sy(RING.cy - 60);
 
-      // توهج خلف العنوان ناعم ومتناسق مع هوية تكنو إنجاز
-      const glow = x.createRadialGradient(cx, cy, 30 * K, cx, cy, 620 * K);
+      // إضاءة هالة خلف العنوان بالأزرق والتركوازي المتناسق مع الهوية البصرية لتكنو إنجاز
+      const glow = x.createRadialGradient(cx, cy, 30 * K, cx, cy, 660 * K);
       if (isLight) {
-        glow.addColorStop(0, 'rgba(2, 132, 199, 0.14)');
-        glow.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
+        glow.addColorStop(0, 'rgba(0, 210, 255, 0.22)');
+        glow.addColorStop(0.5, 'rgba(2, 132, 199, 0.1)');
         glow.addColorStop(1, 'rgba(248, 250, 252, 0)');
       } else {
-        glow.addColorStop(0, 'rgba(0, 210, 255, 0.22)');
-        glow.addColorStop(0.5, 'rgba(14, 165, 233, 0.1)');
+        glow.addColorStop(0, 'rgba(0, 210, 255, 0.42)');
+        glow.addColorStop(0.45, 'rgba(0, 140, 255, 0.24)');
+        glow.addColorStop(0.75, 'rgba(10, 238, 195, 0.1)');
         glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       }
       x.fillStyle = glow;
@@ -267,24 +268,28 @@ export default function TeamMomentsRing({ onScrollDown }) {
       x.direction = lang === 'ar' ? 'rtl' : 'ltr';
 
       if (isLight) {
-        x.shadowColor = 'rgba(2, 132, 199, 0.15)';
+        // إضاءة ظل زرقاء ناعمة
+        x.shadowColor = 'rgba(2, 132, 199, 0.28)';
         x.shadowBlur = 24 * K;
         x.shadowOffsetY = 6 * K;
 
+        // نفس الألوان الأصلية للنص
         const textGrad = x.createLinearGradient(0, cy - fontSize / 2, 0, cy + fontSize / 2);
         textGrad.addColorStop(0, '#0f172a');
-        textGrad.addColorStop(0.6, '#0369a1');
-        textGrad.addColorStop(1, '#0284c7');
+        textGrad.addColorStop(0.6, '#1e1b4b');
+        textGrad.addColorStop(1, '#4338ca');
         x.fillStyle = textGrad;
       } else {
-        x.shadowColor = 'rgba(0, 0, 0, 0.95)';
-        x.shadowBlur = 40 * K;
-        x.shadowOffsetY = 12 * K;
+        // إضاءة متوهجة تركوازية وزرقاء حول الكلمة لتلائم الهوية البصرية
+        x.shadowColor = 'rgba(0, 210, 255, 0.6)';
+        x.shadowBlur = 38 * K;
+        x.shadowOffsetY = 6 * K;
 
+        // نفس الألوان الأصلية للنص
         const textGrad = x.createLinearGradient(0, cy - fontSize / 2, 0, cy + fontSize / 2);
         textGrad.addColorStop(0, '#ffffff');
-        textGrad.addColorStop(0.7, '#e0f2fe');
-        textGrad.addColorStop(1, '#38bdf8');
+        textGrad.addColorStop(0.7, '#f3f0ff');
+        textGrad.addColorStop(1, '#c4b5fd');
         x.fillStyle = textGrad;
       }
 
@@ -374,13 +379,21 @@ export default function TeamMomentsRing({ onScrollDown }) {
 
         // Subtle glowing atmospheric aura
         const aura = ctx.createRadialGradient(W / 2, H * 0.48, 50 * K, W / 2, H * 0.48, 650 * K);
-        aura.addColorStop(0, 'rgba(2, 132, 199, 0.1)');
-        aura.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
+        aura.addColorStop(0, 'rgba(0, 210, 255, 0.12)');
+        aura.addColorStop(0.5, 'rgba(2, 132, 199, 0.05)');
         aura.addColorStop(1, 'rgba(248, 250, 252, 0)');
         ctx.fillStyle = aura;
         ctx.fillRect(0, 0, W, H);
       } else {
         ctx.fillStyle = '#050508';
+        ctx.fillRect(0, 0, W, H);
+
+        // Subtle atmospheric cyan / turquoise aura in dark mode
+        const darkAura = ctx.createRadialGradient(W / 2, H * 0.48, 40 * K, W / 2, H * 0.48, 680 * K);
+        darkAura.addColorStop(0, 'rgba(0, 210, 255, 0.1)');
+        darkAura.addColorStop(0.5, 'rgba(0, 140, 255, 0.04)');
+        darkAura.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = darkAura;
         ctx.fillRect(0, 0, W, H);
       }
       ctx.imageSmoothingQuality = 'high';
