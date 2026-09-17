@@ -413,7 +413,7 @@ html.light #te-loader {
   --violet: #6366f1;
   --line: #e2e8f0;
   color-scheme: light;
-  background: radial-gradient(circle at 50% 45%, #ffffff 0%, #f0f7ff 55%, #e2e8f0 100%);
+  background: #f8fafc !important;
   color: var(--text);
 }
 
@@ -426,109 +426,88 @@ html.light #te-loader {
     --violet: #6366f1;
     --line: #e2e8f0;
     color-scheme: light;
-    background: radial-gradient(circle at 50% 45%, #ffffff 0%, #f0f7ff 55%, #e2e8f0 100%);
+    background: #f8fafc !important;
     color: var(--text);
   }
 }
 
 [data-theme="light"] #te-loader .ambient,
 html.light #te-loader .ambient {
-  background:
-    radial-gradient(ellipse 650px 500px at 50% 45%, rgba(14, 165, 233, 0.12), transparent 75%),
-    radial-gradient(ellipse 550px 350px at 50% 70%, rgba(99, 102, 241, 0.08), transparent 75%),
-    radial-gradient(circle 350px at 50% 45%, rgba(255, 255, 255, 0.85), transparent 80%);
+  display: none !important;
+  background: transparent !important;
+  opacity: 0 !important;
 }
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) #te-loader .ambient {
-    background:
-      radial-gradient(ellipse 650px 500px at 50% 45%, rgba(14, 165, 233, 0.12), transparent 75%),
-      radial-gradient(ellipse 550px 350px at 50% 70%, rgba(99, 102, 241, 0.08), transparent 75%),
-      radial-gradient(circle 350px at 50% 45%, rgba(255, 255, 255, 0.85), transparent 80%);
+    display: none !important;
+    background: transparent !important;
+    opacity: 0 !important;
   }
 }
 
-/* Orbit system in light mode */
+/* Orbit system completely transparent in light mode */
 [data-theme="light"] #te-loader .orbit-system,
 html.light #te-loader .orbit-system {
-  opacity: 0.95;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  display: none !important;
 }
 
-[data-theme="light"] #te-loader .orbit-static circle:first-of-type,
-html.light #te-loader .orbit-static circle:first-of-type {
-  stroke: rgba(2, 132, 199, 0.28);
-  stroke-width: 1px;
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) #te-loader .orbit-system {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    display: none !important;
+  }
 }
 
-[data-theme="light"] #te-loader .orbit-static circle[stroke-dasharray],
-html.light #te-loader .orbit-static circle[stroke-dasharray] {
-  stroke: #0284c7;
-  stroke-opacity: 0.25;
-}
-
-[data-theme="light"] #te-loader .orbit-static path,
-html.light #te-loader .orbit-static path {
-  stroke: #0284c7;
-  stroke-opacity: 0.55;
-}
-
-[data-theme="light"] #te-loader .orbit-rotating path:first-of-type,
-html.light #te-loader .orbit-rotating path:first-of-type {
-  stroke: #0284c7;
-  stroke-opacity: 0.85;
-}
-
-[data-theme="light"] #te-loader .orbit-rotating circle:first-of-type,
-html.light #te-loader .orbit-rotating circle:first-of-type {
-  fill: #0284c7;
-  filter: drop-shadow(0 0 6px rgba(2, 132, 199, 0.7));
-}
-
-[data-theme="light"] #te-loader .orbit-rotating path:last-of-type,
-html.light #te-loader .orbit-rotating path:last-of-type {
-  stroke: #6366f1;
-  stroke-opacity: 0.85;
-}
-
-[data-theme="light"] #te-loader .orbit-rotating circle:last-of-type,
-html.light #te-loader .orbit-rotating circle:last-of-type {
-  fill: #6366f1;
-  filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.7));
-}
-
-/* Launch floor in light mode */
+/* Launch floor completely transparent in light mode */
 [data-theme="light"] #te-loader .launch-floor,
 html.light #te-loader .launch-floor {
-  border-color: rgba(2, 132, 199, 0.35);
-  background: radial-gradient(ellipse, rgba(14, 165, 233, 0.16), transparent 67%);
-  box-shadow: 0 4px 20px rgba(2, 132, 199, 0.12);
+  opacity: 0 !important;
+  display: none !important;
+  visibility: hidden !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
-[data-theme="light"] #te-loader .launch-floor::before,
-html.light #te-loader .launch-floor::before {
-  border-color: rgba(2, 132, 199, 0.2);
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) #te-loader .launch-floor {
+    opacity: 0 !important;
+    display: none !important;
+    visibility: hidden !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
 }
 
-[data-theme="light"] #te-loader .launch-floor div,
-html.light #te-loader .launch-floor div {
-  border-color: rgba(13, 148, 136, 0.28);
-}
-
-[data-theme="light"] #te-loader .launch-floor span,
-html.light #te-loader .launch-floor span {
-  background: radial-gradient(ellipse, rgba(2, 132, 199, 0.45), transparent 65%);
-}
-
-/* Cruise halo in light mode */
+/* Cruise halo completely transparent in light mode */
 [data-theme="light"] #te-loader .cruise-halo,
 html.light #te-loader .cruise-halo {
-  background: radial-gradient(circle, transparent 35%, rgba(2, 132, 199, 0.2) 48%, transparent 65%);
+  opacity: 0 !important;
+  display: none !important;
+  background: transparent !important;
 }
 
-/* Rocket backlight in light mode */
+/* Rocket backlight halo completely transparent in light mode */
 [data-theme="light"] #te-loader .rocket-backlight,
 html.light #te-loader .rocket-backlight {
-  background: radial-gradient(ellipse, rgba(2, 132, 199, 0.28) 0%, rgba(99, 102, 241, 0.1) 45%, transparent 70%);
+  display: none !important;
+  background: transparent !important;
+  opacity: 0 !important;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) #te-loader .rocket-backlight {
+    display: none !important;
+    background: transparent !important;
+    opacity: 0 !important;
+  }
 }
 
 /* Rocket body & core button shadow in light mode */

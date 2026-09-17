@@ -134,6 +134,9 @@
 
   function addWave(at, floor = false) {
     if (state.calm) return;
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light' ||
+                    document.documentElement.classList.contains('light');
+    if (isLight) return;
     waves.push({ x: at.x, y: at.y, life: 0, duration: floor ? 1.2 : 1.0, floor, max: floor ? 380 : 190 });
   }
 
@@ -349,16 +352,16 @@
     }
     ctx.fill();
 
-    // Shockwaves
-    if (waves.length > 0) {
+    // Shockwaves (dark mode only, keep light mode completely transparent)
+    if (waves.length > 0 && !isLight) {
       for (let i = waves.length - 1; i >= 0; i--) {
         const w = waves[i];
         w.life += dt;
         if (w.life >= w.duration) { waves.splice(i, 1); continue; }
         const progress = w.life / w.duration;
         const r = progress * w.max;
-        const alpha = (1 - progress) * (isLight ? 0.3 : 0.45);
-        ctx.strokeStyle = isLight ? `rgba(2, 132, 199, ${alpha})` : `rgba(48, 223, 196, ${alpha})`;
+        const alpha = (1 - progress) * 0.45;
+        ctx.strokeStyle = `rgba(48, 223, 196, ${alpha})`;
         ctx.lineWidth = Math.max(0.6, (1 - progress) * 2);
         ctx.beginPath();
         if (w.floor) {
