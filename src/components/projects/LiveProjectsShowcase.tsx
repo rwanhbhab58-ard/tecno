@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { useThemeLanguage } from '../../context/ThemeLanguageContext';
 import { useSavedProjects } from '../../hooks/useSavedProjects';
-import { Button } from '../ui/button';
 import './LiveProjectsShowcase.css';
 
 export interface LiveProject {
@@ -333,9 +332,9 @@ export const LiveProjectsShowcase: React.FC = () => {
                     <ExternalLink size={17} />
                   </a>
 
-                  <Button
-                    variant={isSaved(activeProject.id) ? "default" : "outline"}
-                    size="default"
+                  <button
+                    type="button"
+                    className={`project-save-btn spotlight-save-btn ${isSaved(activeProject.id) ? 'is-saved' : ''}`}
                     onClick={() => {
                       toggleSave({
                         id: activeProject.id,
@@ -353,7 +352,6 @@ export const LiveProjectsShowcase: React.FC = () => {
                     title={isSaved(activeProject.id) 
                       ? (lang === 'ar' ? 'تم الحفظ في المفضلة' : 'Saved to Favorites') 
                       : (lang === 'ar' ? 'حفظ المشروع في المفضلة' : 'Save Project to Favorites')}
-                    style={{ height: '42px', padding: '0 18px', gap: '8px' }}
                   >
                     {isSaved(activeProject.id) ? (
                       <>
@@ -366,7 +364,7 @@ export const LiveProjectsShowcase: React.FC = () => {
                         <span>{lang === 'ar' ? 'حفظ المشروع' : 'Save Project'}</span>
                       </>
                     )}
-                  </Button>
+                  </button>
                 </div>
               </div>
 

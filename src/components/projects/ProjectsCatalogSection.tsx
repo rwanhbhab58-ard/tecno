@@ -18,7 +18,6 @@ import {
 } from 'lucide-react';
 import { useThemeLanguage } from '../../context/ThemeLanguageContext';
 import { useSavedProjects } from '../../hooks/useSavedProjects';
-import { Button } from '../ui/button';
 import { DRIVE_PROJECTS, type DriveProject, type ProjectCategory } from '../../data/driveProjectsData';
 import OptionWheel, { type OptionWheelItem } from '../ui/OptionWheel';
 import DocumentReaderModal from './DocumentReaderModal';
@@ -261,9 +260,9 @@ export const ProjectsCatalogSection: React.FC = () => {
                       </div>
 
                       {/* Save Project to Favorites Button */}
-                      <Button
-                        variant={isSaved(project.id) ? "default" : "outline"}
-                        size="sm"
+                      <button
+                        type="button"
+                        className={`project-save-btn catalog-save-btn ${isSaved(project.id) ? 'is-saved' : ''}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleSave({
@@ -285,7 +284,6 @@ export const ProjectsCatalogSection: React.FC = () => {
                         title={isSaved(project.id) 
                           ? (lang === 'ar' ? 'تم الحفظ في المفضلة' : 'Saved to Favorites') 
                           : (lang === 'ar' ? 'حفظ المشروع في المفضلة' : 'Save Project to Favorites')}
-                        style={{ height: '28px', padding: '0 10px', gap: '5px' }}
                       >
                         {isSaved(project.id) ? (
                           <>
@@ -298,7 +296,7 @@ export const ProjectsCatalogSection: React.FC = () => {
                             <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>{lang === 'ar' ? 'حفظ' : 'Save'}</span>
                           </>
                         )}
-                      </Button>
+                      </button>
                     </div>
                   </div>
 
