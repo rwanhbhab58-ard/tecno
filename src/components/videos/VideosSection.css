@@ -325,3 +325,47 @@
     transform: scale(0.55) translate(-50%, -50%) !important;
   }
 }
+
+/* =========================================================
+   LIGHT MODE OVERRIDES FOR VIDEOS SECTION
+   ========================================================= */
+[data-theme="light"] .videos-section {
+  background-color: var(--bg-main, #f8fafc);
+  color: #0f172a;
+}
+
+[data-theme="light"] .videos-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .videos-subtitle {
+  color: #475569;
+}
+
+[data-theme="light"] .videos-stat-card {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .videos-stat-label {
+  color: #64748b;
+}
+
+[data-theme="light"] .video-card {
+  background: linear-gradient(160deg, #ffffff 0%, #f8fafc 100%) !important;
+  border-color: rgba(2, 132, 199, 0.25) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .video-card-body h3 {
+  color: #0f172a;
+}
+
+[data-theme="light"] .video-card-body p {
+  color: #64748b;
+}
+
+[data-theme="light"] .video-card-topbar {
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+}

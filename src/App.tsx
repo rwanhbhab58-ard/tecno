@@ -13,7 +13,7 @@ import { Cpu, Video, Sparkles, BookOpen, User, BookmarkCheck } from 'lucide-reac
 import { teamMembers } from './data/teamData';
 import { useThemeLanguage } from './context/ThemeLanguageContext';
 import ThemeSwitch from './components/ui/ThemeSwitch';
-import { Button } from './components/ui/button';
+import LanguageDropdown from './components/ui/LanguageDropdown';
 import { useSavedProjects } from './hooks/useSavedProjects';
 
 const ProfilePage = lazy(() => import('./ProfilePage'));
@@ -29,7 +29,7 @@ interface NavItem {
 }
 
 export default function App() {
-  const { theme, lang, setLang, t } = useThemeLanguage();
+  const { theme, lang, t } = useThemeLanguage();
   const [isLoaderDone, setIsLoaderDone] = useState(false);
   const [currentTab, setCurrentTab] = useState<'home' | 'projects' | 'videos' | 'articles' | 'about'>('home');
   const [selectedMember, setSelectedMember] = useState<any>(null);
@@ -298,43 +298,8 @@ export default function App() {
 
         {/* End Actions: Language Switcher, Theme Toggle, Login / User Profile */}
         <div className="navbar-end-actions">
-          {/* Language Switcher using shadcn Button */}
-          <div className="lang-capsule-toggle" title="Switch Language / تبديل اللغة" style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', background: 'rgba(255,255,255,0.06)', padding: '2px 4px', borderRadius: '9999px', border: '1px solid var(--border-subtle)' }}>
-            <Button
-              variant={lang === 'ar' ? 'default' : 'ghost'}
-              size="sm"
-              className={`lang-pill-btn ${lang === 'ar' ? 'active' : ''}`}
-              onClick={() => setLang('ar')}
-              aria-label={lang === 'ar' ? "اللغة العربية" : "Arabic"}
-              style={{
-                height: '26px',
-                padding: '0 10px',
-                borderRadius: '9999px',
-                fontSize: '0.75rem',
-                fontWeight: lang === 'ar' ? 700 : 500,
-                cursor: 'pointer'
-              }}
-            >
-              عربي
-            </Button>
-            <Button
-              variant={lang === 'en' ? 'default' : 'ghost'}
-              size="sm"
-              className={`lang-pill-btn ${lang === 'en' ? 'active' : ''}`}
-              onClick={() => setLang('en')}
-              aria-label="English Language"
-              style={{
-                height: '26px',
-                padding: '0 10px',
-                borderRadius: '9999px',
-                fontSize: '0.75rem',
-                fontWeight: lang === 'en' ? 700 : 500,
-                cursor: 'pointer'
-              }}
-            >
-              EN
-            </Button>
-          </div>
+          {/* Language Dropdown Selector */}
+          <LanguageDropdown />
 
           {/* Animated Sun / Moon Theme Switch Component */}
           <ThemeSwitch />

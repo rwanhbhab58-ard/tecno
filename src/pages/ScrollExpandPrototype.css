@@ -147,6 +147,19 @@
   transform: translateY(-2px);
 }
 
+[data-theme="light"] .cta-secondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: #0f172a;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .cta-secondary:hover {
+  background: #ffffff;
+  border-color: rgba(2, 132, 199, 0.5);
+  color: #0284c7;
+}
+
 /* Mobile Adjustments */
 @media (max-width: 640px) {
   .expanded-overlay-wrapper {

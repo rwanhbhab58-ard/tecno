@@ -97,7 +97,7 @@ body {
 .top-navbar-container {
   width: 100%;
   position: relative;
-  background-color: #000000;
+  background-color: var(--bg-navbar, #000000);
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   z-index: 50;
   display: grid;
@@ -105,6 +105,7 @@ body {
   align-items: center;
   padding: 18px clamp(16px, 4vw, 48px);
   box-sizing: border-box;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .navbar-brand-link {
@@ -412,7 +413,7 @@ body {
    LIGHT MODE OVERRIDES FOR GLOBAL STYLES & NAVBAR
    ========================================================================== */
 [data-theme="light"] .top-navbar-container {
-  background-color: rgba(255, 255, 255, 0.88);
+  background-color: rgba(255, 255, 255, 0.96);
   border-bottom-color: rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -444,28 +445,35 @@ body {
 }
 
 [data-theme="light"] .theme-toggle-btn {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(2, 132, 199, 0.08);
+  border-color: rgba(2, 132, 199, 0.25);
   color: #0284c7;
 }
 
 [data-theme="light"] .theme-toggle-btn:hover {
-  background: rgba(2, 132, 199, 0.1);
-  border-color: rgba(2, 132, 199, 0.4);
+  background: rgba(2, 132, 199, 0.16);
+  border-color: rgba(2, 132, 199, 0.45);
   box-shadow: 0 0 12px rgba(2, 132, 199, 0.25);
 }
 
 [data-theme="light"] .navbar-auth-btn {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.1);
-  color: #0f172a;
+  background: rgba(2, 132, 199, 0.08);
+  border-color: rgba(2, 132, 199, 0.25);
+  color: #0284c7;
 }
 
 [data-theme="light"] .navbar-auth-btn:hover {
-  background: rgba(2, 132, 199, 0.1);
-  border-color: rgba(2, 132, 199, 0.4);
+  background: rgba(2, 132, 199, 0.16);
+  border-color: rgba(2, 132, 199, 0.5);
   color: #0284c7;
-  box-shadow: 0 0 14px rgba(2, 132, 199, 0.2);
+  box-shadow: 0 2px 14px rgba(2, 132, 199, 0.25);
+}
+
+[data-theme="light"] .navbar-auth-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
 }
 
 [data-theme="light"] .tab-page-title {

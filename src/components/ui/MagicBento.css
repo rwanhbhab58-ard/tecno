@@ -292,3 +292,29 @@
   position: relative;
   user-select: none;
 }
+
+/* =========================================================
+   LIGHT MODE OVERRIDES FOR MAGIC BENTO
+   ========================================================= */
+[data-theme="light"] .magic-bento-card {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .magic-bento-card:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .magic-bento-card__title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .magic-bento-card__description {
+  color: #64748b;
+}
+
+[data-theme="light"] .magic-bento-card__header,
+[data-theme="light"] .magic-bento-card__content {
+  color: #0f172a;
+}

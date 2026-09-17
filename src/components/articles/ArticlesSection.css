@@ -1,4 +1,4 @@
-﻿/* Articles Section Styling */
+/* Articles Section Styling */
 .articles-section {
   position: relative;
   width: 100%;
@@ -101,4 +101,20 @@
   .articles-container {
     gap: 2.5rem;
   }
+}
+
+/* =========================================================
+   LIGHT MODE OVERRIDES FOR ARTICLES SECTION
+   ========================================================= */
+[data-theme="light"] .articles-section {
+  background-color: var(--bg-main, #f8fafc);
+  color: #0f172a;
+}
+
+[data-theme="light"] .articles-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .articles-subtitle {
+  color: #475569;
 }
