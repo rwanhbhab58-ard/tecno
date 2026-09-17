@@ -52,12 +52,14 @@ interface ScrollExpandPrototypeProps {
   onOpenContact?: () => void;
   onNavigateToProjects?: () => void;
   onNavigateToVideos?: () => void;
+  onNavigateToArticles?: () => void;
 }
 
 const ScrollExpandPrototype: React.FC<ScrollExpandPrototypeProps> = ({
   onOpenContact,
   onNavigateToProjects,
-  onNavigateToVideos
+  onNavigateToVideos,
+  onNavigateToArticles
 }) => {
   const { theme, lang, t } = useThemeLanguage();
   const [config, setConfig] = useState<ResponsiveConfig>(() =>
@@ -148,7 +150,7 @@ const ScrollExpandPrototype: React.FC<ScrollExpandPrototypeProps> = ({
 
       {/* Dedicated Articles section using MagicBento */}
       <div className="scroll-deferred-section">
-        <ArticlesSection />
+        <ArticlesSection onNavigateToArticles={onNavigateToArticles} />
       </div>
     </div>
   );

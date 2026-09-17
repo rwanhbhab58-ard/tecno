@@ -39,6 +39,12 @@
   max-width: 720px;
 }
 
+.articles-header .projects-view-all-btn {
+  align-self: center;
+  margin-top: 0.5rem;
+  white-space: nowrap;
+}
+
 .articles-badge {
   display: inline-flex;
   align-items: center;

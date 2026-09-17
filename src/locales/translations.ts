@@ -56,6 +56,7 @@ export interface Translations {
     pageSubtitle: string;
     heading: string;
     subtitle: string;
+    readArticles: string;
   };
   about: {
     pageTitle: string;
@@ -268,7 +269,8 @@ export const translations: Record<'ar' | 'en', Translations> = {
       pageTitle: 'مقالات وأبحاث تكنو إنجاز',
       pageSubtitle: 'دراسات وأبحاث هندسية توثق التجارب المعمارية والخوارزميات المبتكرة في مشاريعنا',
       heading: 'مقالاتنا الهندسية',
-      subtitle: 'دراسات وأبحاث تقنية توثق التجارب المعمارية والخوارزميات المبتكرة في مشاريع تكنو إنجاز'
+      subtitle: 'دراسات وأبحاث تقنية توثق التجارب المعمارية والخوارزميات المبتكرة في مشاريع تكنو إنجاز',
+      readArticles: 'اقرأ المقالات'
     },
     about: {
       pageTitle: 'من نحن - فريق تكنو إنجاز',
@@ -487,7 +489,8 @@ export const translations: Record<'ar' | 'en', Translations> = {
       pageTitle: 'Techno Enjaz Articles & Research',
       pageSubtitle: 'Technical studies and research documenting innovative architectures and algorithms in our projects',
       heading: 'Engineering Articles',
-      subtitle: 'Technical studies and research documenting innovative architectures and algorithms at Techno Enjaz'
+      subtitle: 'Technical studies and research documenting innovative architectures and algorithms at Techno Enjaz',
+      readArticles: 'Read Articles'
     },
     about: {
       pageTitle: 'About Us - Techno Enjaz Team',

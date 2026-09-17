@@ -1,4 +1,5 @@
 import React from 'react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import MagicBento from './MagicBento';
 import heroBgDistortion from '../../assets/hero-bg-distortion.png';
 import im1Bg from '../../assets/im1.png';
@@ -6,7 +7,15 @@ import { useThemeLanguage } from '../../context/ThemeLanguageContext';
 import '../projects/ProjectsSection.css';
 import './ArticlesSection.css';
 
-const ArticlesSection: React.FC = () => {
+export interface ArticlesSectionProps {
+  showNavigateButton?: boolean;
+  onNavigateToArticles?: () => void;
+}
+
+const ArticlesSection: React.FC<ArticlesSectionProps> = ({
+  showNavigateButton = true,
+  onNavigateToArticles
+}) => {
   const { theme, lang, t } = useThemeLanguage();
 
   return (
@@ -32,6 +41,16 @@ const ArticlesSection: React.FC = () => {
           <p className="articles-subtitle">
             {t.articles.subtitle}
           </p>
+          {showNavigateButton && (
+            <button
+              type="button"
+              className="projects-view-all-btn"
+              onClick={onNavigateToArticles || (() => { window.location.hash = '#articles'; })}
+            >
+              <span>{t.articles.readArticles}</span>
+              {lang === 'ar' ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
+            </button>
+          )}
         </div>
 
         {/* MagicBento Interactive Grid */}

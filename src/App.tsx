@@ -424,7 +424,7 @@ export default function App() {
             <p className="tab-page-subtitle">{t.articles.pageSubtitle}</p>
           </div>
 
-          <ArticlesSection />
+          <ArticlesSection showNavigateButton={false} />
 
           <div className="tab-page-cards-grid">
             <div className="tab-page-card">
@@ -642,6 +642,7 @@ export default function App() {
             onOpenContact={() => handleNavItemSelect(navItems[5], 5)}
             onNavigateToProjects={() => handleNavItemSelect(navItems[1], 1)} 
             onNavigateToVideos={() => handleNavItemSelect(navItems[2], 2)}
+            onNavigateToArticles={() => handleNavItemSelect(navItems[3], 3)}
           />
 
           {/* 2. "من نحن" (About Us / Team Showcase) */}
