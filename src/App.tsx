@@ -39,6 +39,34 @@ export default function App() {
   const [isUserProfileOpen, setIsUserProfileOpen] = useState(false);
   const [activeNavIndex, setActiveNavIndex] = useState(0);
   const { count: savedCount } = useSavedProjects();
+  const [currentUser, setCurrentUser] = useState<any>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('techno_user');
+        return stored ? JSON.parse(stored) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    const handleAuthSync = () => {
+      try {
+        const stored = localStorage.getItem('techno_user');
+        setCurrentUser(stored ? JSON.parse(stored) : null);
+      } catch (e) {
+        setCurrentUser(null);
+      }
+    };
+    window.addEventListener('techno_auth_updated', handleAuthSync);
+    window.addEventListener('storage', handleAuthSync);
+    return () => {
+      window.removeEventListener('techno_auth_updated', handleAuthSync);
+      window.removeEventListener('storage', handleAuthSync);
+    };
+  }, []);
 
   const localizedTeamMembers = teamMembers.map((m: any) => ({
     ...m,
@@ -242,6 +270,12 @@ export default function App() {
             window.location.hash = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
+          onLogout={() => {
+            setIsUserProfileOpen(false);
+            setCurrentUser(null);
+            window.location.hash = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
           onOpenReader={() => {
             setIsUserProfileOpen(false);
             window.location.hash = '#academic-projects';
@@ -309,7 +343,7 @@ export default function App() {
             type="button"
             className={`navbar-auth-btn ${isUserProfileOpen || isAuthOpen ? 'active' : ''}`}
             onClick={() => {
-              if (savedCount > 0 || (typeof window !== 'undefined' && localStorage.getItem('techno_user'))) {
+              if (currentUser || savedCount > 0) {
                 setIsContactOpen(false);
                 setSelectedMember(null);
                 setIsAuthOpen(false);
@@ -320,17 +354,17 @@ export default function App() {
                 handleOpenAuth('login');
               }
             }}
-            title={savedCount > 0 
+            title={currentUser 
               ? (lang === 'en' ? `My Profile & Saved Projects (${savedCount})` : `حسابي والمشاريع المحفوظة (${savedCount})`) 
               : t.nav.login}
             style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           >
             <span className="navbar-auth-btn-icon">
-              {savedCount > 0 ? <BookmarkCheck size={15} /> : <User size={15} />}
+              {currentUser ? <BookmarkCheck size={15} /> : <User size={15} />}
             </span>
             <span>
-              {savedCount > 0 
-                ? (lang === 'en' ? 'My Profile' : 'حسابي') 
+              {currentUser 
+                ? (currentUser.name ? currentUser.name.split(' ')[0] : (lang === 'en' ? 'My Profile' : 'حسابي')) 
                 : t.nav.login}
             </span>
             {savedCount > 0 && (
@@ -363,7 +397,8 @@ export default function App() {
           <AuthPage
             initialMode={authMode}
             onBack={handleBackFromAuth}
-            onSuccess={() => {
+            onSuccess={(loggedInUser: any) => {
+              if (loggedInUser) setCurrentUser(loggedInUser);
               setIsAuthOpen(false);
               setIsUserProfileOpen(true);
               window.location.hash = '#my-profile';
