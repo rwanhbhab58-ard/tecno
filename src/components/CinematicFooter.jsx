@@ -128,9 +128,10 @@ export function CinematicFooter() {
       if (giantTextRef.current) {
         gsap.fromTo(
           giantTextRef.current,
-          { y: "6vh", scale: 0.88, opacity: 0.25 },
+          { y: "6vh", xPercent: -50, scale: 0.88, opacity: 0.25 },
           {
             y: "0vh",
+            xPercent: -50,
             scale: 1,
             opacity: 1,
             ease: "power1.out",
@@ -167,7 +168,7 @@ export function CinematicFooter() {
     }, wrapperRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [lang]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

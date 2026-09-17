@@ -128,15 +128,26 @@
   z-index: 0;
   pointer-events: none;
   user-select: none;
-  font-size: clamp(80px, 22vw, 320px);
-  line-height: 0.8;
+  font-size: clamp(60px, 18vw, 260px);
+  line-height: 0.85;
   font-weight: 900;
   letter-spacing: -0.04em;
+  text-align: center;
   color: transparent;
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.07);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 210, 255, 0.03) 40%, transparent 80%);
   -webkit-background-clip: text;
   background-clip: text;
+}
+
+/* English / LTR Giant Background Text: scaled and centered so TECHNO ENJAZ is 100% visible */
+[dir="ltr"] .footer-giant-bg-text,
+.footer-curtain-wrapper[dir="ltr"] .footer-giant-bg-text,
+[lang="en"] .footer-giant-bg-text {
+  font-size: clamp(20px, 9.5vw, 140px);
+  letter-spacing: -0.01em;
+  max-width: 96vw;
+  text-align: center;
 }
 
 /* Metallic Text Glow */

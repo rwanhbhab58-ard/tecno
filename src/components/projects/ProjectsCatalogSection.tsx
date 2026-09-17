@@ -275,6 +275,7 @@ export const ProjectsCatalogSection: React.FC = () => {
                             description: project.description,
                             descriptionEn: project.descriptionEn,
                             type: 'academic',
+                            image: project.image,
                             pdfId: project.pdfId,
                             pptxId: project.pptxId,
                             docxId: project.docxId,
@@ -299,6 +300,16 @@ export const ProjectsCatalogSection: React.FC = () => {
                         )}
                       </Button>
                     </div>
+                  </div>
+
+                  {/* Project Image Slot (White placeholder canvas ready for project images) */}
+                  <div className="catalog-card-image-wrap">
+                    <img 
+                      src={project.image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='340' viewBox='0 0 600 340'%3E%3Crect width='600' height='340' fill='%23ffffff'/%3E%3C/svg%3E"} 
+                      alt={projectTitle}
+                      className="catalog-card-img"
+                      loading="lazy"
+                    />
                   </div>
 
                   {/* Card Title & Description */}
