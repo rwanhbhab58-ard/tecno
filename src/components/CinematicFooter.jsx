@@ -213,7 +213,7 @@ export function CinematicFooter() {
 
         {/* 2. Main Center Content */}
         <div className="footer-main-content">
-          <div ref={headingRef}>
+          <div ref={headingRef} className="footer-heading-wrap">
             <h2 className="footer-heading footer-text-glow">
               {t.footer?.heading || 'جاهز للانطلاق معنا؟'}
             </h2>

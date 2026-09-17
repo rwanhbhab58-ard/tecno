@@ -82,3 +82,28 @@
     padding: 8px 18px;
   }
 }
+
+/* =========================================================
+   LIGHT MODE OVERRIDES FOR TEAM MOMENTS
+   ========================================================= */
+[data-theme="light"] .team-moments-wrapper {
+  background-color: #f8fafc;
+}
+
+[data-theme="light"] .moments-scroll-indicator {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  color: #1e1b4b;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06), 0 0 20px rgba(124, 58, 237, 0.12);
+}
+
+[data-theme="light"] .moments-scroll-indicator:hover {
+  background: #ffffff;
+  border-color: #7c3aed;
+  color: #7c3aed;
+  box-shadow: 0 15px 35px rgba(124, 58, 237, 0.25);
+}
+
+[data-theme="light"] .scroll-arrow {
+  color: #7c3aed;
+}

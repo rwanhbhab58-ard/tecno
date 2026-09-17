@@ -451,9 +451,10 @@
 }
 
 [data-theme="light"] .catalog-btn-read-flipbook {
-  background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(99, 102, 241, 0.15));
-  border: 1px solid rgba(2, 132, 199, 0.45);
-  color: #0284c7;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border: 1px solid #0284c7;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.28);
 }
 
 .catalog-btn-read-flipbook:hover {
@@ -464,9 +465,10 @@
 }
 
 [data-theme="light"] .catalog-btn-read-flipbook:hover {
-  background: #0284c7;
-  color: #ffffff;
-  box-shadow: 0 0 20px rgba(2, 132, 199, 0.35);
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  border-color: #0369a1;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
 }
 
 .catalog-btn-downloads-row {
@@ -494,9 +496,39 @@
   color: #fb923c;
 }
 
+[data-theme="light"] .catalog-btn-download.pptx {
+  background: rgba(249, 115, 22, 0.12);
+  border: 1px solid rgba(249, 115, 22, 0.35);
+  color: #c2410c;
+  font-weight: 700;
+}
+
 .catalog-btn-download.pptx:hover {
   background: rgba(249, 115, 22, 0.25);
   transform: translateY(-1px);
+}
+
+[data-theme="light"] .catalog-btn-download.pptx:hover {
+  background: rgba(249, 115, 22, 0.22);
+  color: #9a3412;
+}
+
+.catalog-btn-download.docx {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
+}
+
+[data-theme="light"] .catalog-btn-download.docx {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+[data-theme="light"] .catalog-btn-download.docx:hover {
+  background: rgba(59, 130, 246, 0.22);
+  color: #1e40af;
 }
 
 .catalog-btn-download.pdf {
@@ -506,9 +538,10 @@
 }
 
 [data-theme="light"] .catalog-btn-download.pdf {
-  background: rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: #334155;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  font-weight: 600;
 }
 
 .catalog-btn-download.pdf:hover {
@@ -518,7 +551,8 @@
 }
 
 [data-theme="light"] .catalog-btn-download.pdf:hover {
-  background: rgba(0, 0, 0, 0.08);
+  background: #e2e8f0;
+  border-color: #94a3b8;
   color: #0f172a;
 }
 

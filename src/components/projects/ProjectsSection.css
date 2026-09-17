@@ -241,8 +241,25 @@
 
 [data-theme="light"] .projects-heading {
   color: #0f172a;
+  text-shadow: none !important;
 }
 
 [data-theme="light"] .projects-statement {
   color: #475569;
+}
+
+[data-theme="light"] .projects-view-all-btn {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border: 1px solid #0284c7;
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.28);
+}
+
+[data-theme="light"] .projects-view-all-btn:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  border-color: #0369a1;
+  color: #ffffff !important;
+  box-shadow: 0 6px 22px rgba(2, 132, 199, 0.4);
+  transform: translateY(-2px);
 }

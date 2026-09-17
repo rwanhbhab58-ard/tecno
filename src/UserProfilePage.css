@@ -339,3 +339,25 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   LIGHT MODE OVERRIDES FOR USER PROFILE PAGE
+   ========================================================= */
+[data-theme="light"] .user-profile-back-btn {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #0f172a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .user-profile-back-btn:hover {
+  background: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+}
+
+[data-theme="light"] .filter-pill-btn.active {
+  background: #0284c7;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+}

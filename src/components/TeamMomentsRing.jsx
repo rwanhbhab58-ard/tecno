@@ -3,7 +3,8 @@ import { useThemeLanguage } from '../context/ThemeLanguageContext';
 import './TeamMomentsRing.css';
 
 export default function TeamMomentsRing({ onScrollDown }) {
-  const { lang } = useThemeLanguage();
+  const { lang, theme } = useThemeLanguage();
+  const isLight = theme === 'light';
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -182,7 +183,7 @@ export default function TeamMomentsRing({ onScrollDown }) {
         x.fillRect(0, 0, TS, TS);
 
         // إطار حدودي رفيع متوهج
-        x.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+        x.strokeStyle = isLight ? 'rgba(124, 58, 237, 0.4)' : 'rgba(255, 255, 255, 0.18)';
         x.lineWidth = 6;
         roundRectPath(x, TS - 6, TS - 6, TS * RING.radius);
         x.stroke();
@@ -190,7 +191,7 @@ export default function TeamMomentsRing({ onScrollDown }) {
         // تأثير Film Grain
         x.save();
         x.globalCompositeOperation = 'overlay';
-        x.globalAlpha = 0.12;
+        x.globalAlpha = isLight ? 0.05 : 0.12;
         const p = x.createPattern(grainTile, 'repeat');
         x.fillStyle = p;
         x.fillRect(0, 0, TS, TS);
@@ -198,16 +199,26 @@ export default function TeamMomentsRing({ onScrollDown }) {
 
         front.push(c);
 
-        // الوجه الخلفي للبلاطة: داكن وأنيق
+        // الوجه الخلفي للبلاطة
         const d = mkc(TS, TS);
         const y = d.getContext('2d');
         y.drawImage(c, 0, 0);
-        y.globalCompositeOperation = 'saturation';
-        y.fillStyle = 'rgba(128,128,128,0.2)';
-        y.fillRect(0, 0, TS, TS);
-        y.globalCompositeOperation = 'multiply';
-        y.fillStyle = 'rgba(10, 8, 20, 0.82)';
-        y.fillRect(0, 0, TS, TS);
+        if (isLight) {
+          y.globalCompositeOperation = 'source-atop';
+          y.fillStyle = 'rgba(241, 245, 249, 0.88)';
+          y.fillRect(0, 0, TS, TS);
+          y.strokeStyle = 'rgba(124, 58, 237, 0.3)';
+          y.lineWidth = 8;
+          roundRectPath(y, TS - 8, TS - 8, TS * RING.radius);
+          y.stroke();
+        } else {
+          y.globalCompositeOperation = 'saturation';
+          y.fillStyle = 'rgba(128,128,128,0.2)';
+          y.fillRect(0, 0, TS, TS);
+          y.globalCompositeOperation = 'multiply';
+          y.fillStyle = 'rgba(10, 8, 20, 0.82)';
+          y.fillRect(0, 0, TS, TS);
+        }
         back.push(d);
       }
 
@@ -240,9 +251,15 @@ export default function TeamMomentsRing({ onScrollDown }) {
 
       // توهج خلف العنوان بحجم موسع
       const glow = x.createRadialGradient(cx, cy, 30 * K, cx, cy, 680 * K);
-      glow.addColorStop(0, 'rgba(82, 39, 255, 0.45)');
-      glow.addColorStop(0.6, 'rgba(124, 58, 237, 0.2)');
-      glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      if (isLight) {
+        glow.addColorStop(0, 'rgba(124, 58, 237, 0.16)');
+        glow.addColorStop(0.5, 'rgba(2, 132, 199, 0.08)');
+        glow.addColorStop(1, 'rgba(248, 250, 252, 0)');
+      } else {
+        glow.addColorStop(0, 'rgba(82, 39, 255, 0.45)');
+        glow.addColorStop(0.6, 'rgba(124, 58, 237, 0.2)');
+        glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      }
       x.fillStyle = glow;
       x.fillRect(0, 0, W, H);
 
@@ -252,23 +269,31 @@ export default function TeamMomentsRing({ onScrollDown }) {
       x.font = `800 ${fontSize}px "Readex Pro", "Segoe UI", system-ui, sans-serif`;
       x.textAlign = 'center';
       x.textBaseline = 'middle';
-      x.direction = 'rtl';
+      x.direction = lang === 'ar' ? 'rtl' : 'ltr';
 
-      // ظل داكن عميق
-      x.shadowColor = 'rgba(0, 0, 0, 0.95)';
-      x.shadowBlur = 40 * K;
-      x.shadowOffsetY = 12 * K;
+      if (isLight) {
+        x.shadowColor = 'rgba(124, 58, 237, 0.2)';
+        x.shadowBlur = 24 * K;
+        x.shadowOffsetY = 6 * K;
 
-      // تدرج لوني فخم للنص
-      const textGrad = x.createLinearGradient(0, cy - fontSize / 2, 0, cy + fontSize / 2);
-      textGrad.addColorStop(0, '#ffffff');
-      textGrad.addColorStop(0.7, '#f3f0ff');
-      textGrad.addColorStop(1, '#c4b5fd');
+        const textGrad = x.createLinearGradient(0, cy - fontSize / 2, 0, cy + fontSize / 2);
+        textGrad.addColorStop(0, '#0f172a');
+        textGrad.addColorStop(0.6, '#1e1b4b');
+        textGrad.addColorStop(1, '#4338ca');
+        x.fillStyle = textGrad;
+      } else {
+        x.shadowColor = 'rgba(0, 0, 0, 0.95)';
+        x.shadowBlur = 40 * K;
+        x.shadowOffsetY = 12 * K;
 
-      x.fillStyle = textGrad;
+        const textGrad = x.createLinearGradient(0, cy - fontSize / 2, 0, cy + fontSize / 2);
+        textGrad.addColorStop(0, '#ffffff');
+        textGrad.addColorStop(0.7, '#f3f0ff');
+        textGrad.addColorStop(1, '#c4b5fd');
+        x.fillStyle = textGrad;
+      }
+
       x.fillText(lang === 'ar' ? 'لحظات الفريق' : 'Team Moments', cx, cy);
-
-      // سطر تعريفي أنيق تحته بخط Readex Pro
       x.restore();
     }
 
@@ -329,8 +354,27 @@ export default function TeamMomentsRing({ onScrollDown }) {
 
     function render(t) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.fillStyle = '#050508';
-      ctx.fillRect(0, 0, W, H);
+      if (isLight) {
+        // Luxury Tech Light Gradient Background
+        const bgGrad = ctx.createRadialGradient(W / 2, H * 0.45, 100 * K, W / 2, H / 2, Math.max(W, H) * 0.85);
+        bgGrad.addColorStop(0, '#ffffff');
+        bgGrad.addColorStop(0.45, '#f8fafc');
+        bgGrad.addColorStop(0.8, '#f1f5f9');
+        bgGrad.addColorStop(1, '#e2e8f0');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Subtle glowing atmospheric aura
+        const aura = ctx.createRadialGradient(W / 2, H * 0.48, 50 * K, W / 2, H * 0.48, 650 * K);
+        aura.addColorStop(0, 'rgba(124, 58, 237, 0.09)');
+        aura.addColorStop(0.5, 'rgba(2, 132, 199, 0.05)');
+        aura.addColorStop(1, 'rgba(248, 250, 252, 0)');
+        ctx.fillStyle = aura;
+        ctx.fillRect(0, 0, W, H);
+      } else {
+        ctx.fillStyle = '#050508';
+        ctx.fillRect(0, 0, W, H);
+      }
       ctx.imageSmoothingQuality = 'high';
 
       const spin = (t / DUR) * Math.PI * 2;
@@ -403,7 +447,7 @@ export default function TeamMomentsRing({ onScrollDown }) {
       if (animId) cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
     };
-  }, []);
+  }, [lang, theme]);
 
   return (
     <div className="team-moments-wrapper">
