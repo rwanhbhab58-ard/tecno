@@ -106,12 +106,8 @@ export default function TeamMomentsRing({ onScrollDown }) {
     function createDefaultTexture(index) {
       const c = mkc(TS, TS);
       const x = c.getContext('2d');
-      const g = x.createLinearGradient(0, 0, TS, TS);
-      const hues = [260, 290, 320, 200];
-      const h = hues[index % hues.length];
-      g.addColorStop(0, `hsl(${h}, 70%, 15%)`);
-      g.addColorStop(1, `hsl(${h + 30}, 80%, 35%)`);
-      x.fillStyle = g;
+      // خلفية معتمة بالكامل وأنيقة
+      x.fillStyle = isLight ? '#f1f5f9' : '#0a0d16';
       x.fillRect(0, 0, TS, TS);
       return c;
     }
@@ -134,7 +130,12 @@ export default function TeamMomentsRing({ onScrollDown }) {
         if (!isMounted) return;
         loadedImages[idx] = img;
         loadedCount++;
-        if (loadedCount === photoUrls.length) {
+        buildPhotoTextures();
+      };
+      img.onerror = () => {
+        if (!isMounted) return;
+        loadedCount++;
+        if (loadedImages.filter(Boolean).length > 0) {
           buildPhotoTextures();
         }
       };
@@ -162,61 +163,55 @@ export default function TeamMomentsRing({ onScrollDown }) {
     function buildPhotoTextures() {
       const front = [];
       const back = [];
+      const validImages = loadedImages.filter(Boolean);
+      if (validImages.length === 0) return;
 
       for (let i = 0; i < RING.n; i++) {
-        const img = loadedImages[i % loadedImages.length];
+        const img = validImages[i % validImages.length];
         const c = mkc(TS, TS);
         const x = c.getContext('2d');
 
+        // خلفية معتمة بنسبة 100% لمنع أي شفافية
+        x.fillStyle = isLight ? '#ffffff' : '#070a12';
+        x.fillRect(0, 0, TS, TS);
+
         if (img) {
           drawCover(x, img, TS, TS);
-        } else {
-          x.fillStyle = '#111';
-          x.fillRect(0, 0, TS, TS);
         }
 
-        // تدرج ظل سينمائي وإضاءة حواف
-        const vig = x.createRadialGradient(TS / 2, TS / 2, TS * 0.35, TS / 2, TS / 2, TS * 0.72);
+        // تدرج ظل سينمائي ناعم وحيادي عند الحواف (دون أي خطوط ملونة)
+        const vig = x.createRadialGradient(TS / 2, TS / 2, TS * 0.38, TS / 2, TS / 2, TS * 0.72);
         vig.addColorStop(0, 'rgba(0,0,0,0)');
-        vig.addColorStop(1, 'rgba(0,0,0,0.55)');
+        vig.addColorStop(1, isLight ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.4)');
         x.fillStyle = vig;
         x.fillRect(0, 0, TS, TS);
 
-        // إطار حدودي رفيع متوهج
-        x.strokeStyle = isLight ? 'rgba(124, 58, 237, 0.4)' : 'rgba(255, 255, 255, 0.18)';
-        x.lineWidth = 6;
-        roundRectPath(x, TS - 6, TS - 6, TS * RING.radius);
-        x.stroke();
-
-        // تأثير Film Grain
+        // تأثير Film Grain خفيف جداً
         x.save();
         x.globalCompositeOperation = 'overlay';
-        x.globalAlpha = isLight ? 0.05 : 0.12;
+        x.globalAlpha = isLight ? 0.03 : 0.07;
         const p = x.createPattern(grainTile, 'repeat');
-        x.fillStyle = p;
-        x.fillRect(0, 0, TS, TS);
+        if (p) {
+          x.fillStyle = p;
+          x.fillRect(0, 0, TS, TS);
+        }
         x.restore();
 
         front.push(c);
 
-        // الوجه الخلفي للبلاطة
+        // الوجه الخلفي للبلاطة معتم 100% ويحافظ على الصورة دون شفافية
         const d = mkc(TS, TS);
         const y = d.getContext('2d');
+        y.fillStyle = isLight ? '#ffffff' : '#070a12';
+        y.fillRect(0, 0, TS, TS);
         y.drawImage(c, 0, 0);
+
+        // طبقة تغشية ناعمة جداً ومعتمة للوجه الخلفي
         if (isLight) {
-          y.globalCompositeOperation = 'source-atop';
-          y.fillStyle = 'rgba(241, 245, 249, 0.88)';
+          y.fillStyle = 'rgba(248, 250, 252, 0.35)';
           y.fillRect(0, 0, TS, TS);
-          y.strokeStyle = 'rgba(124, 58, 237, 0.3)';
-          y.lineWidth = 8;
-          roundRectPath(y, TS - 8, TS - 8, TS * RING.radius);
-          y.stroke();
         } else {
-          y.globalCompositeOperation = 'saturation';
-          y.fillStyle = 'rgba(128,128,128,0.2)';
-          y.fillRect(0, 0, TS, TS);
-          y.globalCompositeOperation = 'multiply';
-          y.fillStyle = 'rgba(10, 8, 20, 0.82)';
+          y.fillStyle = 'rgba(7, 10, 18, 0.35)';
           y.fillRect(0, 0, TS, TS);
         }
         back.push(d);
@@ -249,15 +244,15 @@ export default function TeamMomentsRing({ onScrollDown }) {
       const cx = d2sx(RING.cx);
       const cy = d2sy(RING.cy - 60);
 
-      // توهج خلف العنوان بحجم موسع
-      const glow = x.createRadialGradient(cx, cy, 30 * K, cx, cy, 680 * K);
+      // توهج خلف العنوان ناعم ومتناسق مع هوية تكنو إنجاز
+      const glow = x.createRadialGradient(cx, cy, 30 * K, cx, cy, 620 * K);
       if (isLight) {
-        glow.addColorStop(0, 'rgba(124, 58, 237, 0.16)');
-        glow.addColorStop(0.5, 'rgba(2, 132, 199, 0.08)');
+        glow.addColorStop(0, 'rgba(2, 132, 199, 0.14)');
+        glow.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
         glow.addColorStop(1, 'rgba(248, 250, 252, 0)');
       } else {
-        glow.addColorStop(0, 'rgba(82, 39, 255, 0.45)');
-        glow.addColorStop(0.6, 'rgba(124, 58, 237, 0.2)');
+        glow.addColorStop(0, 'rgba(0, 210, 255, 0.22)');
+        glow.addColorStop(0.5, 'rgba(14, 165, 233, 0.1)');
         glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       }
       x.fillStyle = glow;
@@ -272,14 +267,14 @@ export default function TeamMomentsRing({ onScrollDown }) {
       x.direction = lang === 'ar' ? 'rtl' : 'ltr';
 
       if (isLight) {
-        x.shadowColor = 'rgba(124, 58, 237, 0.2)';
+        x.shadowColor = 'rgba(2, 132, 199, 0.15)';
         x.shadowBlur = 24 * K;
         x.shadowOffsetY = 6 * K;
 
         const textGrad = x.createLinearGradient(0, cy - fontSize / 2, 0, cy + fontSize / 2);
         textGrad.addColorStop(0, '#0f172a');
-        textGrad.addColorStop(0.6, '#1e1b4b');
-        textGrad.addColorStop(1, '#4338ca');
+        textGrad.addColorStop(0.6, '#0369a1');
+        textGrad.addColorStop(1, '#0284c7');
         x.fillStyle = textGrad;
       } else {
         x.shadowColor = 'rgba(0, 0, 0, 0.95)';
@@ -288,8 +283,8 @@ export default function TeamMomentsRing({ onScrollDown }) {
 
         const textGrad = x.createLinearGradient(0, cy - fontSize / 2, 0, cy + fontSize / 2);
         textGrad.addColorStop(0, '#ffffff');
-        textGrad.addColorStop(0.7, '#f3f0ff');
-        textGrad.addColorStop(1, '#c4b5fd');
+        textGrad.addColorStop(0.7, '#e0f2fe');
+        textGrad.addColorStop(1, '#38bdf8');
         x.fillStyle = textGrad;
       }
 
@@ -347,7 +342,20 @@ export default function TeamMomentsRing({ onScrollDown }) {
       ctx.setTransform((-ex * 2) / TS, (-ey * 2) / TS, (-fx * 2) / TS, (-fy * 2) / TS, p0[0], p0[1]);
       roundRectPath(ctx, TS, TS, TS * RING.radius);
       ctx.clip();
+
+      // خلفية معتمة بنسبة 100% خلف الصورة تماماً لمنع أي شفافية
+      ctx.fillStyle = isLight ? '#ffffff' : '#05070e';
+      ctx.fillRect(-TS / 2, -TS / 2, TS, TS);
+
+      // رسم الصورة معتمة ومثالية الوضوح
       ctx.drawImage(img, -TS / 2, -TS / 2, TS, TS);
+
+      // إطار حدودي أنيق وواضح يحيط بالبطاقة دون خطوط داخلية أو أرجوانية
+      ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.25)';
+      ctx.lineWidth = 5;
+      roundRectPath(ctx, TS - 5, TS - 5, TS * RING.radius);
+      ctx.stroke();
+
       ctx.restore();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
@@ -366,8 +374,8 @@ export default function TeamMomentsRing({ onScrollDown }) {
 
         // Subtle glowing atmospheric aura
         const aura = ctx.createRadialGradient(W / 2, H * 0.48, 50 * K, W / 2, H * 0.48, 650 * K);
-        aura.addColorStop(0, 'rgba(124, 58, 237, 0.09)');
-        aura.addColorStop(0.5, 'rgba(2, 132, 199, 0.05)');
+        aura.addColorStop(0, 'rgba(2, 132, 199, 0.1)');
+        aura.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
         aura.addColorStop(1, 'rgba(248, 250, 252, 0)');
         ctx.fillStyle = aura;
         ctx.fillRect(0, 0, W, H);
