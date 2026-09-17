@@ -12,14 +12,13 @@ import {
   Radio, 
   Globe, 
   Smartphone,
-  Filter,
+  SlidersHorizontal,
   Bookmark,
   BookmarkCheck
 } from 'lucide-react';
 import { useThemeLanguage } from '../../context/ThemeLanguageContext';
 import { useSavedProjects } from '../../hooks/useSavedProjects';
 import { DRIVE_PROJECTS, type DriveProject, type ProjectCategory } from '../../data/driveProjectsData';
-import OptionWheel, { type OptionWheelItem } from '../ui/OptionWheel';
 import DocumentReaderModal from './DocumentReaderModal';
 import './ProjectsCatalogSection.css';
 
@@ -104,15 +103,6 @@ export const ProjectsCatalogSection: React.FC = () => {
     { key: 'mobile', labelAr: 'تطبيقات موبايل', labelEn: 'Mobile Applications', icon: <Smartphone size={16} /> },
   ], []);
 
-  const wheelOptions: OptionWheelItem[] = useMemo(() => {
-    return categories.map(cat => ({
-      id: cat.key,
-      label: lang === 'ar' ? cat.labelAr : cat.labelEn,
-      value: cat.key,
-      icon: cat.icon
-    }));
-  }, [categories, lang]);
-
   const activeCategoryKey = categories[selectedCategoryIdx]?.key || 'all';
 
   const filteredProjects = useMemo(() => {
@@ -151,45 +141,72 @@ export const ProjectsCatalogSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Filter and Search Bar Controls */}
-        <div className="catalog-controls-panel">
-          {/* Live Search Input */}
-          <div className="catalog-search-box">
-            <Search size={19} className="catalog-search-icon" />
-            <input
-              type="text"
-              className="catalog-search-input"
-              placeholder={lang === 'ar' ? 'ابحث بالاسم أو التقنية (مثل: شبكات، تعرّف، أمن)...' : 'Search by title or keyword (e.g. AI, vision, security)...'}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            {searchTerm && (
-              <button 
-                type="button" 
-                className="catalog-search-clear"
-                onClick={() => setSearchTerm('')}
-              >
-                ✕
-              </button>
-            )}
+        {/* Modern Filter Card & Interactive Category Chips */}
+        <div className="catalog-filter-card">
+          {/* Header Row: Label & Search Input */}
+          <div className="catalog-filter-header-row">
+            <div className="catalog-filter-label-wrap">
+              <div className="catalog-filter-icon-badge">
+                <SlidersHorizontal size={17} />
+              </div>
+              <div className="catalog-filter-text-group">
+                <span className="catalog-filter-main-label">
+                  {lang === 'ar' ? 'فلترة حسب نوع المشروع:' : 'Filter by Category:'}
+                </span>
+                <span className="catalog-filter-sub-label">
+                  {lang === 'ar' ? 'اختر تصنيفاً لعرض المشاريع المتخصصة' : 'Select a category to view specialized projects'}
+                </span>
+              </div>
+            </div>
+
+            {/* Live Search Input */}
+            <div className="catalog-search-box">
+              <Search size={18} className="catalog-search-icon" />
+              <input
+                type="text"
+                className="catalog-search-input"
+                placeholder={lang === 'ar' ? 'ابحث بالاسم أو التقنية (مثل: شبكات، تعرّف، أمن)...' : 'Search by title or keyword (e.g. AI, vision, security)...'}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              {searchTerm && (
+                <button 
+                  type="button" 
+                  className="catalog-search-clear"
+                  onClick={() => setSearchTerm('')}
+                  title={lang === 'ar' ? 'مسح البحث' : 'Clear search'}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
 
-          {/* OptionWheel Category Selector */}
-          <div className="catalog-wheel-filter-box">
-            <div className="catalog-wheel-label">
-              <Filter size={15} />
-              <span>{lang === 'ar' ? 'فلترة حسب نوع المشروع:' : 'Filter by Category:'}</span>
-            </div>
-            <OptionWheel
-              options={wheelOptions}
-              selectedIndex={selectedCategoryIdx}
-              onChange={(index) => setSelectedCategoryIdx(index)}
-              visibleCount={5}
-              itemHeight={44}
-              perspective={900}
-              radius={100}
-              dir={lang === 'ar' ? 'rtl' : 'ltr'}
-            />
+          {/* Interactive Category Chips */}
+          <div className="catalog-category-chips" role="tablist">
+            {categories.map((cat, idx) => {
+              const isActive = activeCategoryKey === cat.key;
+              const count = cat.key === 'all' 
+                ? DRIVE_PROJECTS.length 
+                : DRIVE_PROJECTS.filter(p => p.category === cat.key).length;
+
+              return (
+                <button
+                  key={cat.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`catalog-category-chip ${isActive ? 'active' : ''}`}
+                  onClick={() => setSelectedCategoryIdx(idx)}
+                >
+                  <span className="chip-icon-wrap">{cat.icon}</span>
+                  <span className="chip-label-text">
+                    {lang === 'ar' ? cat.labelAr : cat.labelEn}
+                  </span>
+                  <span className="chip-count-pill">{count}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
