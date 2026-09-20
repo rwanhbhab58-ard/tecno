@@ -1,0 +1,619 @@
+/* ==========================================================================
+   OFFICE BLOG SECTION - MODERN MAGAZINE & ENGINEERING HUB
+   ========================================================================== */
+
+.office-blog-section {
+  width: 100%;
+  max-width: 1720px;
+  margin: 0 auto;
+  padding: 1rem 1rem 6rem;
+  box-sizing: border-box;
+  font-family: var(--font-arabic, 'Readex Pro', sans-serif);
+  color: #f1f5f9;
+  position: relative;
+  z-index: 2;
+}
+
+/* 2. Hero Header */
+.office-blog-header {
+  text-align: center;
+  max-width: 840px;
+  margin: 0 auto 2.5rem;
+}
+
+.blog-main-title {
+  margin: 0 0 1rem 0;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 35px rgba(0, 210, 255, 0.25);
+}
+
+.blog-main-desc {
+  margin: 0 auto;
+  font-size: clamp(0.95rem, 1.5vw, 1.125rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 680px;
+}
+
+/* 3. Search Bar (strictly matching screenshot media_1789724320518.png) */
+.blog-search-bar-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1.25rem;
+}
+
+.blog-search-inner-box {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  align-items: center;
+}
+
+.blog-search-pill-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 48px 13px 20px;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+[dir="ltr"] .blog-search-pill-input {
+  padding: 13px 20px 13px 48px;
+}
+
+.blog-search-pill-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 25px rgba(14, 165, 233, 0.35);
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.blog-search-pill-icon {
+  position: absolute;
+  inset-inline-end: 18px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+[dir="ltr"] .blog-search-pill-icon {
+  inset-inline-end: auto;
+  inset-inline-start: 18px;
+}
+
+.blog-search-clear-pill-btn {
+  position: absolute;
+  inset-inline-start: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+[dir="ltr"] .blog-search-clear-pill-btn {
+  inset-inline-start: auto;
+  inset-inline-end: 16px;
+}
+
+/* 3. Filter Buttons Row: Sort + Category Chips */
+.blog-filters-capsule-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 2.75rem;
+}
+
+.filter-capsule-btn {
+  padding: 8px 22px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+
+.filter-capsule-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.filter-capsule-btn.active {
+  background: #0090ff;
+  color: #ffffff;
+  border-color: #0090ff;
+  box-shadow: 0 4px 18px rgba(0, 144, 255, 0.4);
+}
+
+.blog-filters-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 4px;
+}
+
+.blog-category-chips-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #94a3b8;
+  font-family: inherit;
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+
+.filter-category-chip:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.filter-category-chip.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(14, 165, 233, 0.35);
+}
+
+.category-chip-count {
+  font-size: 0.72rem;
+  opacity: 0.8;
+}
+
+/* 6. Empty State */
+.blog-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.blog-empty-icon {
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.blog-empty-state h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  color: #ffffff;
+}
+
+.blog-empty-state p {
+  margin: 0 0 1.5rem 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.blog-reset-btn {
+  padding: 8px 20px;
+  border-radius: 9999px;
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+/* 7. Articles Grid (strictly matching user screenshot media_1789724320519.png) */
+.blog-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
+}
+
+.blog-modern-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.blog-modern-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(14, 165, 233, 0.2);
+}
+
+/* Card Media Banner */
+.card-media-banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #05070e;
+}
+
+.card-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.blog-modern-card:hover .card-media-img {
+  transform: scale(1.06);
+}
+
+.card-media-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+/* Card Body Content */
+.card-body-content {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px;
+  flex: 1;
+}
+
+/* Category & Reading Time Row */
+.card-meta-category-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.card-category-capsule {
+  padding: 4px 12px;
+  border-radius: 9999px;
+  border: 1px solid;
+  font-size: 0.76rem;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+}
+
+.card-readtime-capsule {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #94a3b8;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+/* Big Headline Title */
+.card-main-title {
+  margin: 0 0 10px 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Excerpt Description */
+.card-main-excerpt {
+  margin: 0 0 18px 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* Card Footer: Author Capsule & Share / Engagement */
+.card-footer-capsule-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card-author-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px 4px 5px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  font-size: 0.75rem;
+  color: #cbd5e1;
+}
+
+.author-pill-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-pill-name {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.author-pill-divider {
+  opacity: 0.4;
+}
+
+.author-pill-date {
+  color: #94a3b8;
+}
+
+.card-action-icons-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card-icon-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  border-radius: 9999px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.card-icon-action-btn:hover {
+  color: #38bdf8;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.card-icon-action-btn.liked {
+  color: #ef4444;
+}
+
+.card-icon-action-btn.saved {
+  color: #38bdf8;
+}
+
+.card-icon-action-btn.share-btn {
+  padding: 6px;
+}
+
+/* ==========================================================================
+   LIGHT MODE OVERRIDES FOR OFFICE BLOG SECTION
+   ========================================================================== */
+
+[data-theme="light"] .office-blog-section {
+  color: #0f172a;
+}
+
+[data-theme="light"] .blog-notification-banner {
+  background: #e0f2fe;
+  border-color: #bae6fd;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.08);
+}
+
+[data-theme="light"] .notification-text {
+  color: #0369a1;
+}
+
+[data-theme="light"] .notification-dismiss-btn {
+  background: rgba(0, 0, 0, 0.06);
+  color: #0284c7;
+}
+
+[data-theme="light"] .blog-main-title {
+  color: #0f172a;
+  text-shadow: none;
+}
+
+[data-theme="light"] .blog-main-desc {
+  color: #475569;
+}
+
+[data-theme="light"] .blog-search-pill-input {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #0f172a;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .blog-search-pill-input:focus {
+  background: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 0 20px rgba(2, 132, 199, 0.25);
+}
+
+[data-theme="light"] .blog-search-pill-icon {
+  color: #64748b;
+}
+
+[data-theme="light"] .filter-capsule-btn {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+
+[data-theme="light"] .filter-capsule-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+[data-theme="light"] .filter-capsule-btn.active {
+  background: #0090ff;
+  color: #ffffff;
+  border-color: #0090ff;
+}
+
+[data-theme="light"] .categories-dropdown-toggle {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #334155;
+}
+
+[data-theme="light"] .categories-dropdown-menu {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .dropdown-menu-item {
+  color: #475569;
+}
+
+[data-theme="light"] .dropdown-menu-item:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+[data-theme="light"] .dropdown-menu-item.active {
+  background: #e0f2fe;
+  color: #0284c7;
+  border-color: #bae6fd;
+}
+
+[data-theme="light"] .tag-pill-btn {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+
+[data-theme="light"] .tag-pill-btn:hover {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+[data-theme="light"] .blog-modern-card {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .blog-modern-card:hover {
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1);
+  border-color: rgba(14, 165, 233, 0.4);
+}
+
+[data-theme="light"] .card-main-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .card-main-excerpt {
+  color: #475569;
+}
+
+[data-theme="light"] .card-author-pill {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+
+[data-theme="light"] .author-pill-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .author-pill-date {
+  color: #64748b;
+}
+
+[data-theme="light"] .card-icon-action-btn {
+  color: #64748b;
+}
+
+[data-theme="light"] .card-icon-action-btn:hover {
+  color: #0284c7;
+  background: #f1f5f9;
+}
+
+/* ==========================================================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .office-blog-section {
+    padding: 0.5rem 1rem 4rem;
+  }
+
+  .blog-notification-banner {
+    border-radius: 16px;
+    padding: 8px 12px;
+  }
+
+  .notification-text {
+    font-size: 0.78rem;
+  }
+
+  .blog-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .blog-filters-capsule-row {
+    gap: 8px;
+  }
+
+  .filter-capsule-btn,
+  .categories-dropdown-toggle {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+}

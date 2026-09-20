@@ -7,14 +7,12 @@ import TeamMomentsRing from './components/TeamMomentsRing';
 import InfiniteMenu from './InfiniteMenu';
 import Orb from './Orb';
 import CinematicFooter from './components/CinematicFooter';
-import VideosSection from './components/videos/VideosSection';
-import ArticlesSection from './components/articles/ArticlesSection';
-import { Cpu, Video, Sparkles, BookOpen, User, BookmarkCheck } from 'lucide-react';
+import { User } from 'lucide-react';
 import { teamMembers } from './data/teamData';
 import { useThemeLanguage } from './context/ThemeLanguageContext';
 import ThemeSwitch from './components/ui/ThemeSwitch';
 import LanguageDropdown from './components/ui/LanguageDropdown';
-import { useSavedProjects } from './hooks/useSavedProjects';
+import { getLoggedInUser } from './utils/authUtils';
 
 const ProfilePage = lazy(() => import('./ProfilePage'));
 const ContactPage = lazy(() => import('./ContactPage'));
@@ -22,6 +20,8 @@ const AuthPage = lazy(() => import('./AuthPage'));
 const UserProfilePage = lazy(() => import('./UserProfilePage'));
 const LiveProjectsShowcase = lazy(() => import('./components/projects/LiveProjectsShowcase'));
 const ProjectsCatalogSection = lazy(() => import('./components/projects/ProjectsCatalogSection'));
+import OfficeBlogSection from './components/articles/OfficeBlogSection';
+import ProjectReelsFeed from './components/videos/ProjectReelsFeed';
 
 interface NavItem {
   label: string;
@@ -38,27 +38,13 @@ export default function App() {
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [isUserProfileOpen, setIsUserProfileOpen] = useState(false);
   const [activeNavIndex, setActiveNavIndex] = useState(0);
-  const { count: savedCount } = useSavedProjects();
   const [currentUser, setCurrentUser] = useState<any>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = localStorage.getItem('techno_user');
-        return stored ? JSON.parse(stored) : null;
-      } catch (e) {
-        return null;
-      }
-    }
-    return null;
+    return getLoggedInUser();
   });
 
   useEffect(() => {
     const handleAuthSync = () => {
-      try {
-        const stored = localStorage.getItem('techno_user');
-        setCurrentUser(stored ? JSON.parse(stored) : null);
-      } catch (e) {
-        setCurrentUser(null);
-      }
+      setCurrentUser(getLoggedInUser());
     };
     window.addEventListener('techno_auth_updated', handleAuthSync);
     window.addEventListener('storage', handleAuthSync);
@@ -66,6 +52,29 @@ export default function App() {
       window.removeEventListener('techno_auth_updated', handleAuthSync);
       window.removeEventListener('storage', handleAuthSync);
     };
+  }, []);
+
+  // Listen for login requirement triggers from save/like/comment actions
+  useEffect(() => {
+    const handleRequireLogin = (e: any) => {
+      const returnHash = e?.detail?.returnHash || window.location.hash || '#top';
+      try {
+        if (returnHash && returnHash !== '#login' && returnHash !== '#auth' && returnHash !== '#register') {
+          sessionStorage.setItem('techno_auth_return_hash', returnHash);
+        }
+      } catch (err) {}
+
+      setSelectedMember(null);
+      setIsContactOpen(false);
+      setIsUserProfileOpen(false);
+      setIsAuthOpen(true);
+      setAuthMode('login');
+      window.location.hash = '#login';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.addEventListener('techno_require_login', handleRequireLogin);
+    return () => window.removeEventListener('techno_require_login', handleRequireLogin);
   }, []);
 
   const localizedTeamMembers = teamMembers.map((m: any) => ({
@@ -133,6 +142,17 @@ export default function App() {
         return;
       }
       if (hash === '#my-profile' || hash === '#favorites' || hash === '#profile') {
+        const user = getLoggedInUser();
+        if (!user) {
+          setSelectedMember(null);
+          setIsContactOpen(false);
+          setIsUserProfileOpen(false);
+          setIsAuthOpen(true);
+          setAuthMode('login');
+          window.location.hash = '#login';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
         setSelectedMember(null);
         setIsContactOpen(false);
         setIsAuthOpen(false);
@@ -203,6 +223,12 @@ export default function App() {
   };
 
   const handleOpenAuth = (mode: 'login' | 'register' = 'login') => {
+    const currentHash = window.location.hash;
+    if (currentHash && currentHash !== '#login' && currentHash !== '#auth' && currentHash !== '#register') {
+      try {
+        sessionStorage.setItem('techno_auth_return_hash', currentHash);
+      } catch (e) {}
+    }
     setIsContactOpen(false);
     setSelectedMember(null);
     setIsAuthOpen(true);
@@ -213,8 +239,18 @@ export default function App() {
 
   const handleBackFromAuth = () => {
     setIsAuthOpen(false);
-    setActiveNavIndex(0);
-    window.location.hash = '';
+    let returnHash: string | null = null;
+    try {
+      returnHash = sessionStorage.getItem('techno_auth_return_hash');
+      sessionStorage.removeItem('techno_auth_return_hash');
+    } catch (e) {}
+
+    if (returnHash && returnHash !== '#login' && returnHash !== '#auth' && returnHash !== '#register') {
+      window.location.hash = returnHash;
+    } else {
+      setActiveNavIndex(0);
+      window.location.hash = '';
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -267,12 +303,27 @@ export default function App() {
         <UserProfilePage
           onBack={() => {
             setIsUserProfileOpen(false);
+            try {
+              if (window.history && window.history.pushState) {
+                window.history.pushState(null, '', window.location.pathname);
+              }
+            } catch (e) {}
             window.location.hash = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           onLogout={() => {
             setIsUserProfileOpen(false);
+            setIsAuthOpen(false);
+            setIsContactOpen(false);
+            setSelectedMember(null);
             setCurrentUser(null);
+            setCurrentTab('home');
+            setActiveNavIndex(0);
+            try {
+              if (window.history && window.history.pushState) {
+                window.history.pushState(null, '', window.location.pathname);
+              }
+            } catch (e) {}
             window.location.hash = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
@@ -343,7 +394,7 @@ export default function App() {
             type="button"
             className={`navbar-auth-btn ${isUserProfileOpen || isAuthOpen ? 'active' : ''}`}
             onClick={() => {
-              if (currentUser || savedCount > 0) {
+              if (currentUser) {
                 setIsContactOpen(false);
                 setSelectedMember(null);
                 setIsAuthOpen(false);
@@ -355,38 +406,26 @@ export default function App() {
               }
             }}
             title={currentUser 
-              ? (lang === 'en' ? `My Profile & Saved Projects (${savedCount})` : `حسابي والمشاريع المحفوظة (${savedCount})`) 
+              ? (currentUser.name || (lang === 'en' ? 'My Profile' : 'حسابي')) 
               : t.nav.login}
             style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           >
             <span className="navbar-auth-btn-icon">
-              {currentUser ? <BookmarkCheck size={15} /> : <User size={15} />}
+              {currentUser?.avatar ? (
+                <img
+                  src={currentUser.avatar}
+                  alt=""
+                  style={{ width: '18px', height: '18px', borderRadius: '50%', objectFit: 'cover', display: 'block' }}
+                />
+              ) : (
+                <User size={15} />
+              )}
             </span>
-            <span>
+            <span className="navbar-auth-btn-label">
               {currentUser 
-                ? (currentUser.name ? currentUser.name.split(' ')[0] : (lang === 'en' ? 'My Profile' : 'حسابي')) 
+                ? (currentUser.name || (lang === 'en' ? 'My Profile' : 'حسابي')) 
                 : t.nav.login}
             </span>
-            {savedCount > 0 && (
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minWidth: '18px',
-                  height: '18px',
-                  padding: '0 5px',
-                  borderRadius: '9999px',
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                  backgroundColor: 'var(--accent-cyan)',
-                  color: '#030508',
-                  lineHeight: 1
-                }}
-              >
-                {savedCount}
-              </span>
-            )}
           </button>
         </div>
       </nav>
@@ -400,8 +439,19 @@ export default function App() {
             onSuccess={(loggedInUser: any) => {
               if (loggedInUser) setCurrentUser(loggedInUser);
               setIsAuthOpen(false);
-              setIsUserProfileOpen(true);
-              window.location.hash = '#my-profile';
+
+              let returnHash: string | null = null;
+              try {
+                returnHash = sessionStorage.getItem('techno_auth_return_hash');
+                sessionStorage.removeItem('techno_auth_return_hash');
+              } catch (e) {}
+
+              if (returnHash && returnHash !== '#login' && returnHash !== '#auth' && returnHash !== '#register') {
+                window.location.hash = returnHash;
+              } else {
+                setIsUserProfileOpen(true);
+                window.location.hash = '#my-profile';
+              }
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           />
@@ -426,70 +476,16 @@ export default function App() {
           </Suspense>
         </div>
       ) : currentTab === 'videos' ? (
-        <div className="tab-page-container">
-          <div className="tab-page-header">
-            <h1 className="tab-page-title">{t.videos.pageTitle}</h1>
-            <p className="tab-page-subtitle">{t.videos.pageSubtitle}</p>
+        <div className="tab-page-container tab-page-videos" style={{ padding: '0', maxWidth: '100%' }}>
+          <div className="tab-page-header reels-page-header" style={{ marginBottom: '0.75rem', paddingTop: '1rem', paddingBottom: '0.25rem' }}>
+            <h1 className="tab-page-title reels-page-title" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.3rem)', marginBottom: '0.4rem' }}>{t.videos.pageTitle}</h1>
+            <p className="tab-page-subtitle reels-page-subtitle" style={{ fontSize: '0.92rem', maxWidth: '600px' }}>{t.videos.pageSubtitle}</p>
           </div>
-
-          <VideosSection showNavigateButton={false} />
-
-          <div className="tab-page-cards-grid">
-            <div className="tab-page-card">
-              <div className="tab-page-card-icon">
-                <Video size={26} />
-              </div>
-              <h3 className="tab-page-card-title">{t.videos.card1Title}</h3>
-              <p className="tab-page-card-desc">{t.videos.card1Desc}</p>
-            </div>
-
-            <div className="tab-page-card">
-              <div className="tab-page-card-icon">
-                <Sparkles size={26} />
-              </div>
-              <h3 className="tab-page-card-title">{t.videos.card2Title}</h3>
-              <p className="tab-page-card-desc">{t.videos.card2Desc}</p>
-            </div>
-          </div>
+          <ProjectReelsFeed />
         </div>
       ) : currentTab === 'articles' ? (
-        <div className="tab-page-container">
-          <div className="tab-page-header">
-            <h1 className="tab-page-title">{t.articles.pageTitle}</h1>
-            <p className="tab-page-subtitle">{t.articles.pageSubtitle}</p>
-          </div>
-
-          <ArticlesSection showNavigateButton={false} />
-
-          <div className="tab-page-cards-grid">
-            <div className="tab-page-card">
-              <div className="tab-page-card-icon">
-                <BookOpen size={26} />
-              </div>
-              <h3 className="tab-page-card-title">
-                {lang === 'ar' ? 'أبحاث الذكاء الاصطناعي التوليدي' : 'Generative AI Research'}
-              </h3>
-              <p className="tab-page-card-desc">
-                {lang === 'ar' 
-                  ? 'سلسلة مقالات تخصصية تناقش بنية النماذج العصبية المتقدمة وكيفية تسخيرها في تسريع دورة الإنتاج البرمجي.' 
-                  : 'Specialized articles discussing neural models and their application in accelerating development cycles.'}
-              </p>
-            </div>
-
-            <div className="tab-page-card">
-              <div className="tab-page-card-icon">
-                <Cpu size={26} />
-              </div>
-              <h3 className="tab-page-card-title">
-                {lang === 'ar' ? 'المعمارية النظيفة وهندسة النظم' : 'Clean Architecture & Systems'}
-              </h3>
-              <p className="tab-page-card-desc">
-                {lang === 'ar'
-                  ? 'رؤى هندسية تطبيقية حول بناء أنظمة قابلة للتوسع وتصميم واجهات برمجية متماسكة ومرنة للمستقبل.'
-                  : 'Engineering insights on building scalable systems and cohesive, future-proof APIs.'}
-              </p>
-            </div>
-          </div>
+        <div className="tab-page-container" style={{ padding: '0', maxWidth: '100%' }}>
+          <OfficeBlogSection showHeroBanner={true} />
         </div>
       ) : currentTab === 'about' ? (
         <section
@@ -548,15 +544,15 @@ export default function App() {
           >
             <TeamMomentsRing onScrollDown={scrollToTeam} />
 
-            {/* Bottom gradient fade */}
+            {/* Bottom gradient fade - sleek height so front cards remain crisp and vibrant */}
             <div
               style={{
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: '320px',
-                background: theme === 'light' ? 'linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.4) 30%, rgba(241, 245, 249, 0.9) 70%, #f8fafc 100%)' : 'linear-gradient(to bottom, transparent 0%, rgba(5, 5, 8, 0.3) 30%, rgba(0, 0, 0, 0.8) 70%, #000000 100%)',
+                height: '110px',
+                background: theme === 'light' ? 'linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.65) 60%, #f8fafc 100%)' : 'linear-gradient(to bottom, transparent 0%, rgba(5, 5, 8, 0.6) 60%, #000000 100%)',
                 pointerEvents: 'none',
                 zIndex: 10
               }}
@@ -737,15 +733,15 @@ export default function App() {
             >
               <TeamMomentsRing onScrollDown={scrollToTeam} />
 
-              {/* Bottom gradient fade */}
+              {/* Bottom gradient fade - sleek height so front cards remain crisp and vibrant */}
               <div
                 style={{
                   position: 'absolute',
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: '320px',
-                  background: theme === 'light' ? 'linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.4) 30%, rgba(241, 245, 249, 0.9) 70%, #f8fafc 100%)' : 'linear-gradient(to bottom, transparent 0%, rgba(5, 5, 8, 0.3) 30%, rgba(0, 0, 0, 0.8) 70%, #000000 100%)',
+                  height: '110px',
+                  background: theme === 'light' ? 'linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.65) 60%, #f8fafc 100%)' : 'linear-gradient(to bottom, transparent 0%, rgba(5, 5, 8, 0.6) 60%, #000000 100%)',
                   pointerEvents: 'none',
                   zIndex: 10
                 }}
