@@ -172,7 +172,7 @@ export default function App() {
       } else if (hash === '#videos') {
         setCurrentTab('videos');
         setActiveNavIndex(2);
-      } else if (hash === '#articles') {
+      } else if (hash === '#articles' || hash.startsWith('#article/')) {
         setCurrentTab('articles');
         setActiveNavIndex(3);
       } else if (hash === '#about') {

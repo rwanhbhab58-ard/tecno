@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   Heart, 
@@ -110,12 +110,32 @@ export const OfficeBlogSection: React.FC<OfficeBlogSectionProps> = ({
     });
   };
 
+  // Sync selected article with URL hash for SEO, direct links, and browser back/forward
+  useEffect(() => {
+    const syncFromHash = () => {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#article/')) {
+        const targetSlug = hash.replace(/^#article\//, '').replace(/\/$/, '');
+        const found = blogArticlesData.find(a => a.slug === targetSlug || a.id === targetSlug);
+        if (found) {
+          setSelectedArticle(found);
+        }
+      } else if (hash === '#articles' || (!hash.startsWith('#article/') && selectedArticle)) {
+        setSelectedArticle(null);
+      }
+    };
+
+    syncFromHash();
+    window.addEventListener('hashchange', syncFromHash);
+    return () => window.removeEventListener('hashchange', syncFromHash);
+  }, [selectedArticle]);
+
   // Handle Share Link
-  const handleShare = (articleId: string, e: React.MouseEvent) => {
+  const handleShare = (article: BlogArticle, e: React.MouseEvent) => {
     e.stopPropagation();
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(`${window.location.origin}/#articles`);
-      setCopiedId(articleId);
+      navigator.clipboard.writeText(`${window.location.origin}/#article/${article.slug}`);
+      setCopiedId(article.id);
       setTimeout(() => setCopiedId(null), 2000);
     }
   };
@@ -347,15 +367,15 @@ export const OfficeBlogSection: React.FC<OfficeBlogSectionProps> = ({
                   {/* 3. Card Footer: Author Capsule & Share / Engagement (matching screenshot 1) */}
                   <div className="card-footer-capsule-row" onClick={(e) => e.stopPropagation()}>
                     {/* Author Pill Capsule */}
-                    <div className="card-author-pill">
+                    <div className="card-author-pill" style={{ whiteSpace: 'nowrap' }}>
                       <img 
                         src={article.author.avatar} 
                         alt={authorName} 
                         className="author-pill-avatar" 
                       />
-                      <span className="author-pill-name">{authorName}</span>
+                      <span className="author-pill-name" style={{ whiteSpace: 'nowrap' }}>{authorName}</span>
                       <span className="author-pill-divider">|</span>
-                      <span className="author-pill-date">{publishDate}</span>
+                      <span className="author-pill-date" style={{ whiteSpace: 'nowrap' }}>{publishDate}</span>
                     </div>
 
                     {/* Action Group: Share, Likes, Bookmark */}
@@ -401,7 +421,7 @@ export const OfficeBlogSection: React.FC<OfficeBlogSectionProps> = ({
                       <button
                         type="button"
                         className="card-icon-action-btn share-btn"
-                        onClick={(e) => handleShare(article.id, e)}
+                        onClick={(e) => handleShare(article, e)}
                         title={isEn ? "Share link" : "مشاركة الرابط"}
                       >
                         {copiedId === article.id ? <Check size={15} color="#10b981" /> : <Share2 size={15} />}

@@ -5,11 +5,6 @@ import { useThemeLanguage } from '../../context/ThemeLanguageContext';
 import { useSavedProjects } from '../../hooks/useSavedProjects';
 import './MagicBento.css';
 
-import ch1 from '../../assets/projects/techno-projects/chapter4-01.webp';
-import ch2 from '../../assets/projects/techno-projects/chapter4-02.webp';
-import ch3 from '../../assets/projects/techno-projects/chapter4-03.webp';
-import ch4 from '../../assets/projects/techno-projects/chapter4-04.webp';
-import ch5 from '../../assets/projects/techno-projects/chapter4-05.webp';
 import ch6 from '../../assets/projects/techno-projects/chapter4-06.webp';
 
 export interface BentoCardItem {
@@ -31,62 +26,62 @@ const MOBILE_BREAKPOINT = 768;
 const defaultCardData: BentoCardItem[] = [
   {
     color: '#0d1629',
-    title: 'خوارزميات التدفق والتحكم الأمني',
-    titleEn: 'Security Flow & Control Algorithms',
-    description: 'تحليل شجرة القرار ومنطق التحقق المتسلسل لأبواب الخزائن الذكية.',
-    descriptionEn: 'Decision-tree analysis and sequential validation logic for smart vault access.',
-    label: 'هندسة النظم',
-    labelEn: 'Systems Engineering',
-    image: ch1
+    title: 'التوأم الرقمي: ما هو وكيف يعمل وما أهم تطبيقاته؟',
+    titleEn: 'Digital Twin: Architecture & Applications',
+    description: 'تمثيل رقمي قائم على البيانات للأصول والعمليات، للمراقبة واختبار السيناريوهات ودعم القرار.',
+    descriptionEn: 'Data-driven virtual synchronization of physical assets for simulation and decision support.',
+    label: 'التحول الرقمي',
+    labelEn: 'Digital Transformation',
+    image: '/articles/digital-twin.jpg'
   },
   {
     color: '#0d1629',
-    title: 'معمارية قواعد البيانات المشفرة',
-    titleEn: 'Encrypted Database Architecture',
-    description: 'هيكلية تسجيل بيانات الدخول والامتثال لمعايير الحماية المصرفية.',
-    descriptionEn: 'Access audit logging structure compliant with banking security standards.',
-    label: 'أمن البيانات',
-    labelEn: 'Data Security',
-    image: ch2
-  },
-  {
-    color: '#0d1629',
-    title: 'أنظمة التحقق البيومتري الميداني',
-    titleEn: 'Field Biometric Verification Systems',
-    description: 'مطابقة المعالم الحيوية للوجوه بدقة حاسوبية فائقة في أجزاء من الثانية.',
-    descriptionEn: 'Sub-second real-time biometric face landmark matching with high precision.',
-    label: 'الرؤية الحاسوبية',
-    labelEn: 'Computer Vision',
-    image: ch4
-  },
-  {
-    color: '#0d1629',
-    title: 'هندسة العينات والمجموعات المرجعية',
-    titleEn: 'Dataset Engineering & Reference Corpora',
-    description: 'تنقية ومعالجة بيانات التدريب لرفع دقة الاعتماد وتقليل نسب الخطأ.',
-    descriptionEn: 'Training data refinement and curation to minimize false rejection rates.',
-    label: 'الذكاء الاصطناعي',
+    title: 'الحوسبة العاطفية: كيف يحلل الذكاء الاصطناعي التعبير العاطفي؟',
+    titleEn: 'Affective Computing & Human Interaction',
+    description: 'كيف تحلل الأنظمة تعابير الوجه والصوت والإشارات الحيوية ضمن حدود عدم اليقين والسياق.',
+    descriptionEn: 'Multimodal AI analysis of facial, vocal, and physiological expressions within contextual bounds.',
+    label: 'ذكاء اصطناعي',
     labelEn: 'Artificial Intelligence',
-    image: ch3
+    image: '/articles/affective-computing.jpg'
   },
   {
     color: '#0d1629',
-    title: 'سجلات التدقيق والمراقبة اللحظية',
-    titleEn: 'Audit Logs & Real-Time Telemetry',
-    description: 'أرشفة فورية للمحاولات وتتبع مسارات الوصول للرقابة الجنائية.',
-    descriptionEn: 'Instant event streaming and audit trail tracing for forensic inspection.',
-    label: 'التدقيق الأمني',
-    labelEn: 'Security Audit',
-    image: ch5
+    title: 'تحليل تعابير الوجه وتخصيص المحتوى في أنظمة التوصية',
+    titleEn: 'Facial Expressions in Recommender Systems',
+    description: 'دمج الرؤية الحاسوبية كإشارة احتمالية سياقية لتخصيص المحتوى مع مراعاة الخصوصية.',
+    descriptionEn: 'Computer vision landmarks as probabilistic contextual signals for ethical content recommendation.',
+    label: 'أنظمة التوصية',
+    labelEn: 'Recommender Systems',
+    image: '/articles/emotion-aware-recommendation.jpg'
   },
   {
     color: '#0d1629',
-    title: 'منظومة رصد محاولات الاختراق',
-    titleEn: 'Intrusion Detection & Defense',
-    description: 'تنبيهات فورية وإجراءات حماية تلقائية عند كشف وجوه غير مصرح بها.',
-    descriptionEn: 'Instant alert triggers and automated defensive routines upon unauthorized access.',
-    label: 'الاستجابة الفورية',
-    labelEn: 'Incident Response',
+    title: 'ما هو بروتوكول MCP؟ ربط الذكاء الاصطناعي بالأدوات والبيانات',
+    titleEn: 'Model Context Protocol (MCP) Standard',
+    description: 'المعيار المفتوح لربط تطبيقات AI بالأدوات وقواعد البيانات والأنظمة دون كود ربط معقد.',
+    descriptionEn: 'The open standard unifying how LLMs securely interface with external tools and enterprise data.',
+    label: 'معمارية النظم',
+    labelEn: 'Systems Architecture',
+    image: '/articles/model-context-protocol-mcp.jpg'
+  },
+  {
+    color: '#0d1629',
+    title: 'كيف تتنبأ نماذج الذكاء الاصطناعي بالكلمة التالية؟',
+    titleEn: 'Next Token Prediction in Language Models',
+    description: 'من N-gram وRNN إلى Transformers وتحديات الصرف واللهجات والرمزنة في اللغة العربية.',
+    descriptionEn: 'From N-grams to causal Transformers: decoding heuristics and Arabic morphology tokenization.',
+    label: 'معالجة اللغات',
+    labelEn: 'NLP & LLMs',
+    image: '/articles/next-token-prediction.jpg'
+  },
+  {
+    color: '#0d1629',
+    title: 'حوكمة وموثوقية النظم الذكية VVUQ',
+    titleEn: 'AI Verification & Uncertainty (VVUQ)',
+    description: 'معايير التحقق من صحة النماذج الرقمية، وقياس عدم اليقين وأمن البيانات التشغيلية في 2026.',
+    descriptionEn: 'Engineering validation, uncertainty quantification, and operational trust in predictive systems.',
+    label: 'هندسة الموثوقية',
+    labelEn: 'Reliability Engineering',
     image: ch6
   }
 ];
@@ -630,15 +625,28 @@ const MagicBento: React.FC<MagicBentoProps> = ({
           const cardLabel = isEn ? (card.labelEn || card.label) : card.label;
           const cardTitle = isEn ? (card.titleEn || card.title) : card.title;
           const cardDesc = isEn ? (card.descriptionEn || card.description) : card.description;
-          const articleId = `article-${index + 1}`;
+          const articleSlugs = [
+            'digital-twin',
+            'affective-computing',
+            'emotion-aware-recommendation',
+            'model-context-protocol-mcp',
+            'next-token-prediction',
+            'digital-twin'
+          ];
+          const targetSlug = articleSlugs[index] || 'digital-twin';
+          const articleId = targetSlug;
           const isItemSaved = isSaved(articleId);
 
           const baseClassName = `magic-bento-card ${textAutoHide ? 'magic-bento-card--text-autohide' : ''} ${enableBorderGlow ? 'magic-bento-card--border-glow' : ''}`;
           const cardProps = {
-            className: baseClassName,
+            className: `${baseClassName} cursor-pointer`,
+            onClick: () => {
+              window.location.hash = `#article/${targetSlug}`;
+            },
             style: {
               backgroundColor: isLight ? '#ffffff' : (card.color || '#0d1629'),
-              '--glow-color': isLight ? '2, 132, 199' : glowColor
+              '--glow-color': isLight ? '2, 132, 199' : glowColor,
+              cursor: 'pointer'
             } as React.CSSProperties
           };
 
