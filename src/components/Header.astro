@@ -1,0 +1,284 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import logo from '~/assets/brand/logo.png';
+import { site, type Lang } from '~/data/site';
+import type { RouteKey } from '~/i18n/ui';
+import { localize, otherLang, routePath, t } from '~/i18n/utils';
+
+interface Props {
+  lang: Lang;
+  path: string;
+  altPath?: string | undefined;
+}
+
+const { lang, path, altPath } = Astro.props;
+const ui = t(lang);
+const other = otherLang(lang);
+const switchHref = altPath ?? localize(other, '/');
+
+const primary: RouteKey[] = ['services', 'projects', 'webProjects', 'articles', 'videos', 'about', 'faq'];
+
+function isCurrent(key: RouteKey): boolean {
+  const href = routePath(lang, key);
+  return path === href || (key !== 'home' && path.startsWith(href));
+}
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href={localize(lang, '/')} aria-label={`${site.name[lang]} — ${ui.nav.home}`}>
+      <Image src={logo} alt="" width={36} height={39} loading="eager" class="brand__logo" />
+      <span class="brand__name">{site.name[lang]}</span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label={ui.a11y.mainNav}>
+      <ul class="site-nav__list" role="list">
+        {
+          primary.map((key) => (
+            <li>
+              <a href={routePath(lang, key)} aria-current={isCurrent(key) ? 'page' : undefined}>
+                {ui.nav[key]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn site-nav__cta" href={routePath(lang, 'contact')} aria-current={isCurrent('contact') ? 'page' : undefined}>
+        {ui.nav.contact}
+      </a>
+    </nav>
+
+    <div class="site-header__tools">
+      <a class="tool-btn" href={switchHref} hreflang={other} lang={other} aria-label={ui.a11y.langSwitch}>
+        <Icon name="translate" size={18} />
+        <span>{ui.common.langShort}</span>
+      </a>
+      <button class="tool-btn js-only" type="button" data-theme-toggle aria-label={ui.a11y.theme}>
+        <Icon name="moon" size={18} class="icon-moon" />
+        <Icon name="sun" size={18} class="icon-sun" />
+      </button>
+      <button
+        class="tool-btn menu-btn js-only"
+        type="button"
+        aria-controls="site-nav"
+        aria-expanded="false"
+        data-menu-toggle
+        data-label-open={ui.a11y.menu}
+        data-label-close={ui.a11y.closeMenu}
+      >
+        <Icon name="menu" size={20} class="icon-open" />
+        <Icon name="close" size={20} class="icon-close" />
+        <span class="visually-hidden" data-menu-label>{ui.a11y.menu}</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  const root = document.documentElement;
+
+  const themeBtn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const syncPressed = (): void => {
+    themeBtn?.setAttribute('aria-pressed', String(root.dataset['theme'] === 'dark'));
+  };
+  syncPressed();
+  themeBtn?.addEventListener('click', () => {
+    const next = root.dataset['theme'] === 'dark' ? 'light' : 'dark';
+    root.dataset['theme'] = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      /* storage unavailable (private mode) — the choice lasts for this page only */
+    }
+    syncPressed();
+  });
+
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+  media.addEventListener('change', (e) => {
+    let stored: string | null = null;
+    try {
+      stored = localStorage.getItem('theme');
+    } catch {
+      stored = null;
+    }
+    if (!stored) {
+      root.dataset['theme'] = e.matches ? 'dark' : 'light';
+      syncPressed();
+    }
+  });
+
+  const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const nav = document.getElementById('site-nav');
+  const label = menuBtn?.querySelector<HTMLElement>('[data-menu-label]');
+
+  const setMenu = (open: boolean): void => {
+    if (!menuBtn || !nav) return;
+    menuBtn.setAttribute('aria-expanded', String(open));
+    nav.classList.toggle('is-open', open);
+    if (label) label.textContent = (open ? menuBtn.dataset['labelClose'] : menuBtn.dataset['labelOpen']) ?? '';
+  };
+
+  menuBtn?.addEventListener('click', () => setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuBtn?.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      menuBtn.focus();
+    }
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(10px);
+    border-block-end: 1px solid var(--border);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-height: var(--header-h);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--heading);
+    font-weight: 700;
+    font-size: var(--fs-lg);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .brand:hover {
+    color: var(--heading);
+  }
+  .brand__logo {
+    width: 36px;
+    height: auto;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-inline-start: auto;
+  }
+  .site-nav__list {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .site-nav__list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    color: var(--text);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .site-nav__list a:hover {
+    background: var(--bg-muted);
+    color: var(--heading);
+  }
+  .site-nav__list a[aria-current='page'] {
+    background: var(--accent-soft);
+    color: var(--heading);
+    font-weight: 600;
+  }
+  .site-nav__cta {
+    min-height: 2.5rem;
+  }
+
+  .site-header__tools {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .tool-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding-inline: 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--heading);
+    font: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .tool-btn:hover {
+    border-color: var(--border-strong);
+    color: var(--heading);
+  }
+
+  .js-only {
+    display: none;
+  }
+  :global(.js) .js-only {
+    display: inline-flex;
+  }
+  /* Icons are rendered by a child component, so they need :global() to be reached. */
+  :global([data-theme='dark']) .tool-btn :global(.icon-moon),
+  :global([data-theme='light']) .tool-btn :global(.icon-sun) {
+    display: none;
+  }
+  .menu-btn :global(.icon-close),
+  .menu-btn[aria-expanded='true'] :global(.icon-open) {
+    display: none;
+  }
+  .menu-btn[aria-expanded='true'] :global(.icon-close) {
+    display: block;
+  }
+  :global(.js) .menu-btn {
+    display: none;
+  }
+
+  @media (max-width: 68rem) {
+    .site-header__inner {
+      flex-wrap: wrap;
+    }
+    .site-header__tools {
+      margin-inline-start: auto;
+    }
+    :global(.js) .menu-btn {
+      display: inline-flex;
+    }
+    .site-nav {
+      order: 3;
+      flex-basis: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-3);
+      padding-block: var(--space-2) var(--space-4);
+      margin: 0;
+    }
+    :global(.js) .site-nav:not(.is-open) {
+      display: none;
+    }
+    .site-nav__list {
+      flex-direction: column;
+    }
+    .site-nav__list a {
+      width: 100%;
+      border-radius: var(--radius-sm);
+      min-height: 2.75rem;
+      font-size: var(--fs-md);
+    }
+  }
+</style>

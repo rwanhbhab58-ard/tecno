@@ -1,0 +1,36 @@
+---
+export interface FaqEntry {
+  id: string;
+  question: string;
+  answer: string;
+  link?: { href: string; label: string } | undefined;
+}
+
+interface Props {
+  items: FaqEntry[];
+  /** Open the first item so the answer-first pattern is visible without interaction. */
+  openFirst?: boolean;
+}
+
+const { items, openFirst = false } = Astro.props;
+---
+
+<div class="faq">
+  {
+    items.map((item, i) => (
+      <details id={`faq-${item.id}`} open={openFirst && i === 0}>
+        <summary>
+          <h3>{item.question}</h3>
+        </summary>
+        <div class="faq__answer">
+          <p>{item.answer}</p>
+          {item.link && (
+            <p>
+              <a href={item.link.href}>{item.link.label}</a>
+            </p>
+          )}
+        </div>
+      </details>
+    ))
+  }
+</div>

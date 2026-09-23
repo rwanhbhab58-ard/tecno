@@ -1,0 +1,161 @@
+import type { Lang } from '~/data/site';
+
+/** Route keys shared by both languages. Paths are identical except for the /en prefix. */
+export const routes = {
+  home: '/',
+  services: '/services/',
+  projects: '/projects/',
+  webProjects: '/web-projects/',
+  videos: '/videos/',
+  articles: '/articles/',
+  about: '/about/',
+  faq: '/faq/',
+  contact: '/contact/',
+} as const;
+
+export type RouteKey = keyof typeof routes;
+
+export const navOrder: RouteKey[] = [
+  'home',
+  'services',
+  'projects',
+  'webProjects',
+  'articles',
+  'videos',
+  'about',
+  'faq',
+  'contact',
+];
+
+const ar = {
+  meta: { locale: 'ar_SY', dir: 'rtl' },
+  nav: {
+    home: 'الرئيسية',
+    services: 'الخدمات',
+    projects: 'المشاريع',
+    webProjects: 'مشاريع الويب',
+    videos: 'الفيديوهات',
+    articles: 'المقالات',
+    about: 'من نحن',
+    faq: 'الأسئلة الشائعة',
+    contact: 'تواصل معنا',
+  },
+  a11y: {
+    skip: 'تخطَّ إلى المحتوى',
+    mainNav: 'التنقل الرئيسي',
+    footerNav: 'روابط التذييل',
+    breadcrumb: 'مسار التنقل',
+    menu: 'القائمة',
+    closeMenu: 'إغلاق القائمة',
+    theme: 'تبديل الوضع الليلي/النهاري',
+    langSwitch: 'Read this page in English',
+    opensNewTab: '(يفتح في نافذة جديدة)',
+    toc: 'محتويات المقال',
+  },
+  common: {
+    langName: 'English',
+    langShort: 'EN',
+    readMore: 'اقرأ المزيد',
+    readArticle: 'اقرأ المقال',
+    allArticles: 'كل المقالات',
+    allProjects: 'كل المشاريع',
+    visitSite: 'زيارة الموقع',
+    contactUs: 'تواصل معنا',
+    whatsapp: 'راسلنا على واتساب',
+    call: 'اتصل بنا',
+    email: 'البريد الإلكتروني',
+    minutes: 'دقيقة قراءة',
+    publishedOn: 'نُشر في',
+    updatedOn: 'آخر تحديث',
+    by: 'بقلم',
+    category: 'التصنيف',
+    all: 'الكل',
+    documentation: 'ملفات التوثيق',
+    folder: 'مجلد المشروع',
+    report: 'التقرير (PDF)',
+    doc: 'المستند (Word)',
+    slides: 'العرض التقديمي',
+    watch: 'تشغيل الفيديو',
+    faqShort: 'أسئلة شائعة',
+    related: 'مقالات ذات صلة',
+    onThisPage: 'في هذا المقال',
+    backToTop: 'العودة للأعلى',
+    arabicOnly: 'المقال باللغة العربية',
+  },
+  footer: {
+    about:
+      'مكتب هندسي في حماة، سوريا، لمشاريع الذكاء الاصطناعي والروبوتات وأنظمة التحكم وتطوير المواقع.',
+    explore: 'استكشف',
+    contact: 'التواصل',
+    rights: 'جميع الحقوق محفوظة.',
+  },
+} as const;
+
+type UiShape<T> = { [K in keyof T]: T[K] extends string ? string : UiShape<T[K]> };
+export type Ui = UiShape<typeof ar>;
+
+const en: Ui = {
+  meta: { locale: 'en_US', dir: 'ltr' },
+  nav: {
+    home: 'Home',
+    services: 'Services',
+    projects: 'Projects',
+    webProjects: 'Web Projects',
+    videos: 'Videos',
+    articles: 'Articles',
+    about: 'About',
+    faq: 'FAQ',
+    contact: 'Contact',
+  },
+  a11y: {
+    skip: 'Skip to content',
+    mainNav: 'Main navigation',
+    footerNav: 'Footer links',
+    breadcrumb: 'Breadcrumb',
+    menu: 'Menu',
+    closeMenu: 'Close menu',
+    theme: 'Toggle dark/light mode',
+    langSwitch: 'اقرأ هذه الصفحة بالعربية',
+    opensNewTab: '(opens in a new tab)',
+    toc: 'Article contents',
+  },
+  common: {
+    langName: 'العربية',
+    langShort: 'ع',
+    readMore: 'Read more',
+    readArticle: 'Read the article',
+    allArticles: 'All articles',
+    allProjects: 'All projects',
+    visitSite: 'Visit site',
+    contactUs: 'Contact us',
+    whatsapp: 'Message us on WhatsApp',
+    call: 'Call us',
+    email: 'Email',
+    minutes: 'min read',
+    publishedOn: 'Published',
+    updatedOn: 'Updated',
+    by: 'By',
+    category: 'Category',
+    all: 'All',
+    documentation: 'Documentation',
+    folder: 'Project folder',
+    report: 'Report (PDF)',
+    doc: 'Document (Word)',
+    slides: 'Slides',
+    watch: 'Play video',
+    faqShort: 'FAQ',
+    related: 'Related articles',
+    onThisPage: 'In this article',
+    backToTop: 'Back to top',
+    arabicOnly: 'Article in Arabic',
+  },
+  footer: {
+    about:
+      'An engineering office in Hama, Syria for AI, robotics, control systems and web development projects.',
+    explore: 'Explore',
+    contact: 'Contact',
+    rights: 'All rights reserved.',
+  },
+};
+
+export const ui: Record<Lang, Ui> = { ar, en };

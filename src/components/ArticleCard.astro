@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import type { Lang } from '~/data/site';
+import { articlePath, readingMinutes, type Article } from '~/lib/articles';
+import { formatDate, t } from '~/i18n/utils';
+
+interface Props {
+  article: Article;
+  lang: Lang;
+  headingLevel?: 'h2' | 'h3';
+  eager?: boolean;
+}
+
+const { article, lang, headingLevel = 'h3', eager = false } = Astro.props;
+const ui = t(lang);
+const d = article.data;
+const Heading = headingLevel;
+const isEn = lang === 'en';
+---
+
+<article class="card">
+  <div class="card__media">
+    <Image
+      src={d.cover}
+      alt=""
+      widths={[400, 640, 800]}
+      sizes="(min-width: 72rem) 22rem, (min-width: 40rem) 45vw, 92vw"
+      loading={eager ? 'eager' : 'lazy'}
+    />
+  </div>
+  <div class="card__body">
+    <div class="card__meta">
+      <span class="badge">{isEn ? d.categoryEn : d.category}</span>
+      {isEn && <span class="badge badge--outline" lang="en">{ui.common.arabicOnly}</span>}
+    </div>
+    <Heading class="card__title">
+      <a href={articlePath(article)} hreflang={isEn ? 'ar' : undefined}>
+        {isEn ? <span>{d.titleEn}</span> : d.title}
+      </a>
+    </Heading>
+    <p class="card__text">{isEn ? d.excerptEn : d.excerpt}</p>
+    <div class="card__meta">
+      <span><Icon name="calendar" size={14} /> <time datetime={d.publishedAt.toISOString().slice(0, 10)}>{formatDate(lang, d.publishedAt)}</time></span>
+      <span><Icon name="clock" size={14} /> {readingMinutes(article)} {ui.common.minutes}</span>
+    </div>
+  </div>
+</article>
+
+<style>
+  .card__meta span:has(:global(svg)) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+</style>

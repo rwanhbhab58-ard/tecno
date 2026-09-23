@@ -1,0 +1,185 @@
+---
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import '~/styles/global.css';
+
+import Header from '~/components/Header.astro';
+import Footer from '~/components/Footer.astro';
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
+import ogDefault from '~/assets/brand/og-default.jpg';
+import logo from '~/assets/brand/logo.png';
+
+import { site, type Lang } from '~/data/site';
+import { dir, localize, otherLang, t } from '~/i18n/utils';
+import {
+  abs,
+  breadcrumbNode,
+  organizationNode,
+  webPageNode,
+  websiteNode,
+  type Crumb,
+  type JsonLd,
+  type PageType,
+} from '~/lib/schema';
+
+interface Props {
+  lang: Lang;
+  /** Full <title>. Keep ≤ 60 characters where possible. */
+  title: string;
+  description: string;
+  /** Root-relative path of this page, including the language prefix. */
+  path: string;
+  /**
+   * Path of the same page in the other language. Omit for pages that exist in
+   * one language only (Arabic articles); no hreflang pair is emitted then.
+   */
+  altPath?: string | undefined;
+  image?: ImageMetadata | undefined;
+  imageAlt?: string | undefined;
+  ogType?: 'website' | 'article';
+  pageType?: PageType;
+  /** Breadcrumb trail after "Home". The last item is the current page. */
+  crumbs?: Crumb[];
+  schema?: JsonLd[];
+  /** When true the page's own node is provided in `schema` (e.g. FAQPage). */
+  customPageNode?: boolean;
+  noindex?: boolean;
+  publishedAt?: Date | undefined;
+  modifiedAt?: Date | undefined;
+}
+
+const {
+  lang,
+  title,
+  description,
+  path,
+  altPath,
+  image,
+  imageAlt,
+  ogType = 'website',
+  pageType = 'WebPage',
+  crumbs = [],
+  schema = [],
+  customPageNode = false,
+  noindex = false,
+  publishedAt,
+  modifiedAt,
+} = Astro.props;
+
+const ui = t(lang);
+const origin = (Astro.site ?? new URL('https://technoenjaz.com')).origin;
+const canonical = abs(origin, path);
+
+const og = await getImage({ src: image ?? ogDefault, width: 1200, format: 'jpg', quality: 82 });
+const ogUrl = abs(origin, og.src);
+const logoImg = await getImage({ src: logo, width: 512, format: 'png' });
+const logoUrl = abs(origin, logoImg.src);
+
+const fullCrumbs: Crumb[] = crumbs.length ? [{ name: ui.nav.home, path: localize(lang, '/') }, ...crumbs] : [];
+
+const graph: JsonLd[] = [
+  organizationNode(origin, lang, logoUrl),
+  websiteNode(origin, lang),
+  ...(customPageNode
+    ? []
+    : [
+        webPageNode({
+          origin,
+          canonical,
+          lang,
+          title,
+          description,
+          type: pageType,
+          imageUrl: ogUrl,
+          hasBreadcrumb: fullCrumbs.length > 0,
+          datePublished: publishedAt,
+          dateModified: modifiedAt,
+        }),
+      ]),
+  ...(fullCrumbs.length ? [breadcrumbNode(origin, canonical, fullCrumbs)] : []),
+  ...schema,
+];
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
+
+const alt = otherLang(lang);
+const arPath = lang === 'ar' ? path : altPath;
+const enPath = lang === 'en' ? path : altPath;
+const hasPair = Boolean(altPath);
+---
+
+<!doctype html>
+<html lang={lang} dir={dir(lang)} data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // Resolve theme before first paint to avoid a flash of the wrong colour scheme.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        var t = null;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') {
+          t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        d.setAttribute('data-theme', t);
+      })();
+    </script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />}
+    {
+      hasPair && arPath && enPath && (
+        <>
+          <link rel="alternate" hreflang="ar" href={abs(origin, arPath)} />
+          <link rel="alternate" hreflang="en" href={abs(origin, enPath)} />
+          <link rel="alternate" hreflang="x-default" href={abs(origin, arPath)} />
+        </>
+      )
+    }
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7fbfb" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a1622" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <meta name="geo.region" content={site.address.regionCode} />
+    <meta name="geo.placename" content="Hama, Syria" />
+    <meta name="geo.position" content={`${site.geo.latitude};${site.geo.longitude}`} />
+    <meta name="ICBM" content={`${site.geo.latitude}, ${site.geo.longitude}`} />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name[lang]} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content={String(og.attributes.width)} />
+    <meta property="og:image:height" content={String(og.attributes.height)} />
+    <meta property="og:image:alt" content={imageAlt ?? site.name[lang]} />
+    <meta property="og:locale" content={ui.meta.locale} />
+    {hasPair && <meta property="og:locale:alternate" content={t(alt).meta.locale} />}
+    {publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
+    {modifiedAt && <meta property="article:modified_time" content={modifiedAt.toISOString()} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    <script type="application/ld+json" set:html={jsonLd} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{ui.a11y.skip}</a>
+    <Header lang={lang} path={path} altPath={altPath} />
+    <main id="main" tabindex="-1">
+      {fullCrumbs.length > 0 && <Breadcrumbs lang={lang} crumbs={fullCrumbs} />}
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

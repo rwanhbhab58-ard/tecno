@@ -1,0 +1,66 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import type { Lang } from '~/data/site';
+import { displayDomain, webCategories, type WebProject } from '~/data/webProjects';
+import { t } from '~/i18n/utils';
+
+interface Props {
+  project: WebProject;
+  lang: Lang;
+  headingLevel?: 'h2' | 'h3';
+  eager?: boolean;
+}
+
+const { project, lang, headingLevel = 'h3', eager = false } = Astro.props;
+const ui = t(lang);
+const Heading = headingLevel;
+---
+
+<article class="card" id={project.id}>
+  <div class="card__media web-card__media">
+    <Image
+      src={project.image}
+      alt={lang === 'ar' ? `لقطة شاشة من ${project.title.ar}` : `Screenshot of ${project.title.en}`}
+      widths={[400, 640, 800]}
+      sizes="(min-width: 72rem) 22rem, (min-width: 40rem) 45vw, 92vw"
+      loading={eager ? 'eager' : 'lazy'}
+    />
+  </div>
+  <div class="card__body">
+    <span class="badge">{webCategories[project.category][lang]}</span>
+    <Heading class="card__title">
+      <a href={project.url} target="_blank" rel="noopener">
+        {project.title[lang]}
+        <span class="visually-hidden">{ui.a11y.opensNewTab}</span>
+      </a>
+    </Heading>
+    <p class="card__text">{project.description[lang]}</p>
+    <ul class="tags" role="list">
+      {project.highlights[lang].map((h) => <li class="badge badge--outline">{h}</li>)}
+    </ul>
+    <p class="web-card__domain">
+      <Icon name="external" size={14} />
+      <span class="ltr">{displayDomain(project.url)}</span>
+    </p>
+  </div>
+</article>
+
+<style>
+  .web-card__media {
+    aspect-ratio: 16 / 10;
+    border-block-end: 1px solid var(--border);
+  }
+  .web-card__media img {
+    object-position: top;
+  }
+  .web-card__domain {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: auto 0 0;
+    padding-block-start: var(--space-2);
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+</style>

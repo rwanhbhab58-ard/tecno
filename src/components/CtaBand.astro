@@ -1,0 +1,71 @@
+---
+import Icon from './Icon.astro';
+import { site, type Lang } from '~/data/site';
+import { routePath, t } from '~/i18n/utils';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  text?: string;
+}
+
+const copy = {
+  ar: {
+    title: 'لديك فكرة مشروع؟ لنحوّلها إلى واقع',
+    text: 'أرسل لنا وصفاً مختصراً لمشروعك، وسنعود إليك بتقدير واضح للنطاق والتكلفة والمدة.',
+  },
+  en: {
+    title: 'Have a project idea? Let’s build it',
+    text: 'Send us a short description of your project and we will reply with a clear estimate of scope, cost and timeline.',
+  },
+};
+
+const { lang } = Astro.props;
+const title = Astro.props.title ?? copy[lang].title;
+const text = Astro.props.text ?? copy[lang].text;
+const ui = t(lang);
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <div class="container cta__inner">
+    <div>
+      <h2 id="cta-title">{title}</h2>
+      <p>{text}</p>
+    </div>
+    <div class="btn-row">
+      <a class="btn btn--whatsapp" href={site.whatsapp} target="_blank" rel="noopener">
+        <Icon name="whatsapp" />
+        {ui.common.whatsapp}
+        <span class="visually-hidden">{ui.a11y.opensNewTab}</span>
+      </a>
+      <a class="btn btn--ghost" href={routePath(lang, 'contact')}>{ui.common.contactUs}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    padding-block: var(--space-7);
+  }
+  .cta__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background:
+      radial-gradient(40rem 12rem at 0% 0%, color-mix(in srgb, var(--brand-teal) 18%, transparent), transparent 70%),
+      var(--surface);
+  }
+  .cta h2 {
+    font-size: var(--fs-xl);
+  }
+  .cta p {
+    color: var(--text-muted);
+    margin: 0;
+    max-width: 38rem;
+  }
+</style>
