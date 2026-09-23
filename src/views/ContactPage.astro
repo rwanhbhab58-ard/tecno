@@ -1,0 +1,418 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import Icon from '~/components/Icon.astro';
+import { site, type Lang } from '~/data/site';
+import { localize, otherLang, routePath, t } from '~/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = t(lang);
+const path = routePath(lang, 'contact');
+const sep = lang === 'ar' ? '، ' : ', ';
+const fullAddress = [site.address.street[lang], site.address.locality[lang], site.address.country[lang]].join(sep);
+
+const copy = {
+  ar: {
+    title: 'تواصل مع تكنو إنجاز | هاتف وواتساب وعنوان المكتب في حماة',
+    description:
+      'تواصل مع تكنو إنجاز في حماة: واتساب وهاتف ‎+963 958 794 195، البريد info@technoenjaz.com، والعنوان: ساحة العاصي، بناء الخاني، الطابق الرابع.',
+    eyebrow: 'تواصل معنا',
+    h1: 'تواصل مع تكنو إنجاز',
+    lead: 'أسرع طريقة هي واتساب. يمكنك أيضاً الاتصال بنا أو مراسلتنا بالبريد أو زيارة المكتب في حماة.',
+    channels: 'طرق التواصل',
+    whatsapp: 'واتساب',
+    phone: 'الهاتف',
+    email: 'البريد الإلكتروني',
+    instagram: 'إنستغرام',
+    facebook: 'فيسبوك',
+    address: 'عنوان المكتب',
+    openMap: 'افتح في خرائط Google',
+    formTitle: 'أرسل تفاصيل مشروعك',
+    formLead: 'املأ النموذج وسنجهّز رسالتك لتُرسل عبر واتساب أو البريد الإلكتروني. لا نخزّن أي بيانات على الموقع.',
+    name: 'الاسم الكامل',
+    field: 'الاختصاص أو مجال العمل',
+    fieldHint: 'اختياري، مثال: هندسة معلوماتية، ذكاء اصطناعي',
+    org: 'الجامعة أو الجهة',
+    orgHint: 'اختياري',
+    contact: 'رقم الهاتف أو البريد للرد عليك',
+    message: 'تفاصيل المشروع أو الاستفسار',
+    messageHint: 'صف الفكرة والمتطلبات والموعد المطلوب إن وجد.',
+    required: 'مطلوب',
+    sendWhatsapp: 'إرسال عبر واتساب',
+    sendEmail: 'إرسال عبر البريد',
+    errName: 'يرجى كتابة اسمك.',
+    errMessage: 'يرجى كتابة تفاصيل مشروعك أو استفسارك.',
+    subject: 'استفسار من موقع تكنو إنجاز',
+    labels: { name: 'الاسم', field: 'الاختصاص', org: 'الجهة', contact: 'للتواصل', message: 'الرسالة' },
+    mapTitle: 'موقع المكتب على الخريطة',
+    loadMap: 'عرض الخريطة التفاعلية',
+    mapNote: 'تُحمَّل خريطة Google فقط عند الضغط، حفاظاً على السرعة والخصوصية.',
+  },
+  en: {
+    title: 'Contact Techno Enjaz | Phone, WhatsApp & office in Hama',
+    description:
+      'Contact Techno Enjaz in Hama, Syria: WhatsApp and phone +963 958 794 195, email info@technoenjaz.com, office at Al-Assi Square, Al-Khani Building, 4th floor.',
+    eyebrow: 'Contact',
+    h1: 'Contact Techno Enjaz',
+    lead: 'WhatsApp is the fastest way to reach us. You can also call, email or visit our office in Hama.',
+    channels: 'Ways to reach us',
+    whatsapp: 'WhatsApp',
+    phone: 'Phone',
+    email: 'Email',
+    instagram: 'Instagram',
+    facebook: 'Facebook',
+    address: 'Office address',
+    openMap: 'Open in Google Maps',
+    formTitle: 'Send us your project details',
+    formLead: 'Fill in the form and we will prepare your message to send via WhatsApp or email. Nothing is stored on this website.',
+    name: 'Full name',
+    field: 'Major or field',
+    fieldHint: 'Optional, e.g. computer engineering, AI',
+    org: 'University or organisation',
+    orgHint: 'Optional',
+    contact: 'Phone or email so we can reply',
+    message: 'Project details or question',
+    messageHint: 'Describe the idea, requirements and any deadline.',
+    required: 'required',
+    sendWhatsapp: 'Send via WhatsApp',
+    sendEmail: 'Send via email',
+    errName: 'Please enter your name.',
+    errMessage: 'Please describe your project or question.',
+    subject: 'Enquiry from the Techno Enjaz website',
+    labels: { name: 'Name', field: 'Field', org: 'Organisation', contact: 'Reply to', message: 'Message' },
+    mapTitle: 'Office location on the map',
+    loadMap: 'Show interactive map',
+    mapNote: 'The Google map only loads when you ask for it, to keep the page fast and private.',
+  },
+}[lang];
+
+const channels = [
+  { icon: 'whatsapp', label: copy.whatsapp, value: site.phoneDisplay, href: site.whatsapp, external: true, ltr: true },
+  { icon: 'call', label: copy.phone, value: site.phoneDisplay, href: `tel:${site.phone}`, external: false, ltr: true },
+  { icon: 'mail', label: copy.email, value: site.email, href: `mailto:${site.email}`, external: false, ltr: true },
+  { icon: 'instagram', label: copy.instagram, value: site.instagramHandle, href: site.social.instagram, external: true, ltr: true },
+  { icon: 'facebook', label: copy.facebook, value: site.name[lang], href: site.social.facebook, external: true, ltr: false },
+] as const;
+
+const formConfig = {
+  whatsapp: site.whatsapp,
+  email: site.email,
+  subject: copy.subject,
+  labels: copy.labels,
+};
+---
+
+<BaseLayout
+  lang={lang}
+  title={copy.title}
+  description={copy.description}
+  path={path}
+  altPath={localize(otherLang(lang), '/contact/')}
+  pageType="ContactPage"
+  crumbs={[{ name: ui.nav.contact, path }]}
+>
+  <PageHero eyebrow={copy.eyebrow} title={copy.h1} lead={copy.lead} />
+
+  <div class="container section contact-grid">
+    <section aria-labelledby="channels-title">
+      <h2 id="channels-title">{copy.channels}</h2>
+      <ul class="channels" role="list">
+        {
+          channels.map((c) => (
+            <li>
+              <a href={c.href} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined}>
+                <span class="icon-tile">
+                  <Icon name={c.icon} />
+                </span>
+                <span>
+                  <span class="channels__label">{c.label}</span>
+                  <span class:list={['channels__value', { ltr: c.ltr }]}>{c.value}</span>
+                </span>
+                {c.external && <span class="visually-hidden">{ui.a11y.opensNewTab}</span>}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <h2 class="address-title">{copy.address}</h2>
+      <address class="address">
+        <Icon name="pin" />
+        <span>{fullAddress}</span>
+      </address>
+      <a class="btn btn--ghost" href={site.mapUrl} target="_blank" rel="noopener">
+        <Icon name="external" /> {copy.openMap} <span class="visually-hidden">{ui.a11y.opensNewTab}</span>
+      </a>
+    </section>
+
+    <section class="form-card" aria-labelledby="form-title">
+      <h2 id="form-title">{copy.formTitle}</h2>
+      <p class="form-card__lead">{copy.formLead}</p>
+      <form
+        id="contact-form"
+        class="stack"
+        action={`mailto:${site.email}`}
+        method="post"
+        enctype="text/plain"
+        novalidate
+        data-config={JSON.stringify(formConfig)}
+      >
+        <div class="field">
+          <label for="cf-name">{copy.name} <span class="req">({copy.required})</span></label>
+          <input id="cf-name" name="name" type="text" autocomplete="name" required aria-describedby="cf-name-err" />
+          <p class="field__error" id="cf-name-err" data-error-for="name" hidden>{copy.errName}</p>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="cf-field">{copy.field}</label>
+            <input id="cf-field" name="field" type="text" aria-describedby="cf-field-hint" />
+            <p class="hint" id="cf-field-hint">{copy.fieldHint}</p>
+          </div>
+          <div class="field">
+            <label for="cf-org">{copy.org}</label>
+            <input id="cf-org" name="org" type="text" autocomplete="organization" aria-describedby="cf-org-hint" />
+            <p class="hint" id="cf-org-hint">{copy.orgHint}</p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="cf-contact">{copy.contact}</label>
+          <input id="cf-contact" name="contact" type="text" inputmode="email" autocomplete="email" dir="ltr" />
+        </div>
+        <div class="field">
+          <label for="cf-message">{copy.message} <span class="req">({copy.required})</span></label>
+          <textarea id="cf-message" name="message" required aria-describedby="cf-message-hint cf-message-err"></textarea>
+          <p class="hint" id="cf-message-hint">{copy.messageHint}</p>
+          <p class="field__error" id="cf-message-err" data-error-for="message" hidden>{copy.errMessage}</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn--whatsapp" type="submit" name="via" value="whatsapp">
+            <Icon name="whatsapp" /> {copy.sendWhatsapp}
+          </button>
+          <button class="btn btn--ghost" type="submit" name="via" value="email">
+            <Icon name="mail" /> {copy.sendEmail}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <section class="container map" aria-labelledby="map-title">
+    <h2 id="map-title">{copy.mapTitle}</h2>
+    <div class="map__frame" data-map-src={site.mapEmbedUrl + `&hl=${lang}`} data-map-title={copy.mapTitle}>
+      <button type="button" class="btn js-only-inline" data-load-map>{copy.loadMap}</button>
+      <a class="btn btn--ghost" href={site.mapUrl} target="_blank" rel="noopener">{copy.openMap}</a>
+      <p>{copy.mapNote}</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  interface FormConfig {
+    whatsapp: string;
+    email: string;
+    subject: string;
+    labels: Record<'name' | 'field' | 'org' | 'contact' | 'message', string>;
+  }
+
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+
+  if (form) {
+    const config = JSON.parse(form.dataset['config'] ?? '{}') as FormConfig;
+    const value = (name: string): string => {
+      const el = form.elements.namedItem(name);
+      return el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement ? el.value.trim() : '';
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const submitter = (event as SubmitEvent).submitter as HTMLButtonElement | null;
+      const via = submitter?.value === 'email' ? 'email' : 'whatsapp';
+
+      let firstInvalid: HTMLElement | null = null;
+      for (const name of ['name', 'message'] as const) {
+        const field = form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement;
+        const error = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+        const invalid = value(name) === '';
+        field.setAttribute('aria-invalid', String(invalid));
+        if (error) error.hidden = !invalid;
+        if (invalid && !firstInvalid) firstInvalid = field;
+      }
+      if (firstInvalid) {
+        firstInvalid.focus();
+        return;
+      }
+
+      const lines = (['name', 'field', 'org', 'contact', 'message'] as const)
+        .filter((k) => value(k) !== '')
+        .map((k) => `${config.labels[k]}: ${value(k)}`);
+      const text = lines.join('\n');
+
+      const url =
+        via === 'whatsapp'
+          ? `${config.whatsapp}?text=${encodeURIComponent(text)}`
+          : `mailto:${config.email}?subject=${encodeURIComponent(config.subject)}&body=${encodeURIComponent(text)}`;
+      if (via === 'whatsapp') window.open(url, '_blank', 'noopener');
+      else window.location.href = url;
+    });
+  }
+
+  document.querySelector<HTMLButtonElement>('[data-load-map]')?.addEventListener('click', (e) => {
+    const holder = (e.currentTarget as HTMLElement).closest<HTMLElement>('[data-map-src]');
+    if (!holder) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = holder.dataset['mapSrc'] ?? '';
+    iframe.title = holder.dataset['mapTitle'] ?? 'Map';
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'no-referrer-when-downgrade';
+    iframe.className = 'map__iframe';
+    holder.replaceChildren(iframe);
+  });
+</script>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: var(--space-7);
+  }
+  @media (min-width: 60rem) {
+    .contact-grid {
+      grid-template-columns: 1fr 1.2fr;
+      align-items: start;
+    }
+  }
+  .contact-grid h2 {
+    font-size: var(--fs-xl);
+  }
+  .channels {
+    list-style: none;
+    margin: 0 0 var(--space-6);
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .channels a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--heading);
+    text-decoration: none;
+  }
+  .channels a:hover {
+    border-color: var(--accent);
+  }
+  .channels__label {
+    display: block;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+  .channels__value {
+    display: block;
+    font-weight: 600;
+  }
+  [dir='rtl'] .channels__value.ltr {
+    text-align: right;
+  }
+  .address-title {
+    margin-block-start: var(--space-5);
+  }
+  .address {
+    display: flex;
+    gap: var(--space-2);
+    font-style: normal;
+    margin-block-end: var(--space-4);
+  }
+  .address :global(svg) {
+    flex-shrink: 0;
+    color: var(--accent);
+    margin-block-start: 0.3rem;
+  }
+  .form-card {
+    padding: var(--space-6);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+  }
+  .form-card__lead {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .field-row {
+    display: grid;
+    gap: var(--space-4);
+  }
+  @media (min-width: 36rem) {
+    .field-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .field .hint {
+    margin: 0;
+  }
+  .req {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+  }
+  .field__error {
+    margin: 0;
+    color: #b42318;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  :global([data-theme='dark']) .field__error {
+    color: #ff9c8f;
+  }
+  .field :global([aria-invalid='true']) {
+    border-color: #b42318;
+  }
+  .map {
+    padding-block-end: var(--space-6);
+  }
+  .map h2 {
+    font-size: var(--fs-xl);
+  }
+  .map__frame {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    gap: var(--space-3);
+    min-height: 20rem;
+    padding: var(--space-5);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--surface-2);
+    text-align: center;
+  }
+  .map__frame p {
+    flex-basis: 100%;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .js-only-inline {
+    display: none;
+  }
+  :global(.js) .js-only-inline {
+    display: inline-flex;
+  }
+  .map__frame:has(:global(.map__iframe)) {
+    padding: 0;
+    border-style: solid;
+    overflow: hidden;
+  }
+  :global(.map__iframe) {
+    width: 100%;
+    height: 24rem;
+    border: 0;
+  }
+</style>

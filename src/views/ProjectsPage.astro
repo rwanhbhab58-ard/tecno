@@ -1,0 +1,200 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import ProjectCard from '~/components/ProjectCard.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import { type Lang } from '~/data/site';
+import { projects, projectCategories, type ProjectCategory } from '~/data/projects';
+import { gallery } from '~/data/media';
+import { formatNumber, localize, otherLang, routePath, t } from '~/i18n/utils';
+import { abs, itemListNode } from '~/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = t(lang);
+const path = routePath(lang, 'projects');
+const origin = (Astro.site ?? new URL('https://technoenjaz.com')).origin;
+
+const copy = {
+  ar: {
+    title: 'المشاريع الهندسية ومشاريع التخرج | تكنو إنجاز',
+    description: `${projects.length} مشروعاً هندسياً موثقاً من تكنو إنجاز في الذكاء الاصطناعي والرؤية الحاسوبية والروبوتات وأنظمة التحكم والتطبيقات، مع تقارير PDF ومستندات Word وعروض تقديمية.`,
+    eyebrow: 'المشاريع الهندسية',
+    h1: 'مشاريع هندسية ومشاريع تخرج موثّقة',
+    lead: `${formatNumber('ar', projects.length)} مشروعاً نفّذها فريق تكنو إنجاز في الذكاء الاصطناعي والرؤية الحاسوبية والروبوتات وأنظمة التحكم وتطبيقات الويب والموبايل. لكل مشروع ملفات توثيق يمكنك فتحها على Google Drive‏.`,
+    filter: 'تصفية حسب المجال',
+    showing: 'عدد المشاريع المعروضة:',
+    galleryTitle: 'صور من نماذج نفّذناها',
+    galleryLead: 'نماذج روبوتية وأنظمة عملية من أعمال الفريق.',
+  },
+  en: {
+    title: 'Engineering & graduation projects | Techno Enjaz',
+    description: `${projects.length} documented engineering projects by Techno Enjaz in AI, computer vision, robotics, control systems and apps, with PDF reports, Word documents and slide decks.`,
+    eyebrow: 'Engineering projects',
+    h1: 'Documented engineering and graduation projects',
+    lead: `${projects.length} projects built by the Techno Enjaz team in AI, computer vision, robotics, control systems, and web and mobile apps. Each one links to documentation you can open on Google Drive.`,
+    filter: 'Filter by field',
+    showing: 'Projects shown:',
+    galleryTitle: 'Photos of prototypes we built',
+    galleryLead: 'Robotic prototypes and working systems from the team’s projects.',
+  },
+}[lang];
+
+const categories = Object.keys(projectCategories) as ProjectCategory[];
+const counts = Object.fromEntries(categories.map((c) => [c, projects.filter((p) => p.category === c).length]));
+
+const list = itemListNode(
+  abs(origin, path),
+  copy.h1,
+  projects.map((p) => ({ name: p.title[lang], url: `${abs(origin, path)}#${p.id}` })),
+);
+---
+
+<BaseLayout
+  lang={lang}
+  title={copy.title}
+  description={copy.description}
+  path={path}
+  altPath={localize(otherLang(lang), '/projects/')}
+  pageType="CollectionPage"
+  crumbs={[{ name: ui.nav.projects, path }]}
+  schema={[list]}
+>
+  <PageHero eyebrow={copy.eyebrow} title={copy.h1} lead={copy.lead} />
+
+  <section class="container section" aria-label={copy.eyebrow}>
+    <div class="filters js-only-block" role="group" aria-label={copy.filter} data-filters>
+      <button type="button" class="chip" aria-pressed="true" data-filter="all">
+        {ui.common.all} <span class="chip__count">{formatNumber(lang, projects.length)}</span>
+      </button>
+      {
+        categories.map((c) => (
+          <button type="button" class="chip" aria-pressed="false" data-filter={c}>
+            {projectCategories[c][lang]} <span class="chip__count">{formatNumber(lang, counts[c] ?? 0)}</span>
+          </button>
+        ))
+      }
+    </div>
+    <p class="visually-hidden" aria-live="polite" data-filter-status data-label={copy.showing}></p>
+
+    <div class="grid" data-project-grid>
+      {projects.map((p) => <ProjectCard project={p} lang={lang} />)}
+    </div>
+  </section>
+
+  <section class="section section--muted" aria-labelledby="gallery-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="gallery-title">{copy.galleryTitle}</h2>
+        <p>{copy.galleryLead}</p>
+      </div>
+      <ul class="gallery" role="list">
+        {
+          gallery.map((g) => (
+            <li>
+              <figure>
+                <Image src={g.image} alt={g.alt[lang]} widths={[280, 420, 560]} sizes="(min-width: 60rem) 17rem, 45vw" loading="lazy" />
+                <figcaption>{g.alt[lang]}</figcaption>
+              </figure>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<script>
+  // Progressive enhancement: without JS every project stays visible.
+  const group = document.querySelector<HTMLElement>('[data-filters]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-project-grid] > [data-category]');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+  group?.addEventListener('click', (event) => {
+    const btn = event.target instanceof Element ? event.target.closest('button[data-filter]') : null;
+    if (!btn) return;
+    const value = btn.getAttribute('data-filter');
+    group.querySelectorAll('button[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    let shown = 0;
+    cards.forEach((card) => {
+      const match = value === 'all' || card.dataset['category'] === value;
+      card.hidden = !match;
+      if (match) shown += 1;
+    });
+    if (status) status.textContent = `${status.dataset['label'] ?? ''} ${shown}`;
+  });
+</script>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-end: var(--space-6);
+  }
+  .js-only-block {
+    display: none;
+  }
+  :global(.js) .js-only-block {
+    display: flex;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    padding: 0.35rem 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--heading);
+    font: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .chip:hover {
+    border-color: var(--accent);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+  .chip__count {
+    font-size: var(--fs-xs);
+    opacity: 0.85;
+  }
+  [data-project-grid] > :global([hidden]) {
+    display: none;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+    gap: var(--space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  figure {
+    margin: 0;
+  }
+  .gallery img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  figcaption {
+    margin-block-start: var(--space-2);
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+</style>

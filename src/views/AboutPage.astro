@@ -1,0 +1,243 @@
+---
+import { Image, getImage } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import { site, type Lang } from '~/data/site';
+import { team } from '~/data/team';
+import { moments } from '~/data/media';
+import { projects } from '~/data/projects';
+import { webProjects } from '~/data/webProjects';
+import { getArticles } from '~/lib/articles';
+import { formatNumber, localize, otherLang, routePath, t } from '~/i18n/utils';
+import { abs, personNodes } from '~/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = t(lang);
+const path = routePath(lang, 'about');
+const origin = (Astro.site ?? new URL('https://technoenjaz.com')).origin;
+const articleCount = (await getArticles()).length;
+
+const copy = {
+  ar: {
+    title: 'من نحن | تكنو إنجاز، مكتب هندسي في حماة',
+    description:
+      'تعرّف على تكنو إنجاز: مكتب هندسي في حماة، سوريا، يعمل في مشاريع التخرج والذكاء الاصطناعي والروبوتات وتطوير المواقع، ويقوده م. عبد الغني.',
+    eyebrow: 'من نحن',
+    h1: 'تكنو إنجاز: هندسة تتحول إلى نتائج',
+    whoTitle: 'من نحن',
+    who: [
+      'تكنو إنجاز مكتب هندسي مقرّه مدينة حماة في سوريا. نعمل مع طلاب الهندسة والباحثين والشركات لتحويل الأفكار التقنية إلى نماذج وأنظمة تعمل فعلاً.',
+      'نجمع في فريق واحد بين العتاد والبرمجيات: من الحساسات والمتحكمات والأذرع الروبوتية، إلى نماذج الذكاء الاصطناعي، وصولاً إلى المواقع والأنظمة السحابية المنشورة على الإنترنت.',
+      'ونؤمن بأن المعرفة يجب أن تكون متاحة بالعربية، لذلك ننشر مقالات تقنية معمّقة مجانية مع مصادرها.',
+    ],
+    factsTitle: 'تكنو إنجاز في أرقام',
+    facts: {
+      location: 'المقر',
+      projects: 'مشاريع هندسية موثقة',
+      web: 'مواقع وأنظمة منشورة',
+      articles: 'مقالات تقنية عربية',
+      languages: 'لغات العمل',
+      languagesValue: 'العربية والإنجليزية',
+    },
+    teamTitle: 'الفريق',
+    teamLead: 'يقود الفريق التقني:',
+    momentsTitle: 'من أنشطتنا ومعارض المشاريع',
+  },
+  en: {
+    title: 'About Techno Enjaz | Engineering office in Hama, Syria',
+    description:
+      'Meet Techno Enjaz: an engineering office in Hama, Syria working on graduation projects, AI, robotics and web development, led by Eng. Abdulghani.',
+    eyebrow: 'About',
+    h1: 'Techno Enjaz: engineering that delivers',
+    whoTitle: 'Who we are',
+    who: [
+      'Techno Enjaz is an engineering office based in Hama, Syria. We work with engineering students, researchers and businesses to turn technical ideas into prototypes and systems that actually work.',
+      'Our team covers both hardware and software: sensors, microcontrollers and robotic arms, AI models, and websites and cloud systems deployed live on the internet.',
+      'We believe knowledge should be available in Arabic, so we publish free, in-depth technical articles with their sources.',
+    ],
+    factsTitle: 'Techno Enjaz at a glance',
+    facts: {
+      location: 'Based in',
+      projects: 'Documented engineering projects',
+      web: 'Live websites & systems',
+      articles: 'Arabic technical articles',
+      languages: 'Working languages',
+      languagesValue: 'Arabic and English',
+    },
+    teamTitle: 'Team',
+    teamLead: 'The technical team is led by:',
+    momentsTitle: 'From our activities and project exhibitions',
+  },
+}[lang];
+
+const photoUrls: Record<string, string> = {};
+for (const m of team) {
+  const img = await getImage({ src: m.photo, width: 600, format: 'jpg' });
+  photoUrls[m.id] = abs(origin, img.src);
+}
+---
+
+<BaseLayout
+  lang={lang}
+  title={copy.title}
+  description={copy.description}
+  path={path}
+  altPath={localize(otherLang(lang), '/about/')}
+  pageType="AboutPage"
+  crumbs={[{ name: ui.nav.about, path }]}
+  schema={personNodes(origin, lang, photoUrls)}
+>
+  <PageHero eyebrow={copy.eyebrow} title={copy.h1} lead={site.description[lang]} />
+
+  <section class="container section about-grid" aria-labelledby="who-title">
+    <div>
+      <h2 id="who-title">{copy.whoTitle}</h2>
+      {copy.who.map((p) => <p>{p}</p>)}
+    </div>
+    <aside class="facts" aria-labelledby="facts-title">
+      <h2 id="facts-title">{copy.factsTitle}</h2>
+      <dl>
+        <div><dt>{copy.facts.location}</dt><dd>{site.address.locality[lang]}{lang === 'ar' ? '، ' : ', '}{site.address.country[lang]}</dd></div>
+        <div><dt>{copy.facts.projects}</dt><dd>{formatNumber(lang, projects.length)}</dd></div>
+        <div><dt>{copy.facts.web}</dt><dd>{formatNumber(lang, webProjects.length)}</dd></div>
+        <div><dt>{copy.facts.articles}</dt><dd>{formatNumber(lang, articleCount)}</dd></div>
+        <div><dt>{copy.facts.languages}</dt><dd>{copy.facts.languagesValue}</dd></div>
+      </dl>
+    </aside>
+  </section>
+
+  <section class="section section--muted" aria-labelledby="team-title">
+    <div class="container">
+      <h2 id="team-title">{copy.teamTitle}</h2>
+      <p>{copy.teamLead}</p>
+      {
+        team.map((m) => (
+          <article class="person" id={m.id}>
+            <Image src={m.photo} alt={m.name[lang]} widths={[300, 600]} sizes="(min-width: 48rem) 18rem, 90vw" loading="lazy" />
+            <div>
+              <h3>{m.name[lang]}</h3>
+              <p class="person__role">{m.role[lang]}</p>
+              <p>{m.bio[lang]}</p>
+              <ul class="tags" role="list">
+                {m.skills[lang].map((s) => <li class="badge">{s}</li>)}
+              </ul>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="moments-title">
+    <div class="container">
+      <h2 id="moments-title">{copy.momentsTitle}</h2>
+      <ul class="moments" role="list">
+        {
+          moments.map((m) => (
+            <li>
+              <Image src={m.image} alt={m.alt[lang]} widths={[300, 450, 600]} sizes="(min-width: 60rem) 17rem, 45vw" loading="lazy" />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .about-grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 56rem) {
+    .about-grid {
+      grid-template-columns: 1.4fr 1fr;
+      align-items: start;
+    }
+  }
+  .facts {
+    padding: var(--space-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .facts h2 {
+    font-size: var(--fs-lg);
+  }
+  .facts dl {
+    margin: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .facts dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-block-end: var(--space-3);
+    border-block-end: 1px solid var(--border);
+  }
+  .facts dl div:last-child {
+    border: 0;
+    padding: 0;
+  }
+  .facts dt {
+    color: var(--text-muted);
+  }
+  .facts dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--heading);
+    text-align: end;
+  }
+  .person {
+    display: grid;
+    gap: var(--space-5);
+    margin-block-start: var(--space-5);
+    padding: var(--space-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  @media (min-width: 48rem) {
+    .person {
+      grid-template-columns: 18rem 1fr;
+      align-items: center;
+    }
+  }
+  .person img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: center 20%;
+    border-radius: var(--radius);
+  }
+  .person h3 {
+    font-size: var(--fs-xl);
+    margin: 0;
+  }
+  .person__role {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .moments {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+    gap: var(--space-4);
+    list-style: none;
+    margin: var(--space-5) 0 0;
+    padding: 0;
+  }
+  .moments img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+</style>

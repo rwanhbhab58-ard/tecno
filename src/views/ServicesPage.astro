@@ -1,0 +1,293 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import Icon from '~/components/Icon.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import { type Lang } from '~/data/site';
+import { services } from '~/data/services';
+import { projects, projectCategories } from '~/data/projects';
+import { getArticles, articlePath } from '~/lib/articles';
+import { formatNumber, localize, otherLang, routePath, t } from '~/i18n/utils';
+import { abs, type JsonLd } from '~/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = t(lang);
+const articles = await getArticles();
+const path = routePath(lang, 'services');
+const origin = (Astro.site ?? new URL('https://technoenjaz.com')).origin;
+
+const copy = {
+  ar: {
+    title: 'خدمات تكنو إنجاز | مشاريع تخرج، ذكاء اصطناعي، روبوتات، مواقع',
+    description:
+      'خدمات تكنو إنجاز في حماة: تنفيذ مشاريع التخرج والمشاريع الهندسية، أنظمة الذكاء الاصطناعي والرؤية الحاسوبية، الروبوتات والأنظمة المدمجة، تطوير المواقع والمتاجر وتطبيقات Flutter.',
+    eyebrow: 'الخدمات',
+    h1: 'خدماتنا الهندسية والبرمجية',
+    lead: 'نعمل في خمسة مجالات مترابطة. لكل خدمة أمثلة حقيقية منشورة في الموقع ومقالات تشرح التقنية التي نستخدمها.',
+    examples: 'أمثلة من أعمالنا',
+    projectsCount: 'مشروعاً موثقاً في هذا المجال',
+    learn: 'اقرأ عن التقنية',
+    process: 'كيف نعمل معك',
+    steps: [
+      ['أرسل الفكرة', 'صف مشروعك باختصار عبر واتساب أو نموذج التواصل.'],
+      ['نحدد النطاق', 'نراجع الفكرة معك ونتفق على المتطلبات والتكلفة والمدة.'],
+      ['التنفيذ والمتابعة', 'نبني النموذج أو النظام مع تحديثات دورية.'],
+      ['التسليم والتوثيق', 'نسلّم العمل مع ملفات التوثيق ونساعدك في العرض.'],
+    ],
+  },
+  en: {
+    title: 'Techno Enjaz services | Graduation projects, AI, robotics, web',
+    description:
+      'Techno Enjaz services in Hama, Syria: graduation and engineering projects, AI and computer vision, robotics and embedded systems, websites, online stores and Flutter apps.',
+    eyebrow: 'Services',
+    h1: 'Our engineering and software services',
+    lead: 'We work in five connected areas. Each service links to real, published examples and to articles explaining the technology we use.',
+    examples: 'Examples of our work',
+    projectsCount: 'documented projects in this area',
+    learn: 'Read about the technology',
+    process: 'How we work with you',
+    steps: [
+      ['Send your idea', 'Describe your project briefly on WhatsApp or via the contact form.'],
+      ['Agree the scope', 'We review the idea with you and agree requirements, cost and timeline.'],
+      ['Build & update', 'We build the prototype or system and keep you updated.'],
+      ['Handover & docs', 'We deliver the work with documentation and help you present it.'],
+    ],
+  },
+}[lang];
+
+const schema: JsonLd[] = services.map((s) => ({
+  '@type': 'Service',
+  '@id': `${abs(origin, path)}#${s.id}`,
+  name: s.title[lang],
+  description: s.summary[lang],
+  serviceType: s.title.en,
+  provider: { '@id': `${origin}/#organization` },
+  areaServed: 'SY',
+  url: `${abs(origin, path)}#${s.id}`,
+}));
+---
+
+<BaseLayout
+  lang={lang}
+  title={copy.title}
+  description={copy.description}
+  path={path}
+  altPath={localize(otherLang(lang), '/services/')}
+  crumbs={[{ name: ui.nav.services, path }]}
+  schema={schema}
+>
+  <PageHero eyebrow={copy.eyebrow} title={copy.h1} lead={copy.lead} />
+
+  <div class="container section">
+    <nav class="toc-chips" aria-label={copy.eyebrow}>
+      <ul role="list">
+        {services.map((s) => <li><a href={`#${s.id}`}>{s.title[lang]}</a></li>)}
+      </ul>
+    </nav>
+
+    {
+      services.map((s) => {
+        const count = projects.filter((p) => s.projectCategories.includes(p.category)).length;
+        const related = s.articles
+          .map((slug) => articles.find((a) => a.id === slug))
+          .filter((a) => a !== undefined);
+        return (
+          <section class="service-block" id={s.id} aria-labelledby={`${s.id}-title`}>
+            <div class="service-block__head">
+              <span class="icon-tile">
+                <Icon name={s.icon} />
+              </span>
+              <h2 id={`${s.id}-title`}>{s.title[lang]}</h2>
+            </div>
+            <p class="service-block__summary">{s.summary[lang]}</p>
+            <div class="service-block__grid">
+              <ul class="checklist" role="list">
+                {s.points[lang].map((pt) => (
+                  <li>
+                    <Icon name="check" size={18} />
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+              <div class="service-block__aside">
+                <h3>{copy.examples}</h3>
+                <p>
+                  {s.id === 'web-development' ? (
+                    <a href={routePath(lang, 'webProjects')}>{ui.nav.webProjects}</a>
+                  ) : (
+                    <a href={routePath(lang, 'projects')}>
+                      {formatNumber(lang, count)} {copy.projectsCount}
+                    </a>
+                  )}
+                </p>
+                <ul class="tags" role="list">
+                  {s.projectCategories.map((c) => (
+                    <li class="badge badge--outline">{projectCategories[c][lang]}</li>
+                  ))}
+                </ul>
+                {related.length > 0 && (
+                  <>
+                    <h3>{copy.learn}</h3>
+                    <ul class="links" role="list">
+                      {related.map((a) => (
+                        <li>
+                          <a href={articlePath(a)} hreflang={lang === 'en' ? 'ar' : undefined}>
+                            {lang === 'en' ? a.data.titleEn : a.data.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })
+    }
+  </div>
+
+  <section class="section section--muted" aria-labelledby="process-title">
+    <div class="container">
+      <h2 id="process-title">{copy.process}</h2>
+      <ol class="steps" role="list">
+        {
+          copy.steps.map(([title, text], i) => (
+            <li>
+              <span class="steps__n" aria-hidden="true">{formatNumber(lang, i + 1)}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .toc-chips ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0 0 var(--space-6);
+    padding: 0;
+  }
+  .toc-chips a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0.3rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--heading);
+    font-size: var(--fs-sm);
+    text-decoration: none;
+  }
+  .toc-chips a:hover {
+    border-color: var(--accent);
+  }
+  .service-block {
+    padding-block: var(--space-6);
+    border-block-start: 1px solid var(--border);
+  }
+  .service-block__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .service-block__head h2 {
+    margin: 0;
+    font-size: var(--fs-xl);
+  }
+  .service-block__summary {
+    margin-block: var(--space-3) var(--space-5);
+    font-size: var(--fs-lg);
+    color: var(--text-muted);
+    max-width: 48rem;
+  }
+  .service-block__grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 52rem) {
+    .service-block__grid {
+      grid-template-columns: 1.3fr 1fr;
+    }
+  }
+  .checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .checklist li {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+  .checklist :global(svg) {
+    flex-shrink: 0;
+    margin-block-start: 0.35rem;
+    color: var(--accent);
+  }
+  .service-block__aside {
+    padding: var(--space-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .service-block__aside h3 {
+    font-size: var(--fs-md);
+  }
+  .service-block__aside .tags {
+    margin-block-end: var(--space-4);
+  }
+  .links {
+    margin: 0;
+    padding-inline-start: 1.1rem;
+    font-size: var(--fs-sm);
+  }
+  .links li + li {
+    margin-block-start: var(--space-2);
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--space-4);
+    list-style: none;
+    margin: var(--space-5) 0 0;
+    padding: 0;
+  }
+  .steps li {
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .steps__n {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-weight: 700;
+    margin-block-end: var(--space-3);
+  }
+  .steps p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+</style>

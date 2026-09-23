@@ -1,0 +1,113 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import FaqList from '~/components/FaqList.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import { type Lang } from '~/data/site';
+import { allFaqItems, faqGroups } from '~/data/faq';
+import { localize, otherLang, routePath, t } from '~/i18n/utils';
+import { abs, faqPageNode, ids } from '~/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = t(lang);
+const path = routePath(lang, 'faq');
+const origin = (Astro.site ?? new URL('https://technoenjaz.com')).origin;
+const canonical = abs(origin, path);
+
+const copy = {
+  ar: {
+    title: 'الأسئلة الشائعة | تكنو إنجاز',
+    description:
+      'إجابات مباشرة عن تكنو إنجاز: موقع المكتب، مشاريع التخرج وما يتضمنه التسليم، أنواع المواقع التي نطوّرها، التكلفة والمدة، وطرق التواصل.',
+    eyebrow: 'الأسئلة الشائعة',
+    h1: 'الأسئلة الشائعة',
+    lead: 'إجابات قصيرة ومباشرة عن أكثر ما يسألنا عنه الطلاب والعملاء. لم تجد إجابتك؟ راسلنا وسنجيبك مباشرة.',
+    jump: 'انتقل إلى قسم',
+  },
+  en: {
+    title: 'Frequently asked questions | Techno Enjaz',
+    description:
+      'Direct answers about Techno Enjaz: office location, graduation projects and deliverables, the websites we build, cost and timeline, and how to contact us.',
+    eyebrow: 'FAQ',
+    h1: 'Frequently asked questions',
+    lead: 'Short, direct answers to what students and clients ask us most. Can’t find your answer? Message us and we will reply directly.',
+    jump: 'Jump to section',
+  },
+}[lang];
+
+const pageNode = {
+  ...faqPageNode(
+    canonical,
+    lang,
+    allFaqItems.map((f) => ({ question: f.question[lang], answer: f.answer[lang] })),
+    true,
+  ),
+  url: canonical,
+  name: copy.title,
+  description: copy.description,
+  isPartOf: { '@id': ids.website(origin) },
+  about: { '@id': ids.organization(origin) },
+  breadcrumb: { '@id': `${canonical}#breadcrumb` },
+};
+---
+
+<BaseLayout
+  lang={lang}
+  title={copy.title}
+  description={copy.description}
+  path={path}
+  altPath={localize(otherLang(lang), '/faq/')}
+  crumbs={[{ name: ui.nav.faq, path }]}
+  schema={[pageNode]}
+  customPageNode
+>
+  <PageHero eyebrow={copy.eyebrow} title={copy.h1} lead={copy.lead}>
+    <nav class="faq-jump" aria-label={copy.jump}>
+      <ul class="tags" role="list">
+        {faqGroups.map((g) => <li><a class="badge badge--outline" href={`#${g.id}`}>{g.title[lang]}</a></li>)}
+      </ul>
+    </nav>
+  </PageHero>
+
+  <div class="container section faq-page">
+    {
+      faqGroups.map((g) => (
+        <section id={g.id} aria-labelledby={`${g.id}-title`}>
+          <h2 id={`${g.id}-title`}>{g.title[lang]}</h2>
+          <FaqList
+            items={g.items.map((f) => ({
+              id: f.id,
+              question: f.question[lang],
+              answer: f.answer[lang],
+              link: f.link ? { href: routePath(lang, f.link.route), label: f.link.label[lang] } : undefined,
+            }))}
+          />
+        </section>
+      ))
+    }
+  </div>
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .faq-jump {
+    margin-block-start: var(--space-5);
+  }
+  .faq-jump a {
+    text-decoration: none;
+    min-height: 2.25rem;
+    color: var(--heading);
+  }
+  .faq-page {
+    max-width: 52rem;
+    display: grid;
+    gap: var(--space-7);
+  }
+  .faq-page h2 {
+    font-size: var(--fs-xl);
+  }
+</style>

@@ -1,0 +1,361 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Icon from '~/components/Icon.astro';
+import ArticleCard from '~/components/ArticleCard.astro';
+import ProjectCard from '~/components/ProjectCard.astro';
+import WebProjectCard from '~/components/WebProjectCard.astro';
+import FaqList from '~/components/FaqList.astro';
+import CtaBand from '~/components/CtaBand.astro';
+
+import { site, type Lang } from '~/data/site';
+import { services } from '~/data/services';
+import { projects } from '~/data/projects';
+import { webProjects } from '~/data/webProjects';
+import { gallery, videos } from '~/data/media';
+import { allFaqItems, homeFaqIds } from '~/data/faq';
+import { getArticles } from '~/lib/articles';
+import { formatNumber, localize, otherLang, routePath, t } from '~/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = t(lang);
+const articles = (await getArticles()).slice(0, 3);
+
+const copy = {
+  ar: {
+    title: 'تكنو إنجاز | مشاريع هندسية وذكاء اصطناعي وتطوير مواقع في حماة',
+    description:
+      'تكنو إنجاز مكتب هندسي في حماة، سوريا: مشاريع تخرج وأنظمة ذكاء اصطناعي ورؤية حاسوبية وروبوتات، وتطوير مواقع ومتاجر وأنظمة سحابية، ومقالات تقنية عربية.',
+    eyebrow: 'مكتب هندسي في حماة، سوريا',
+    h1: 'نحوّل الأفكار الهندسية إلى مشاريع تعمل',
+    primary: 'استكشف المشاريع',
+    stats: ['مشروعاً هندسياً موثّقاً', 'موقعاً ونظاماً منشوراً', 'مقالاً تقنياً معمّقاً', 'فيديوهات لمشاريع منفّذة'],
+    servicesTitle: 'ماذا نقدّم؟',
+    servicesLead: 'خمسة مجالات نعمل فيها يومياً، من النموذج الأولي إلى التسليم والتوثيق.',
+    projectsTitle: 'من مشاريعنا الهندسية',
+    projectsLead: 'مشاريع حقيقية بملفات توثيقها الكاملة: تقارير ومستندات وعروض تقديمية.',
+    galleryTitle: 'نماذج نفّذناها',
+    webTitle: 'مواقع وأنظمة منشورة يمكنك تجربتها',
+    articlesTitle: 'أحدث المقالات التقنية',
+    articlesLead: 'أدلة عربية معمّقة مع مصادر موثوقة في الذكاء الاصطناعي وإنترنت الأشياء والاتصالات.',
+    faqTitle: 'أسئلة يطرحها عملاؤنا',
+    allFaq: 'كل الأسئلة الشائعة',
+    allWeb: 'كل مشاريع الويب',
+    allServices: 'تفاصيل الخدمات',
+    heroAlt: 'مركبة روبوتية مع كاميرات رؤية محيطية وحامل هاتف',
+  },
+  en: {
+    title: 'Techno Enjaz | Engineering, AI & web projects in Hama, Syria',
+    description:
+      'Techno Enjaz is an engineering office in Hama, Syria: graduation projects, AI, computer vision and robotics systems, websites, stores and cloud systems, plus Arabic technical articles.',
+    eyebrow: 'Engineering office in Hama, Syria',
+    h1: 'We turn engineering ideas into working projects',
+    primary: 'Explore projects',
+    stats: ['documented engineering projects', 'live websites & systems', 'in-depth technical articles', 'project demo videos'],
+    servicesTitle: 'What we do',
+    servicesLead: 'Five areas we work in every day, from first prototype to handover and documentation.',
+    projectsTitle: 'Selected engineering projects',
+    projectsLead: 'Real projects with their full documentation: reports, documents and slide decks.',
+    galleryTitle: 'Prototypes we have built',
+    webTitle: 'Live websites and systems you can try',
+    articlesTitle: 'Latest technical articles',
+    articlesLead: 'In-depth Arabic guides with trusted sources on AI, IoT and telecoms.',
+    faqTitle: 'Questions clients ask us',
+    allFaq: 'All FAQs',
+    allWeb: 'All web projects',
+    allServices: 'Service details',
+    heroAlt: 'Robotic rover with surround-view cameras and a phone mount',
+  },
+}[lang];
+
+const stats = [projects.length, webProjects.length, (await getArticles()).length, videos.length];
+const featuredProjects = ['smart-robotic-arm', 'breast-cancer-ai', 'bci-eeg-control', 'facial-attendance', 'ai-technical-chatbot', 'focusbac-app']
+  .map((id) => projects.find((p) => p.id === id))
+  .filter((p) => p !== undefined);
+const featuredWeb = webProjects.slice(0, 3);
+const faqItems = homeFaqIds
+  .map((id) => allFaqItems.find((f) => f.id === id))
+  .filter((f) => f !== undefined)
+  .map((f) => ({
+    id: f.id,
+    question: f.question[lang],
+    answer: f.answer[lang],
+    link: f.link ? { href: routePath(lang, f.link.route), label: f.link.label[lang] } : undefined,
+  }));
+const heroImage = gallery[2]!;
+const strip = [gallery[0]!, gallery[5]!, gallery[10]!, gallery[12]!];
+---
+
+<BaseLayout lang={lang} title={copy.title} description={copy.description} path={localize(lang, '/')} altPath={localize(otherLang(lang), '/')}>
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <span class="eyebrow"><Icon name="pin" size={16} /> {copy.eyebrow}</span>
+        <h1>{copy.h1}</h1>
+        <p class="hero__lead">{site.description[lang]}</p>
+        <div class="btn-row">
+          <a class="btn" href={routePath(lang, 'projects')}>{copy.primary} <Icon name="arrow" class="flip-rtl" /></a>
+          <a class="btn btn--ghost" href={site.whatsapp} target="_blank" rel="noopener">
+            <Icon name="whatsapp" />
+            {ui.common.whatsapp}
+            <span class="visually-hidden">{ui.a11y.opensNewTab}</span>
+          </a>
+        </div>
+      </div>
+      <div class="hero__media">
+        <Image
+          src={heroImage.image}
+          alt={copy.heroAlt}
+          widths={[360, 540, 720]}
+          sizes="(min-width: 60rem) 28rem, 88vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+    <div class="container">
+      <dl class="stats">
+        {
+          stats.map((n, i) => (
+            <div class="stats__item">
+              <dt>{copy.stats[i]}</dt>
+              <dd>{formatNumber(lang, n)}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head section-head--row">
+        <div>
+          <h2 id="services-title">{copy.servicesTitle}</h2>
+          <p>{copy.servicesLead}</p>
+        </div>
+        <a href={routePath(lang, 'services')}>{copy.allServices}</a>
+      </div>
+      <ul class="grid services" role="list" style="--min: 12.5rem">
+        {
+          services.map((s) => (
+            <li class="service">
+              <span class="icon-tile"><Icon name={s.icon} /></span>
+              <h3>
+                <a href={`${routePath(lang, 'services')}#${s.id}`}>{s.title[lang]}</a>
+              </h3>
+              <p>{s.summary[lang]}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--muted" aria-labelledby="projects-title">
+    <div class="container">
+      <div class="section-head section-head--row">
+        <div>
+          <h2 id="projects-title">{copy.projectsTitle}</h2>
+          <p>{copy.projectsLead}</p>
+        </div>
+        <a href={routePath(lang, 'projects')}>{ui.common.allProjects} ({formatNumber(lang, projects.length)})</a>
+      </div>
+      <div class="grid">
+        {featuredProjects.map((p) => <ProjectCard project={p} lang={lang} />)}
+      </div>
+
+      <h3 class="gallery-title">{copy.galleryTitle}</h3>
+      <ul class="strip" role="list">
+        {
+          strip.map((g) => (
+            <li>
+              <Image src={g.image} alt={g.alt[lang]} widths={[240, 360, 480]} sizes="(min-width: 60rem) 16rem, 45vw" loading="lazy" />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="web-title">
+    <div class="container">
+      <div class="section-head section-head--row">
+        <h2 id="web-title">{copy.webTitle}</h2>
+        <a href={routePath(lang, 'webProjects')}>{copy.allWeb} ({formatNumber(lang, webProjects.length)})</a>
+      </div>
+      <div class="grid">
+        {featuredWeb.map((p) => <WebProjectCard project={p} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted" aria-labelledby="articles-title">
+    <div class="container">
+      <div class="section-head section-head--row">
+        <div>
+          <h2 id="articles-title">{copy.articlesTitle}</h2>
+          <p>{copy.articlesLead}</p>
+        </div>
+        <a href={routePath(lang, 'articles')}>{ui.common.allArticles}</a>
+      </div>
+      <div class="grid">
+        {articles.map((a) => <ArticleCard article={a} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-title">
+    <div class="container faq-wrap">
+      <div class="section-head">
+        <h2 id="faq-title">{copy.faqTitle}</h2>
+        <p><a href={routePath(lang, 'faq')}>{copy.allFaq}</a></p>
+      </div>
+      <FaqList items={faqItems} openFirst />
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-7) var(--space-6);
+    background:
+      radial-gradient(50rem 26rem at 90% 0%, color-mix(in srgb, var(--brand-teal) 16%, transparent), transparent 70%),
+      radial-gradient(30rem 20rem at 0% 100%, color-mix(in srgb, var(--brand-violet) 10%, transparent), transparent 70%);
+  }
+  .hero__grid {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+  }
+  @media (min-width: 60rem) {
+    .hero__grid {
+      grid-template-columns: 1.25fr 1fr;
+    }
+  }
+  .hero .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.8rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--heading);
+  }
+  .hero h1 {
+    margin-block: var(--space-4);
+    max-width: 18ch;
+  }
+  .hero__lead {
+    font-size: var(--fs-lg);
+    color: var(--text-muted);
+    max-width: 40rem;
+    margin-block-end: var(--space-5);
+  }
+  .hero__media {
+    justify-self: center;
+    width: min(100%, 28rem);
+  }
+  .hero__media img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: var(--space-3);
+    margin: var(--space-7) 0 0;
+  }
+  .stats__item {
+    display: flex;
+    flex-direction: column-reverse;
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .stats dt {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .stats dd {
+    margin: 0;
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    color: var(--heading);
+    line-height: 1.2;
+  }
+
+  .services {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .service {
+    position: relative;
+    padding: var(--space-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .service:hover {
+    border-color: var(--border-strong);
+  }
+  .service h3 {
+    margin-block: var(--space-4) var(--space-2);
+  }
+  .service h3 a {
+    color: var(--heading);
+    text-decoration: none;
+  }
+  .service h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .service:has(a:focus-visible) {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .service h3 a:focus-visible {
+    outline: none;
+  }
+  .service p {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    margin: 0;
+  }
+
+  .gallery-title {
+    margin-block: var(--space-7) var(--space-4);
+  }
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+    gap: var(--space-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .strip img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .faq-wrap {
+    max-width: 52rem;
+  }
+</style>

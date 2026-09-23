@@ -1,0 +1,86 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import WebProjectCard from '~/components/WebProjectCard.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import { type Lang } from '~/data/site';
+import { webCategories, webProjects, type WebCategory } from '~/data/webProjects';
+import { formatNumber, localize, otherLang, routePath, t } from '~/i18n/utils';
+import { abs, itemListNode } from '~/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = t(lang);
+const path = routePath(lang, 'webProjects');
+const origin = (Astro.site ?? new URL('https://technoenjaz.com')).origin;
+
+const copy = {
+  ar: {
+    title: 'مشاريع الويب: مواقع ومتاجر وأنظمة منشورة | تكنو إنجاز',
+    description: `${webProjects.length} موقعاً ونظاماً طوّرتها تكنو إنجاز ومنشورة على الإنترنت: نظام حساب ERP، منصة ProjectForge، متاجر إلكترونية، مواقع شخصية وأدوات ويب.`,
+    eyebrow: 'مشاريع الويب',
+    h1: 'مواقع وأنظمة ويب منشورة يمكنك تجربتها',
+    lead: `${formatNumber('ar', webProjects.length)} مشروعاً حياً من تطوير تكنو إنجاز: أنظمة أعمال، متاجر إلكترونية، مواقع شخصية، وأدوات تفاعلية. افتح أي مشروع لتجربته مباشرة.`,
+  },
+  en: {
+    title: 'Web projects: live sites, stores & systems | Techno Enjaz',
+    description: `${webProjects.length} live websites and systems built by Techno Enjaz: the Hisab ERP, ProjectForge, online stores, personal sites and web tools.`,
+    eyebrow: 'Web projects',
+    h1: 'Live websites and web systems you can try',
+    lead: `${webProjects.length} live projects built by Techno Enjaz: business systems, online stores, personal sites and interactive tools. Open any project to try it yourself.`,
+  },
+}[lang];
+
+const groups = (Object.keys(webCategories) as WebCategory[]).map((c) => ({
+  id: c,
+  title: webCategories[c][lang],
+  items: webProjects.filter((p) => p.category === c),
+}));
+
+const list = itemListNode(
+  abs(origin, path),
+  copy.h1,
+  webProjects.map((p) => ({ name: p.title[lang], url: p.url })),
+);
+---
+
+<BaseLayout
+  lang={lang}
+  title={copy.title}
+  description={copy.description}
+  path={path}
+  altPath={localize(otherLang(lang), '/web-projects/')}
+  pageType="CollectionPage"
+  crumbs={[{ name: ui.nav.webProjects, path }]}
+  schema={[list]}
+>
+  <PageHero eyebrow={copy.eyebrow} title={copy.h1} lead={copy.lead} />
+  {
+    groups.map((g, i) => (
+      <section class:list={['section', { 'section--muted': i % 2 === 1 }]} aria-labelledby={`g-${g.id}`}>
+        <div class="container">
+          <h2 id={`g-${g.id}`} class="group-title">
+            {g.title} <span class="badge">{formatNumber(lang, g.items.length)}</span>
+          </h2>
+          <div class="grid">
+            {g.items.map((p) => <WebProjectCard project={p} lang={lang} />)}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .group-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--fs-xl);
+    margin-block-end: var(--space-5);
+  }
+</style>

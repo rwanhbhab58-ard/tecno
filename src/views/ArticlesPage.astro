@@ -1,0 +1,79 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import ArticleCard from '~/components/ArticleCard.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import { type Lang } from '~/data/site';
+import { articlePath, getArticles } from '~/lib/articles';
+import { formatNumber, localize, otherLang, routePath, t } from '~/i18n/utils';
+import { abs, itemListNode } from '~/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = t(lang);
+const path = routePath(lang, 'articles');
+const origin = (Astro.site ?? new URL('https://technoenjaz.com')).origin;
+const articles = await getArticles();
+
+const copy = {
+  ar: {
+    title: 'مقالات تقنية عربية: ذكاء اصطناعي، IoT، 5G | تكنو إنجاز',
+    description: `${articles.length} مقالاً تقنياً عربياً معمّقاً من تكنو إنجاز في الذكاء الاصطناعي والرؤية الحاسوبية وإنترنت الأشياء وشبكات 5G والأنظمة المدمجة، مع مصادر موثوقة وأسئلة شائعة.`,
+    eyebrow: 'المقالات',
+    h1: 'مقالات تقنية عربية معمّقة',
+    lead: `${formatNumber('ar', articles.length)} دليلاً مكتوباً بالعربية يشرح التقنيات التي نعمل بها يومياً، مع أمثلة عملية وأسئلة شائعة وقائمة مصادر في نهاية كل مقال.`,
+    topics: 'المواضيع',
+  },
+  en: {
+    title: 'Arabic technical articles on AI, IoT & 5G | Techno Enjaz',
+    description: `${articles.length} in-depth Arabic technical articles by Techno Enjaz on AI, computer vision, IoT, 5G and embedded systems, with sources and FAQs. English summaries below.`,
+    eyebrow: 'Articles',
+    h1: 'In-depth technical articles (in Arabic)',
+    lead: `${articles.length} long-form guides explaining the technologies we work with. The articles are written in Arabic; each card below gives an English summary.`,
+    topics: 'Topics',
+  },
+}[lang];
+
+const categories = [...new Map(articles.map((a) => [a.data.category, lang === 'en' ? a.data.categoryEn : a.data.category])).values()];
+
+const list = itemListNode(
+  abs(origin, path),
+  copy.h1,
+  articles.map((a) => ({ name: lang === 'en' ? a.data.titleEn : a.data.title, url: abs(origin, articlePath(a)) })),
+);
+---
+
+<BaseLayout
+  lang={lang}
+  title={copy.title}
+  description={copy.description}
+  path={path}
+  altPath={localize(otherLang(lang), '/articles/')}
+  pageType="CollectionPage"
+  crumbs={[{ name: ui.nav.articles, path }]}
+  schema={[list]}
+>
+  <PageHero eyebrow={copy.eyebrow} title={copy.h1} lead={copy.lead}>
+    <div class="topics">
+      <span class="visually-hidden">{copy.topics}:</span>
+      <ul class="tags" role="list">
+        {categories.map((c) => <li class="badge badge--outline">{c}</li>)}
+      </ul>
+    </div>
+  </PageHero>
+  <section class="container section" aria-label={copy.eyebrow}>
+    <div class="grid">
+      {articles.map((a, i) => <ArticleCard article={a} lang={lang} headingLevel="h2" eager={i < 3} />)}
+    </div>
+  </section>
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .topics {
+    margin-block-start: var(--space-5);
+  }
+</style>

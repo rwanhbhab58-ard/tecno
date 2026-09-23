@@ -1,0 +1,75 @@
+---
+import { getImage } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import VideoCard from '~/components/VideoCard.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import { type Lang } from '~/data/site';
+import { videos } from '~/data/media';
+import { localize, otherLang, routePath, t } from '~/i18n/utils';
+import { abs, videoNode } from '~/lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = t(lang);
+const path = routePath(lang, 'videos');
+const origin = (Astro.site ?? new URL('https://technoenjaz.com')).origin;
+const canonical = abs(origin, path);
+
+const copy = {
+  ar: {
+    title: 'فيديوهات مشاريع تكنو إنجاز: درون وأذرع روبوتية',
+    description:
+      'فيديوهات لمشاريع نفّذتها تكنو إنجاز: طائرة درون بمتحكم Arduino وبث ESP-CAM، ذراع روبوتية للّحام بالأرجون، وذراع موجهة بالرؤية الحاسوبية بـ Python وOpenCV.',
+    eyebrow: 'الفيديوهات',
+    h1: 'فيديوهات لمشاريع نفّذناها',
+    lead: 'عروض عملية قصيرة لمشاريع حقيقية تعمل. يُحمَّل مشغّل YouTube فقط عند الضغط على الفيديو حفاظاً على سرعة الصفحة وخصوصيتك.',
+  },
+  en: {
+    title: 'Techno Enjaz project videos: drones and robotic arms',
+    description:
+      'Videos of projects built by Techno Enjaz: an Arduino drone with ESP-CAM streaming, an argon-welding robotic arm, and a vision-guided arm using Python and OpenCV.',
+    eyebrow: 'Videos',
+    h1: 'Videos of projects we built',
+    lead: 'Short demos of real, working projects. The YouTube player only loads when you press play, to keep the page fast and protect your privacy.',
+  },
+}[lang];
+
+const schema = await Promise.all(
+  videos.map(async (v) => {
+    const thumb = await getImage({ src: v.cover, width: 1280, format: 'jpg' });
+    return videoNode({
+      canonical,
+      origin,
+      id: v.id,
+      youtubeId: v.youtubeId,
+      name: v.title[lang],
+      description: v.description[lang],
+      thumbnailUrl: abs(origin, thumb.src),
+      duration: v.duration,
+    });
+  }),
+);
+---
+
+<BaseLayout
+  lang={lang}
+  title={copy.title}
+  description={copy.description}
+  path={path}
+  altPath={localize(otherLang(lang), '/videos/')}
+  pageType="CollectionPage"
+  crumbs={[{ name: ui.nav.videos, path }]}
+  schema={schema}
+>
+  <PageHero eyebrow={copy.eyebrow} title={copy.h1} lead={copy.lead} />
+  <section class="container section" aria-label={copy.eyebrow}>
+    <div class="grid" style="--min: 20rem">
+      {videos.map((v) => <VideoCard video={v} lang={lang} headingLevel="h2" />)}
+    </div>
+  </section>
+  <CtaBand lang={lang} />
+</BaseLayout>

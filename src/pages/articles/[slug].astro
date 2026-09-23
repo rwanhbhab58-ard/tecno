@@ -1,0 +1,243 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ArticleCard from '~/components/ArticleCard.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import Icon from '~/components/Icon.astro';
+import '~/styles/prose.css';
+import { site } from '~/data/site';
+import {
+  articlePath,
+  extractFaq,
+  getArticles,
+  readingMinutes,
+  relatedArticles,
+  type Article,
+} from '~/lib/articles';
+import { formatDate, routePath, t } from '~/i18n/utils';
+import { abs, articleNode, faqPageNode } from '~/lib/schema';
+
+export const getStaticPaths = (async () => {
+  const all = await getArticles();
+  return all.map((article) => ({ params: { slug: article.id }, props: { article, all } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  article: Article;
+  all: Article[];
+}
+
+const { article, all } = Astro.props;
+const lang = 'ar' as const;
+const ui = t(lang);
+const d = article.data;
+const { Content, headings } = await render(article);
+const toc = headings.filter((h) => h.depth === 2);
+const faq = extractFaq(article);
+const related = relatedArticles(article, all);
+const path = articlePath(article);
+const origin = (Astro.site ?? new URL('https://technoenjaz.com')).origin;
+const canonical = abs(origin, path);
+const modified = d.updatedAt ?? d.publishedAt;
+const words = (article.body ?? '').split(/\s+/).filter(Boolean).length;
+const cover = await getImage({ src: d.cover, width: 1200, format: 'jpg' });
+
+const schema = [
+  articleNode({
+    origin,
+    canonical,
+    headline: d.title,
+    description: d.description,
+    imageUrl: abs(origin, cover.src),
+    datePublished: d.publishedAt,
+    dateModified: modified,
+    section: d.category,
+    keywords: d.tags,
+    wordCount: words,
+  }),
+  ...(faq.length ? [faqPageNode(canonical, lang, faq, false)] : []),
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={d.seoTitle}
+  description={d.description}
+  path={path}
+  image={d.cover}
+  imageAlt={d.title}
+  ogType="article"
+  crumbs={[
+    { name: ui.nav.articles, path: routePath(lang, 'articles') },
+    { name: d.title, path },
+  ]}
+  schema={schema}
+  publishedAt={d.publishedAt}
+  modifiedAt={modified}
+>
+  <article class="article">
+    <header class="article__header container">
+      <a class="badge" href={routePath(lang, 'articles')}>{d.category}</a>
+      <h1>{d.title}</h1>
+      <p class="article__excerpt">{d.excerpt}</p>
+      <ul class="article__meta" role="list">
+        <li><Icon name="calendar" size={16} /> {ui.common.publishedOn} <time datetime={d.publishedAt.toISOString().slice(0, 10)}>{formatDate(lang, d.publishedAt)}</time></li>
+        <li><Icon name="clock" size={16} /> {readingMinutes(article)} {ui.common.minutes}</li>
+        <li>{ui.common.by} <a href={routePath(lang, 'about')}>فريق {site.name.ar} الهندسي</a></li>
+      </ul>
+      <p class="article__en" lang="en" dir="ltr">
+        <span class="badge badge--outline">EN</span> {d.titleEn}
+      </p>
+    </header>
+
+    <div class="container article__cover">
+      <Image
+        src={d.cover}
+        alt={d.title}
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 72rem) 72rem, 100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+
+    <div class="container article__layout">
+      {
+        toc.length > 2 && (
+          <aside class="article__toc" aria-label={ui.a11y.toc}>
+            <details open>
+              <summary>{ui.common.onThisPage}</summary>
+              <ol role="list">
+                {toc.map((h) => (
+                  <li>
+                    <a href={`#${h.slug}`}>{h.text}</a>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          </aside>
+        )
+      }
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="section section--muted" aria-labelledby="related-title">
+        <div class="container">
+          <h2 id="related-title">{ui.common.related}</h2>
+          <div class="grid">
+            {related.map((a) => <ArticleCard article={a} lang={lang} />)}
+          </div>
+        </div>
+      </section>
+    )
+  }
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<script>
+  // Collapse the table of contents on small screens (it stays open on wide layouts).
+  const toc = document.querySelector<HTMLDetailsElement>('.article__toc details');
+  if (toc && window.matchMedia('(max-width: 63.99rem)').matches) toc.open = false;
+</script>
+
+<style>
+  .article__header {
+    padding-block: var(--space-6) var(--space-5);
+    max-width: 52rem;
+  }
+  .article__header h1 {
+    font-size: clamp(1.8rem, 1.4rem + 2vw, 2.8rem);
+    margin-block: var(--space-4);
+  }
+  .article__header .badge {
+    text-decoration: none;
+  }
+  .article__excerpt {
+    font-size: var(--fs-lg);
+    color: var(--text-muted);
+  }
+  .article__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+  .article__meta li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .article__en {
+    margin-block: var(--space-4) 0;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    text-align: start;
+  }
+  .article__cover img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+  }
+  .article__layout {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-6);
+  }
+  @media (min-width: 64rem) {
+    .article__layout {
+      grid-template-columns: 16rem minmax(0, 1fr);
+      align-items: start;
+    }
+    .article__toc {
+      position: sticky;
+      top: calc(var(--header-h) + 1rem);
+      max-height: calc(100dvh - var(--header-h) - 2rem);
+      overflow-y: auto;
+    }
+  }
+  .article__toc details {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: var(--space-3) var(--space-4);
+  }
+  .article__toc summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--heading);
+    min-height: 2.25rem;
+    display: flex;
+    align-items: center;
+  }
+  .article__toc ol {
+    list-style: none;
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+  }
+  .article__toc li + li {
+    margin-block-start: var(--space-2);
+  }
+  .article__toc a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .article__toc a:hover {
+    color: var(--link);
+    text-decoration: underline;
+  }
+</style>
