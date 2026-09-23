@@ -1,17 +1,17 @@
-<!--
-FILE: 02-article.md
-PURPOSE: Published article content
-VERIFICATION DATE: 2026-09-21
--->
-
-SEO Title: كيف تعمل مشاركة الرحلات الذكية بالذكاء الاصطناعي؟ من المطابقة إلى تقليل الازدحام
-
-Meta Description: دليل يشرح أنظمة مشاركة الرحلات الذكية: الفرق بين Ride-Hailing وRide-Pooling، المطابقة اللحظية، التنبؤ بالطلب، GNN والتعلم التعزيزي، إعادة توزيع الأسطول، وكيف نقيس أثرها الحقيقي على الازدحام والانبعاثات.
-
-Suggested Slug: smart-ai-ride-pooling
-
-# كيف تعمل مشاركة الرحلات الذكية بالذكاء الاصطناعي؟ من المطابقة إلى تقليل الازدحام
-
+---
+title: "كيف تعمل مشاركة الرحلات الذكية بالذكاء الاصطناعي؟ من المطابقة إلى تقليل الازدحام"
+seoTitle: "كيف تعمل مشاركة الرحلات الذكية بالذكاء الاصطناعي؟ من المطابقة إلى تقليل الازدحام"
+description: "دليل يشرح أنظمة مشاركة الرحلات الذكية: الفرق بين Ride-Hailing وRide-Pooling، المطابقة اللحظية، التنبؤ بالطلب، GNN والتعلم التعزيزي، إعادة توزيع الأسطول، وكيف نقيس أثرها الحقيقي على الازدحام والانبعاثات."
+excerpt: "كيف تحل خوارزميات الذكاء الاصطناعي معضلة مشاركة الرحلات؟ دراسة شاملة لمطابقة الركاب، إعادة توجيه المسارات اللحظية، وتخفيف الانبعاثات والازدحام في المدن الذكية."
+titleEn: "Smart AI Ride-Pooling: Algorithms, Dynamic Routing, and Urban Congestion Reduction"
+excerptEn: "Algorithmic deep dive into on-demand shared ride-pooling: combinatorial request matching, dynamic vehicle routing (DARP), and balancing passenger detour times."
+category: "أنظمة ذكية ونقل"
+categoryEn: "Smart Mobility & AI"
+publishedAt: 2026-09-21
+cover: "../../assets/articles/smart-ai-ride-pooling.png"
+tags: ["أنظمة ذكية", "نقل ذكي", "ذكاء اصطناعي", "مشاركة الرحلات", "توجيه المسارات", "مدن ذكية"]
+related: ["digital-twin", "internet-of-things-iot", "ai-image-classification"]
+---
 **مشاركة الرحلات الذكية (Dynamic Ride-Pooling) هي نظام نقل عند الطلب يحاول دمج ركاب ذوي مسارات متوافقة داخل المركبة نفسها في الوقت الفعلي، مع موازنة عدة أهداف متعارضة: تقليل انتظار الراكب، تقليل الانحراف عن مساره، رفع إشغال المركبة، خفض المسافات الفارغة، وتحسين كفاءة الأسطول.**
 
 الفكرة تبدو بسيطة:
@@ -48,11 +48,11 @@ Requests + Vehicles + Traffic + Constraints
           Continuous Re-optimization
 ```
 
-# ما الفرق بين Ride-Hailing وRide-Pooling؟
+## ما الفرق بين Ride-Hailing وRide-Pooling؟
 
 المصطلحان يُستخدمان أحيانًا وكأنهما شيء واحد، لكن الفرق مهم.
 
-## Ride-Hailing
+### Ride-Hailing
 
 يربط منصة رقمية بين:
 
@@ -67,7 +67,7 @@ Passenger B → Vehicle 2
 Passenger C → Vehicle 3
 ```
 
-## Ride-Pooling
+### Ride-Pooling
 
 تحاول المنصة دمج طلبات مستقلة داخل المركبة نفسها إذا كانت متوافقة.
 
@@ -85,7 +85,7 @@ Passenger C ┘
 
 وهذا الفرق أساسي عند الحديث عن الازدحام والانبعاثات.
 
-# هل تطبيقات Ride-Hailing تقلل الازدحام تلقائيًا؟
+## هل تطبيقات Ride-Hailing تقلل الازدحام تلقائيًا؟
 
 لا.
 
@@ -118,7 +118,7 @@ Passenger C ┘
 
 > هل النظام يزيد متوسط الإشغال ويقلل Vehicle Kilometers Traveled بعد احتساب المسافات الفارغة والانحرافات وتغير وسيلة النقل الأصلية؟
 
-# متى يمكن أن تقلل Ride-Pooling عدد المركبات؟
+## متى يمكن أن تقلل Ride-Pooling عدد المركبات؟
 
 تتحقق الفائدة عندما يستطيع النظام دمج طلبات كانت ستحتاج إلى مركبات منفصلة.
 
@@ -165,7 +165,7 @@ detour = 8 km
 - توقيت الطلبات.
 - جودة المطابقة.
 
-# لماذا Dynamic Ride-Pooling مسألة صعبة؟
+## لماذا Dynamic Ride-Pooling مسألة صعبة؟
 
 لنفترض وجود:
 
@@ -203,7 +203,7 @@ service_area
 
 وهي مسائل قد تصبح حسابيًا صعبة جدًا مع ازدياد الحجم.
 
-# ما المسار الكامل لطلب راكب؟
+## ما المسار الكامل لطلب راكب؟
 
 يمكن تصور النظام كالتالي:
 
@@ -231,7 +231,7 @@ service_area
 
 كل مرحلة لها هدف مختلف.
 
-# 1. استقبال الطلب
+## 1. استقبال الطلب
 
 الطلب النموذجي قد يحتوي:
 
@@ -247,7 +247,7 @@ accessibility needs
 
 ولا ينبغي للنظام جمع بيانات إضافية لا يحتاجها.
 
-# 2. البحث عن المركبات المرشحة
+## 2. البحث عن المركبات المرشحة
 
 بدل مقارنة الطلب بكل مركبة في المدينة، يمكن تضييق البحث حسب:
 
@@ -259,7 +259,7 @@ accessibility needs
 
 هذه الخطوة تقلل مساحة البحث.
 
-# 3. هل يمكن إدخال راكب جديد في رحلة قائمة؟
+## 3. هل يمكن إدخال راكب جديد في رحلة قائمة؟
 
 لنفترض أن Route الحالية:
 
@@ -297,7 +297,7 @@ Dropoff A
 
 إذا فشل أي Constraint، الطلب غير قابل للإدراج في هذه المركبة.
 
-# Request-Trip-Vehicle Graph
+## Request-Trip-Vehicle Graph
 
 من أشهر الأطر البحثية المؤثرة في Dynamic Ride-Sharing عمل Alonso-Mora وزملائه المنشور عام 2017.
 
@@ -329,7 +329,7 @@ Global assignment
 
 لكن هذه نتائج **محاكاة على Dataset وسيناريو محددين**، وليست وعدًا بأن أي مدينة ستحصل على النسب نفسها.
 
-# لماذا لا نستخدم Greedy Matching فقط؟
+## لماذا لا نستخدم Greedy Matching فقط؟
 
 Greedy قد يقول:
 
@@ -354,11 +354,11 @@ Greedy قد يقول:
 - **Myopic decision**
 - **Anticipatory decision**
 
-# الخوارزميات المستخدمة في Ride-Pooling
+## الخوارزميات المستخدمة في Ride-Pooling
 
 لا يوجد Algorithm واحدة تصلح لكل منصة.
 
-## Greedy / Insertion Heuristics
+### Greedy / Insertion Heuristics
 
 تختبر إدراج طلب جديد داخل Route حالية.
 
@@ -368,7 +368,7 @@ Greedy قد يقول:
 - Baseline قوي.
 - نظام أبسط.
 
-## Integer / Mixed Integer Optimization
+### Integer / Mixed Integer Optimization
 
 يمكن صياغة Assignment كمسألة Optimization.
 
@@ -379,7 +379,7 @@ Greedy قد يقول:
 
 لكن وقت الحساب قد يصبح تحديًا عند Scale كبير.
 
-## Metaheuristics
+### Metaheuristics
 
 مثل:
 
@@ -391,7 +391,7 @@ Greedy قد يقول:
 
 لكن لا يوجد ضمان أن تكون أسرع أو أفضل في كل سيناريو.
 
-## Machine Learning
+### Machine Learning
 
 يمكن استخدام ML في أجزاء من النظام بدل استبدال Optimization كاملة.
 
@@ -403,7 +403,7 @@ Greedy قد يقول:
 - Travel time.
 - Candidate pruning.
 
-## Reinforcement Learning
+### Reinforcement Learning
 
 يمكن استخدام RL في قرارات طويلة الأمد مثل:
 
@@ -430,7 +430,7 @@ GNN/RL chooses strategic action
 Assignment solver handles hard constraints
 ```
 
-# لماذا تستخدم Graph Neural Networks؟
+## لماذا تستخدم Graph Neural Networks؟
 
 شبكة الطرق Graph بطبيعتها.
 
@@ -473,7 +473,7 @@ RL / Prediction / Optimization
 - نفس Compute budget.
 - نفس KPIs.
 
-# ما دور Deep Reinforcement Learning؟
+## ما دور Deep Reinforcement Learning؟
 
 في Ride-Pooling، القرار الحالي يؤثر في المستقبل.
 
@@ -524,7 +524,7 @@ adjust policy parameter
 
 إذا أعطينا وزنًا كبيرًا لـOccupancy، قد يسبب Detours مزعجة.
 
-# هل MADRL-GNN هي البنية المثالية؟
+## هل MADRL-GNN هي البنية المثالية؟
 
 الحلقة البحثية الأصلية تقترح دمج:
 
@@ -569,7 +569,7 @@ adjust policy parameter
 - الرحلات الممكنة.
 - Constraints.
 
-# ما هو Fleet Rebalancing؟
+## ما هو Fleet Rebalancing؟
 
 حتى لو كانت المطابقة ممتازة، قد يتجمع الأسطول في المكان الخطأ.
 
@@ -603,7 +603,7 @@ benefit of future positioning
 cost of empty travel
 ```
 
-# كيف نتنبأ بالطلب؟
+## كيف نتنبأ بالطلب؟
 
 Demand Forecasting تحاول تقدير:
 
@@ -640,25 +640,25 @@ requests(zone, time)
 - forecast horizon.
 - city dynamics.
 
-# هل التنبؤ لمدة 15–45 دقيقة دائمًا مناسب؟
+## هل التنبؤ لمدة 15–45 دقيقة دائمًا مناسب؟
 
 لا.
 
 هذا Horizon يجب اختياره حسب قرار التشغيل.
 
-## 5 دقائق
+### 5 دقائق
 
 مفيد لـ:
 
 - near-term rebalancing.
 
-## 30 دقيقة
+### 30 دقيقة
 
 مفيد لـ:
 
 - fleet positioning.
 
-## ساعات
+### ساعات
 
 مفيد لـ:
 
@@ -676,7 +676,7 @@ requests(zone, time)
 
 وليس RMSE فقط.
 
-# بنية منصة Ride-Pooling حقيقية
+## بنية منصة Ride-Pooling حقيقية
 
 يمكن تصميمها طبقيًا:
 
@@ -718,7 +718,7 @@ Training / Analytics
 Model Registry
 ```
 
-# هل نحتاج Big Data فعلًا؟
+## هل نحتاج Big Data فعلًا؟
 
 ليس كل نظام يحتاج "Big Data".
 
@@ -738,9 +738,9 @@ Model Registry
 
 > بناء أبسط Architecture تستطيع تحقيق SLA المطلوبة.
 
-# ما البيانات التي يحتاجها النظام؟
+## ما البيانات التي يحتاجها النظام؟
 
-## من الراكب
+### من الراكب
 
 - Origin.
 - Destination.
@@ -749,7 +749,7 @@ Model Registry
 - max waiting preference.
 - accessibility needs عند الحاجة.
 
-## من المركبة
+### من المركبة
 
 - current location.
 - route.
@@ -758,14 +758,14 @@ Model Registry
 - status.
 - energy/fuel state إذا كان ذلك مهمًا.
 
-## من الشبكة
+### من الشبكة
 
 - travel times.
 - closures.
 - incidents.
 - congestion.
 
-## تاريخيًا
+### تاريخيًا
 
 - demand by zone/time.
 - cancellations.
@@ -774,7 +774,7 @@ Model Registry
 - detours.
 - deadheading.
 
-# Map Matching
+## Map Matching
 
 GPS لا يعطي دائمًا موقعًا دقيقًا على الطريق.
 
@@ -788,7 +788,7 @@ Map Matching تربط Telemetry بأقرب Segment منطقي في شبكة ال
 
 هذه خطوة مهمة لأن Route optimization تعتمد على Graph صحيحة.
 
-# هل Edge Computing ضرورية؟
+## هل Edge Computing ضرورية؟
 
 ليس دائمًا.
 
@@ -803,21 +803,21 @@ Edge قد تكون مفيدة لـ:
 
 لكن وضع "AI داخل كل مركبة" ليس شرطًا للمشاركة الديناميكية.
 
-# كيف نحدد Objective Function؟
+## كيف نحدد Objective Function؟
 
 نظام سيئ التحسين قد يحقق Metric واحدة ويضر بالبقية.
 
 مثال:
 
-## تقليل VMT فقط
+### تقليل VMT فقط
 
 قد يجعل الركاب ينتظرون طويلًا.
 
-## تقليل الانتظار فقط
+### تقليل الانتظار فقط
 
 قد يرسل مركبات كثيرة منفصلة.
 
-## زيادة Occupancy فقط
+### زيادة Occupancy فقط
 
 قد يفرض Detours كبيرة.
 
@@ -839,9 +839,9 @@ Cost =
 
 هي تعبر عن Policy وBusiness goals ويجب اختبار حساسيتها.
 
-# ما مؤشرات الأداء الصحيحة؟
+## ما مؤشرات الأداء الصحيحة؟
 
-## مؤشرات تجربة الراكب
+### مؤشرات تجربة الراكب
 
 - Mean wait time.
 - P90/P95 wait time.
@@ -851,7 +851,7 @@ Cost =
 - rejection rate.
 - pickup reliability.
 
-## مؤشرات الأسطول
+### مؤشرات الأسطول
 
 - Vehicle occupancy.
 - pooling rate.
@@ -860,20 +860,20 @@ Cost =
 - idle time.
 - trips per vehicle-hour.
 
-## مؤشرات الشبكة
+### مؤشرات الشبكة
 
 - total VKT.
 - VHT.
 - average speed.
 - congestion delay.
 
-## مؤشرات الاستدامة
+### مؤشرات الاستدامة
 
 - fuel/energy use.
 - CO₂e.
 - emissions per passenger-km.
 
-## العدالة
+### العدالة
 
 - wait time by zone.
 - rejection by zone.
@@ -882,7 +882,7 @@ Cost =
 
 هذا يمنع النظام من تحسين وسط المدينة فقط وترك الأطراف بخدمة سيئة.
 
-# لماذا P95 أهم من المتوسط أحيانًا؟
+## لماذا P95 أهم من المتوسط أحيانًا؟
 
 لو كان متوسط الانتظار:
 
@@ -902,7 +902,7 @@ Cost =
 
 لذلك راقب Distribution وليس Mean فقط.
 
-# كيف نقيس الازدحام؟
+## كيف نقيس الازدحام؟
 
 لا يكفي:
 
@@ -931,7 +931,7 @@ rebalancing
 detours
 ```
 
-# هل Ride-Pooling تقلل الانبعاثات دائمًا؟
+## هل Ride-Pooling تقلل الانبعاثات دائمًا؟
 
 لا.
 
@@ -969,7 +969,7 @@ mode substitution
 - city form.
 - transit network.
 
-# أهم Metric بيئي: الانبعاث لكل راكب-كيلومتر
+## أهم Metric بيئي: الانبعاث لكل راكب-كيلومتر
 
 مقارنة:
 
@@ -993,7 +993,7 @@ CO₂e / passenger-km
 - electricity generation.
 - lifecycle emissions.
 
-# ماذا عن EV Ride-Pooling؟
+## ماذا عن EV Ride-Pooling؟
 
 كهربنة الأسطول يمكن أن تقلل الانبعاثات التشغيلية حسب مزيج الكهرباء.
 
@@ -1021,7 +1021,7 @@ charging
 
 وقد يكون إرسال EV بعيدة إلى طلب غير جيد إذا أدى إلى Charging downtime لاحقًا.
 
-# المحاكاة: كيف نثبت أن النظام مفيد؟
+## المحاكاة: كيف نثبت أن النظام مفيد؟
 
 إذا لم توجد بيانات تشغيل حقيقية، Simulation هي أداة أساسية.
 
@@ -1029,7 +1029,7 @@ charging
 
 > **المحاكاة دليل تجريبي داخل نموذج، وليست إثباتًا تلقائيًا لأداء مدينة حقيقية.**
 
-# استخدام SUMO
+## استخدام SUMO
 
 SUMO يدعم محاكاة Demand Responsive Transport عبر Taxi Device.
 
@@ -1043,21 +1043,21 @@ SUMO يدعم محاكاة Demand Responsive Transport عبر Taxi Device.
 
 وهذا يجعله مناسبًا لبناء Baseline واختبار خوارزمية خارجية.
 
-# تصميم تجربة جيدة
+## تصميم تجربة جيدة
 
-## Baseline A: Private Trips
+### Baseline A: Private Trips
 
 كل طلب → مركبة منفصلة.
 
-## Baseline B: Ride-Hailing
+### Baseline B: Ride-Hailing
 
 مركبة لكل Request مع Deadheading.
 
-## Baseline C: Greedy Pooling
+### Baseline C: Greedy Pooling
 
 Pooling بسيط.
 
-## Model D: Advanced Optimization
+### Model D: Advanced Optimization
 
 خوارزمية المقارنة.
 
@@ -1071,7 +1071,7 @@ Pooling بسيط.
 
 وقارن.
 
-# لا تقارن AI بخوارزمية ضعيفة عمدًا
+## لا تقارن AI بخوارزمية ضعيفة عمدًا
 
 خطأ بحثي شائع:
 
@@ -1094,7 +1094,7 @@ naive nearest-car baseline
 
 وإلا لا نعرف هل المكسب من "AI" أم من أن المقارنة ضعيفة.
 
-# Ablation Study
+## Ablation Study
 
 إذا كان النظام:
 
@@ -1116,7 +1116,7 @@ without rebalancing
 
 حتى نعرف ما الذي أضاف القيمة.
 
-# الاختبار عبر عدة Seeds
+## الاختبار عبر عدة Seeds
 
 بيئة المرور stochastic.
 
@@ -1134,35 +1134,35 @@ without rebalancing
 
 إذا كان الرقم من Run واحدة.
 
-# سيناريوهات الضغط
+## سيناريوهات الضغط
 
 اختبر:
 
-## Demand +20%
+### Demand +20%
 
 هل ينهار النظام؟
 
-## حادث مروري
+### حادث مروري
 
 هل يعيد التوجيه؟
 
-## Rain/event surge
+### Rain/event surge
 
 هل Forecast تتكيف؟
 
-## GPS noise
+### GPS noise
 
 هل Map matching مستقرة؟
 
-## Driver shortage
+### Driver shortage
 
 هل Rejection يرتفع بصورة عادلة؟
 
-## Communication delay
+### Communication delay
 
 هل القرارات ما زالت صالحة؟
 
-# ما مشكلة Rejection Rate؟
+## ما مشكلة Rejection Rate؟
 
 يمكن للنظام تحسين متوسط الانتظار عبر رفض الطلبات الصعبة.
 
@@ -1184,7 +1184,7 @@ reject remote requests
 
 معًا.
 
-# العدالة في Ride-Pooling
+## العدالة في Ride-Pooling
 
 Optimization قد تتعلم أن بعض المناطق "أقل ربحية".
 
@@ -1204,7 +1204,7 @@ outer zone   → high rejection
 
 لكن العدالة ليست Weight واحدًا فقط؛ تحتاج تعريفًا واضحًا لما يعنيه الإنصاف في سياق المدينة.
 
-# الخصوصية: بيانات الحركة حساسة
+## الخصوصية: بيانات الحركة حساسة
 
 Ride-Pooling يعرف عادة:
 
@@ -1218,15 +1218,15 @@ Ride-Pooling يعرف عادة:
 
 لذلك استخدم:
 
-## Data Minimization
+### Data Minimization
 
 لا تجمع ما لا تحتاجه.
 
-## Retention Limits
+### Retention Limits
 
 لا تحتفظ بموقع عالي الدقة إلى الأبد.
 
-## Access Control
+### Access Control
 
 افصل:
 
@@ -1234,15 +1234,15 @@ Ride-Pooling يعرف عادة:
 - analytics.
 - research datasets.
 
-## Aggregation
+### Aggregation
 
 Forecasting على مستوى Zone قد لا يحتاج Trajectory خام لكل مستخدم.
 
-## Pseudonymization
+### Pseudonymization
 
 مفيدة، لكنها ليست ضمانًا كاملًا لإخفاء الهوية.
 
-# الأمن
+## الأمن
 
 النظام قد يتحكم في آلاف المركبات.
 
@@ -1265,7 +1265,7 @@ Forecasting على مستوى Zone قد لا يحتاج Trajectory خام لكل
 - denial-of-service.
 - data leakage.
 
-# هل يمكن للذكاء الاصطناعي نفسه أن يسبب مشكلة مرورية؟
+## هل يمكن للذكاء الاصطناعي نفسه أن يسبب مشكلة مرورية؟
 
 نعم.
 
@@ -1287,7 +1287,7 @@ Forecasting على مستوى Zone قد لا يحتاج Trajectory خام لكل
 
 لا يكفي Forecast ممتاز.
 
-# العلاقة مع النقل العام
+## العلاقة مع النقل العام
 
 أفضل Ride-Pooling لا يجب بالضرورة أن يحاول استبدال:
 
@@ -1322,7 +1322,7 @@ Ride-Pool
 
 الدمج مع النقل العام قد يكون أكثر استدامة من المنافسة معه.
 
-# Dynamic Pricing: هل هو جزء من الذكاء؟
+## Dynamic Pricing: هل هو جزء من الذكاء؟
 
 يمكن استخدام السعر لتغيير:
 
@@ -1349,7 +1349,7 @@ pooled ride  = discount
 
 بل تحسين خدمة النقل مع حماية المستخدمين.
 
-# ماذا عن المركبات الذاتية؟
+## ماذا عن المركبات الذاتية؟
 
 يمكن أن تغير Economics لأن تكلفة السائق قد تختفي.
 
@@ -1369,7 +1369,7 @@ empty movement
 
 وليس فقط تكلفة التشغيل.
 
-# ماذا عن eVTOL والنقل الجوي الحضري؟
+## ماذا عن eVTOL والنقل الجوي الحضري؟
 
 يمكن تمديد أفكار:
 
@@ -1389,9 +1389,9 @@ empty movement
 
 لذلك لا ينبغي عرضها كامتداد بسيط لنفس تطبيق Ride-Pooling.
 
-# إطار عملي لبناء النظام
+## إطار عملي لبناء النظام
 
-## المرحلة 1: لا تبدأ بـAI
+### المرحلة 1: لا تبدأ بـAI
 
 ابنِ Baseline:
 
@@ -1403,30 +1403,30 @@ simple insertion
 
 واعرف الأداء.
 
-## المرحلة 2: أضف Constraints
+### المرحلة 2: أضف Constraints
 
 - wait.
 - detour.
 - capacity.
 - service area.
 
-## المرحلة 3: أضف Optimization
+### المرحلة 3: أضف Optimization
 
 حل أفضل للمطابقة.
 
-## المرحلة 4: أضف Demand Forecast
+### المرحلة 4: أضف Demand Forecast
 
 فقط إذا أثبتت أن Rebalancing تحتاجها.
 
-## المرحلة 5: أضف Learning
+### المرحلة 5: أضف Learning
 
 مثل GNN/RL إذا كانت Baselines لم تعد تحقق الهدف.
 
-## المرحلة 6: اختبر Operational KPIs
+### المرحلة 6: اختبر Operational KPIs
 
 وليس Model loss فقط.
 
-## المرحلة 7: اختبر Externalities
+### المرحلة 7: اختبر Externalities
 
 - VKT.
 - congestion.
@@ -1434,7 +1434,7 @@ simple insertion
 - equity.
 - transit substitution.
 
-# مثال Architecture عملية
+## مثال Architecture عملية
 
 ```text
 Passenger App
@@ -1476,7 +1476,7 @@ Strategic matching
 
 بدل وضع "AI" في كل Component بلا حاجة.
 
-# كيف نقرر هل النظام نجح؟
+## كيف نقرر هل النظام نجح؟
 
 لا تقل:
 
@@ -1505,9 +1505,9 @@ CO₂e/passenger-km:      -e%
 - dataset.
 - simulation assumptions.
 
-# أهم تصحيحات يجب الانتباه لها
+## أهم تصحيحات يجب الانتباه لها
 
-## "المشكلة NP-hard، إذًا الطرق التقليدية لا تعمل"
+### "المشكلة NP-hard، إذًا الطرق التقليدية لا تعمل"
 
 غير صحيح.
 
@@ -1515,19 +1515,19 @@ CO₂e/passenger-km:      -e%
 
 Heuristics وOptimization الحديثة يمكن أن تكون قوية جدًا.
 
-## "DRL تعمل O(1) بعد التدريب"
+### "DRL تعمل O(1) بعد التدريب"
 
 غير صحيح كقاعدة.
 
 Inference تعتمد على حجم المدخلات والمعمارية، وقد تبقى هناك Assignment/route optimization مكلفة.
 
-## "AI تلغي الازدحام"
+### "AI تلغي الازدحام"
 
 مبالغة.
 
 النتيجة تعتمد على سلوك المستخدمين والسياسات والطلب.
 
-## "Pooling تخفض CO₂ دائمًا"
+### "Pooling تخفض CO₂ دائمًا"
 
 غير صحيح.
 
@@ -1537,7 +1537,7 @@ Inference تعتمد على حجم المدخلات والمعمارية، وق�
 - Detours.
 - substitution from transit.
 
-## "خفض عدد المركبات = خفض الانبعاثات بنفس النسبة"
+### "خفض عدد المركبات = خفض الانبعاثات بنفس النسبة"
 
 غير صحيح.
 
@@ -1548,13 +1548,13 @@ Inference تعتمد على حجم المدخلات والمعمارية، وق�
 - fuel/energy.
 - occupancy.
 
-## "نتيجة Simulation = نتيجة مدينة حقيقية"
+### "نتيجة Simulation = نتيجة مدينة حقيقية"
 
 غير صحيح.
 
 المحاكاة تحتاج Calibration وValidation.
 
-# الخلاصة
+## الخلاصة
 
 نظام مشاركة الرحلات الذكي ليس مجرد تطبيق يربط عدة ركاب بسيارة.
 
@@ -1682,9 +1682,3 @@ Ride-Hailing قد تكون رحلة خاصة لراكب واحد، بينما Ri
 
 7. Ke, Yang, Zhu — On Ride-Pooling and Traffic Congestion, Transportation Research Part B  
    https://doi.org/10.1016/j.trb.2020.10.003
-
-## مقالات ودراسات ذات صلة في منصة تكنو إنجاز
-
-- [التوأم الرقمي: ما هو وكيف يعمل وما أهم تطبيقاته في المدن والأنظمة؟](/articles/digital-twin)
-- [ما هو إنترنت الأشياء (IoT)؟ البنية والبروتوكولات والتطبيقات والأمان](/articles/internet-of-things-iot)
-- [كيف يعمل تصنيف الصور بالذكاء الاصطناعي؟ من CNN إلى Vision Transformers](/articles/ai-image-classification)

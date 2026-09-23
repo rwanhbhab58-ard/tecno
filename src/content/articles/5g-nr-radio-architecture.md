@@ -1,17 +1,17 @@
-<!--
-FILE: 02-article.md
-PURPOSE: Published article content
-VERIFICATION DATE: 2026-09-21
--->
-
-SEO Title: كيف تعمل شبكات 5G تقنيًا؟ شرح 5G NR وOFDM وMIMO وFronthaul
-
-Meta Description: دليل تقني لفهم ما يحدث داخل شبكة 5G: من 5G NR وOFDM وNumerology إلى MIMO وBeamforming والخفوت وFronthaul وبنية RU/DU/CU، مع تحديثات 5G-Advanced وRelease 19.
-
-Suggested Slug: 5g-nr-radio-architecture
-
-# كيف تعمل شبكات 5G تقنيًا؟ شرح 5G NR وOFDM وMIMO وFronthaul
-
+---
+title: "كيف تعمل شبكات 5G تقنيًا؟ شرح 5G NR وOFDM وMIMO وFronthaul"
+seoTitle: "كيف تعمل شبكات 5G تقنيًا؟ شرح 5G NR وOFDM وMIMO وFronthaul"
+description: "دليل تقني لفهم ما يحدث داخل شبكة 5G: من 5G NR وOFDM وNumerology إلى MIMO وBeamforming والخفوت وFronthaul وبنية RU/DU/CU، مع تحديثات 5G-Advanced وRelease 19."
+excerpt: "تحليل هندسي تقني شامل لكيفية عمل 5G NR: تباعد الحوامل الفرعية في OFDM، مصفوفات الهوائيات Massive MIMO، تشكيل الحزم Beamforming، وواجهات Fronthaul في O-RAN."
+titleEn: "5G Technical Deep Dive: 5G NR, OFDM, Massive MIMO, and Open RAN Fronthaul"
+excerptEn: "A technical breakdown of 5G New Radio: flexible numerology, OFDM waveforms, 3D beamforming, Massive MIMO channel state estimation, and Open RAN split 7.2x fronthaul."
+category: "اتصالات وشبكات"
+categoryEn: "Networks & Telecom"
+publishedAt: 2026-09-21
+cover: "../../assets/articles/5g-nr-radio-architecture.png"
+tags: ["شبكات 5G", "5G NR", "اتصالات", "MIMO", "Beamforming", "OFDM", "Open RAN"]
+related: ["5g-iot", "internet-of-things-iot", "embedded-serial-protocols"]
+---
 **شبكة 5G ليست مجرد "4G أسرع".** الفرق الحقيقي يظهر في تصميم الواجهة الراديوية 5G NR، والمرونة في استخدام الطيف، وOFDM قابل للتكيّف، وMIMO وBeamforming، وتقسيم شبكة الوصول الراديوي إلى وظائف مثل RU وDU وCU، إضافة إلى Core جديد صُمم لخدمات أكثر تنوعًا.
 
 لفهم 5G بصورة هندسية، من المفيد تفكيكها إلى سلسلة:
@@ -33,7 +33,7 @@ Data Network / Edge / Cloud
 
 هذا المقال يركز على **شبكة الوصول الراديوي والطبقة الفيزيائية** أكثر من التركيز على التطبيقات التجارية.
 
-# ما الفرق بين 5G و5G NR؟
+## ما الفرق بين 5G و5G NR؟
 
 **5G** اسم المنظومة الكاملة.
 
@@ -58,11 +58,11 @@ Data Network / Edge / Cloud
 
 فنحن غالبًا داخل عالم **5G NR**.
 
-# ما المكونات الأساسية لشبكة 5G؟
+## ما المكونات الأساسية لشبكة 5G؟
 
 يمكن تبسيطها إلى ثلاثة أجزاء.
 
-## 1. UE — User Equipment
+### 1. UE — User Equipment
 
 هو الجهاز المتصل بالشبكة، مثل:
 
@@ -73,7 +73,7 @@ Data Network / Edge / Cloud
 - RedCap device.
 - وحدة اتصال داخل مركبة.
 
-## 2. NG-RAN
+### 2. NG-RAN
 
 شبكة الوصول الراديوي.
 
@@ -87,7 +87,7 @@ Data Network / Edge / Cloud
 
 وهذا التقسيم مهم في الشبكات الحديثة وOpen RAN.
 
-## 3. 5G Core — 5GC
+### 3. 5G Core — 5GC
 
 يتعامل مع وظائف مثل:
 
@@ -101,15 +101,15 @@ Data Network / Edge / Cloud
 
 المواصفة الأساسية لمعمارية 5GS هي **3GPP TS 23.501**، وما زالت تحت التطوير في Releases الحديثة.
 
-# ما الفرق بين NSA وSA؟
+## ما الفرق بين NSA وSA؟
 
-## Non-Standalone — NSA
+### Non-Standalone — NSA
 
 في مراحل النشر الأولى، استخدمت شبكات كثيرة 5G NR مع جزء من بنية LTE/EPC.
 
 هذا سمح بإطلاق 5G بسرعة دون الانتقال الكامل إلى Core جديد.
 
-## Standalone — SA
+### Standalone — SA
 
 يستخدم:
 
@@ -125,7 +125,7 @@ Data Network / Edge / Cloud
 
 لذلك وجود أيقونة "5G" على الهاتف لا يخبرك وحده عن نوع البنية المستخدمة.
 
-# كيف تستخدم 5G الطيف؟
+## كيف تستخدم 5G الطيف؟
 
 من الأخطاء الشائعة اختزال 5G في mmWave.
 
@@ -133,7 +133,7 @@ Data Network / Edge / Cloud
 
 عمليًا يمكن التفكير في:
 
-## النطاقات المنخفضة
+### النطاقات المنخفضة
 
 تعطي عادة:
 
@@ -141,7 +141,7 @@ Data Network / Edge / Cloud
 - اختراقًا أفضل نسبيًا.
 - سعة أقل مقارنة بالنطاقات الأعلى.
 
-## النطاقات المتوسطة
+### النطاقات المتوسطة
 
 أصبحت من أهم طبقات 5G التجارية لأنها تقدم توازنًا بين:
 
@@ -149,7 +149,7 @@ Data Network / Edge / Cloud
 - عرض النطاق.
 - السعة.
 
-## الترددات العالية / FR2
+### الترددات العالية / FR2
 
 تتيح قنوات أعرض وسعات كبيرة، لكن انتشار الإشارة يصبح أصعب وتزداد أهمية:
 
@@ -160,7 +160,7 @@ Data Network / Edge / Cloud
 
 ومع توسع NR، امتدت المواصفات إلى ترددات أعلى حتى نطاقات تصل إلى 71 GHz في إصدارات 3GPP الحديثة.
 
-# لماذا لا يمكن أن نربط التغطية باسم "5G" فقط؟
+## لماذا لا يمكن أن نربط التغطية باسم "5G" فقط؟
 
 لأن خصائص الانتشار مرتبطة بالتردد والبيئة.
 
@@ -189,7 +189,7 @@ Data Network / Edge / Cloud
 
 **أي Band، وبأي قدرة، وبأي هوائيات، وفي أي بيئة؟**
 
-# ما OFDM؟ ولماذا تستخدمه 5G؟
+## ما OFDM؟ ولماذا تستخدمه 5G؟
 
 OFDM اختصار لـ:
 
@@ -212,7 +212,7 @@ OFDM اختصار لـ:
 
 الاختلاف المهم هو **المرونة الأكبر في Numerology**.
 
-# ما هي Numerology في 5G NR؟
+## ما هي Numerology في 5G NR؟
 
 في LTE، كانت 15 kHz Subcarrier Spacing هي المرجع الأساسي.
 
@@ -240,13 +240,13 @@ OFDM اختصار لـ:
 
 ليست لها المتطلبات نفسها التي تعمل عند ترددات عالية جدًا.
 
-## Subcarrier spacing أصغر
+### Subcarrier spacing أصغر
 
 يعني عادة Symbol duration أطول.
 
 قد يكون مناسبًا أكثر لبعض نطاقات التردد المنخفضة.
 
-## Subcarrier spacing أكبر
+### Subcarrier spacing أكبر
 
 يعني Symbols أقصر.
 
@@ -254,7 +254,7 @@ OFDM اختصار لـ:
 
 إذًا Numerology تمنح NR مرونة لاختيار بنية زمن/تردد مناسبة لحالة الاستخدام.
 
-# ما Resource Block؟
+## ما Resource Block؟
 
 لا تمنح الشبكة المستخدم "ترددًا كاملًا" بصورة ثابتة.
 
@@ -271,7 +271,7 @@ Resource Block في NR يتكون من **12 Subcarriers** في المجال ال
 
 وهذا جزء من مرونة NR.
 
-# ماذا يفعل Cyclic Prefix؟
+## ماذا يفعل Cyclic Prefix؟
 
 القنوات اللاسلكية ليست مسارًا مستقيمًا واحدًا.
 
@@ -289,7 +289,7 @@ Resource Block في NR يتكون من **12 Subcarriers** في المجال ال
 
 لكن Cyclic Prefix ليس حلًا سحريًا لكل مشكلة قناة؛ طول التأخير وخصائص البيئة يظلان مهمين.
 
-# كيف تختار الشبكة Modulation وCoding؟
+## كيف تختار الشبكة Modulation وCoding؟
 
 NR لا تستخدم مستوى Modulation واحدًا طوال الوقت.
 
@@ -306,19 +306,19 @@ NR لا تستخدم مستوى Modulation واحدًا طوال الوقت.
 
 الفكرة:
 
-## قناة جيدة
+### قناة جيدة
 
 يمكن استخدام Modulation أعلى:
 
 > Bits أكثر لكل Symbol.
 
-## قناة سيئة
+### قناة سيئة
 
 تخفض الشبكة Modulation أو تستخدم Coding أكثر تحفظًا.
 
 هذا هو جوهر **Adaptive Modulation and Coding — AMC**.
 
-# ما MCS؟
+## ما MCS؟
 
 MCS اختصار لـ:
 
@@ -342,7 +342,7 @@ MCS اختصار لـ:
 - Retransmission.
 - Link adaptation.
 
-# ما هو Channel Coding في 5G؟
+## ما هو Channel Coding في 5G؟
 
 استخدم LTE Turbo Codes بصورة مهمة.
 
@@ -355,17 +355,17 @@ MCS اختصار لـ:
 
 لذلك لا ينبغي وصف Turbo Codes على أنها ترميز البيانات المركزي في 5G NR.
 
-# لماذا القناة اللاسلكية صعبة؟
+## لماذا القناة اللاسلكية صعبة؟
 
 الإشارة أثناء انتقالها لا تواجه مجرد "مسافة".
 
 هناك ثلاثة مفاهيم يجب الفصل بينها:
 
-## 1. Path Loss
+### 1. Path Loss
 
 الانخفاض المتوسط في القدرة مع زيادة المسافة والبيئة والتردد.
 
-## 2. Shadowing
+### 2. Shadowing
 
 تغير أبطأ في القدرة بسبب عوائق كبيرة مثل:
 
@@ -373,13 +373,13 @@ MCS اختصار لـ:
 - تل.
 - جدار.
 
-## 3. Small-scale Fading
+### 3. Small-scale Fading
 
 تغيرات أسرع ناتجة عن تداخل نسخ الإشارة متعددة المسارات والحركة.
 
 هذه الظواهر لا تعني الشيء نفسه.
 
-# ما Multipath؟
+## ما Multipath؟
 
 تصل الإشارة إلى المستقبل عبر أكثر من مسار.
 
@@ -406,7 +406,7 @@ Base Station ───────→ UE
 
 هذا هو أحد مصادر Fading.
 
-# هل الانعكاس والانكسار والتبعثر هي كل القصة؟
+## هل الانعكاس والانكسار والتبعثر هي كل القصة؟
 
 هي آليات مهمة في الانتشار، لكن نمذجة القناة الحديثة تتضمن أكثر من قائمة ثلاثية بسيطة.
 
@@ -424,25 +424,25 @@ Base Station ───────→ UE
 
 لذلك تستخدم أنظمة 5G نماذج قناة أكثر تعقيدًا للاختبار والمحاكاة.
 
-# ما Diversity؟
+## ما Diversity؟
 
 الفكرة هي إعطاء النظام أكثر من فرصة لاستقبال المعلومة عبر مسارات أو موارد غير متطابقة.
 
 أنواعها تشمل:
 
-## Time Diversity
+### Time Diversity
 
 إرسال Redundancy عبر أزمنة مختلفة.
 
-## Frequency Diversity
+### Frequency Diversity
 
 استخدام ترددات أو Subcarriers مختلفة.
 
-## Spatial Diversity
+### Spatial Diversity
 
 استخدام هوائيات متعددة أو مسارات Spatial مستقلة.
 
-## Coding Diversity
+### Coding Diversity
 
 استخدام Channel Coding لنشر المعلومات وإتاحة تصحيح الأخطاء.
 
@@ -450,7 +450,7 @@ Base Station ───────→ UE
 
 MIMO يمكن أن تستخدم المجال المكاني أيضًا **لزيادة السعة** وليس فقط للتنوع.
 
-# ما MIMO؟
+## ما MIMO؟
 
 MIMO اختصار:
 
@@ -460,15 +460,15 @@ MIMO اختصار:
 
 لكن MIMO يمكن أن تحقق أهدافًا مختلفة.
 
-## 1. Spatial Diversity
+### 1. Spatial Diversity
 
 تحسين Reliability.
 
-## 2. Spatial Multiplexing
+### 2. Spatial Multiplexing
 
 إرسال Streams مختلفة بالتوازي لزيادة Data Rate.
 
-## 3. Beamforming
+### 3. Beamforming
 
 تشكيل نمط الإشعاع لتوجيه الطاقة بصورة أفضل نحو اتجاه معين.
 
@@ -478,7 +478,7 @@ MIMO اختصار:
 
 هذا وصف لنمط Diversity فقط، وليس MIMO كلها.
 
-# ما Massive MIMO؟
+## ما Massive MIMO؟
 
 عندما تمتلك محطة القاعدة عددًا كبيرًا من عناصر الهوائي، يمكنها استغلال المجال المكاني بدرجة أكبر.
 
@@ -499,7 +499,7 @@ MIMO اختصار:
 - التردد.
 - تكوين الشبكة.
 
-# ما Beamforming؟
+## ما Beamforming؟
 
 بدل بث الطاقة بالتساوي في جميع الاتجاهات، يمكن لمصفوفة الهوائيات تشكيل نمط إشعاع يركز الإشارة.
 
@@ -520,7 +520,7 @@ Beamforming لا يعني "شعاع ليزر" ثابتًا.
 
 وفي Release 19 استمرت 3GPP بتطوير MIMO وBeam Management، بما في ذلك دعم **UE-initiated/event-driven beam management** في أعمال NR MIMO Phase 5.
 
-# ما علاقة MIMO بالخـفوت؟
+## ما علاقة MIMO بالخـفوت؟
 
 Multipath ليس دائمًا عدوًا.
 
@@ -533,7 +533,7 @@ Multipath ليس دائمًا عدوًا.
 
 أي أن البيئة متعددة المسارات التي تسبب Fading يمكن أيضًا أن تصبح موردًا مفيدًا لنظام MIMO عندما تكون القناة مناسبة.
 
-# ما Maximal Ratio Combining — MRC؟
+## ما Maximal Ratio Combining — MRC؟
 
 MRC طريقة Diversity Combining.
 
@@ -562,15 +562,15 @@ MRC تعطي Weight أكبر للفروع ذات جودة القناة الأف�
 - HARQ.
 - Beam processing.
 
-# ما الفرق بين SNR وSINR؟
+## ما الفرق بين SNR وSINR؟
 
-## SNR
+### SNR
 
 Signal-to-Noise Ratio.
 
 تقارن قدرة الإشارة بالضجيج.
 
-## SINR
+### SINR
 
 Signal-to-Interference-plus-Noise Ratio.
 
@@ -583,7 +583,7 @@ Signal-to-Interference-plus-Noise Ratio.
 - Beams.
 - Inter-cell interference.
 
-# لماذا سرعة 5G النظرية تختلف عن السرعة الفعلية؟
+## لماذا سرعة 5G النظرية تختلف عن السرعة الفعلية؟
 
 Throughput النهائي يتأثر بـ:
 
@@ -607,7 +607,7 @@ Throughput النهائي يتأثر بـ:
 
 حتى على الشبكة نفسها، يمكن لمستخدمين في مكانين مختلفين رؤية نتائج مختلفة جدًا.
 
-# ما Fronthaul؟
+## ما Fronthaul؟
 
 هذه نقطة تقنية مهمة في بنية RAN.
 
@@ -633,7 +633,7 @@ Backhaul
 
 المصطلحات والتقسيمات تختلف حسب Architecture، لكن الفكرة هي أن **Fronthaul أقرب إلى الراديو**.
 
-# هل ما زال نموذج RRH + BBU كافيًا لشرح 5G؟
+## هل ما زال نموذج RRH + BBU كافيًا لشرح 5G؟
 
 هو مفيد تاريخيًا، لكنه لم يعد كافيًا وحده.
 
@@ -652,7 +652,7 @@ Backhaul
 
 فقط.
 
-# ما IEEE 1914.1 و1914.3؟
+## ما IEEE 1914.1 و1914.3؟
 
 **IEEE 1914.1-2019** يحدد معمارية ومتطلبات Packet-based fronthaul transport networks، بما في ذلك متطلبات:
 
@@ -673,7 +673,7 @@ Backhaul
 
 هذه نقطة تحديث مهمة مقارنة بمراجع تعتمد فقط على IEEE 1914.3-2018.
 
-# أين يدخل O-RAN؟
+## أين يدخل O-RAN؟
 
 O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 
@@ -696,9 +696,9 @@ O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 
 لكن "Open" لا يعني أن جميع مكونات كل مورد تتكامل بلا اختبار؛ Conformance وInteroperability Testing يظلان أساسيين.
 
-# ما الفرق بين Fronthaul وBackhaul؟
+## ما الفرق بين Fronthaul وBackhaul؟
 
-## Fronthaul
+### Fronthaul
 
 يربط أجزاء RAN القريبة من الراديو.
 
@@ -709,7 +709,7 @@ O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 - Jitter.
 - Throughput.
 
-## Backhaul
+### Backhaul
 
 يربط RAN بالشبكة الأساسية أو شبكات التجميع.
 
@@ -719,7 +719,7 @@ O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 
 لهذا ظهرت Functional Splits لتوزيع المعالجة بصورة أكثر عملية.
 
-# لماذا Timing وSynchronization مهمان؟
+## لماذا Timing وSynchronization مهمان؟
 
 الشبكة الراديوية تعتمد على توقيت دقيق.
 
@@ -740,13 +740,13 @@ O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 - Timing.
 - Synchronization.
 
-# كيف ترتبط 5G التقنية بإنترنت الأشياء؟
+## كيف ترتبط 5G التقنية بإنترنت الأشياء؟
 
 ليس عبر "السرعة فقط".
 
 خصائص RAN المختلفة تخدم أجهزة مختلفة.
 
-## حساس بسيط
+### حساس بسيط
 
 قد يستخدم:
 
@@ -755,11 +755,11 @@ O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 
 ولا يحتاج Full NR high throughput.
 
-## RedCap
+### RedCap
 
 يخفض تعقيد 5G لبعض الأجهزة التي تقع بين LPWA و5G كامل القدرات.
 
-## كاميرا صناعية
+### كاميرا صناعية
 
 تستفيد من:
 
@@ -768,7 +768,7 @@ O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 - QoS.
 - Private 5G.
 
-## روبوت أو AGV
+### روبوت أو AGV
 
 قد يهتم أكثر بـ:
 
@@ -780,7 +780,7 @@ O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 
 لذلك يجب فصل مقال "كيف تعمل 5G تقنيًا" عن مقال "متى تحتاج IoT إلى 5G".
 
-# ما 5G-Advanced؟
+## ما 5G-Advanced؟
 
 تطلق الصناعة اسم **5G-Advanced** على المرحلة التطورية التالية من 5G، ويمثل **3GPP Release 18** أول Release ضمن هذه المرحلة.
 
@@ -795,7 +795,7 @@ O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 - NTN.
 - Industrial capabilities.
 
-## ماذا عن Release 19؟
+### ماذا عن Release 19؟
 
 وفق بوابة 3GPP الحالية:
 
@@ -814,7 +814,7 @@ O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 
 لذلك "5G" في 2026 ليست مواصفة ثابتة توقفت عند Release 15.
 
-# هل 6G حلّت محل 5G؟
+## هل 6G حلّت محل 5G؟
 
 لا.
 
@@ -827,41 +827,41 @@ O-RAN لا يساوي 5G ولا يحل محل 3GPP.
 
 بينما 5G و5G-Advanced هما النظام التجاري الجاري تطويره ونشره.
 
-# أخطاء شائعة في شرح 5G
+## أخطاء شائعة في شرح 5G
 
-## "5G = mmWave"
+### "5G = mmWave"
 
 خطأ. 5G تعمل في نطاقات عديدة.
 
-## "5G أسرع 100 مرة دائمًا"
+### "5G أسرع 100 مرة دائمًا"
 
 خطأ. Peak capability لا تساوي تجربة المستخدم.
 
-## "MIMO ترسل نسخة احتياطية من الإشارة فقط"
+### "MIMO ترسل نسخة احتياطية من الإشارة فقط"
 
 ناقص. MIMO تستخدم أيضًا Spatial Multiplexing وBeamforming.
 
-## "5G تغطي مسافة أكبر دائمًا"
+### "5G تغطي مسافة أكبر دائمًا"
 
 خطأ. التغطية تعتمد على Band والبيئة.
 
-## "Fronthaul = كابل بين RRH وBBU"
+### "Fronthaul = كابل بين RRH وBBU"
 
 شرح تاريخي مبسط جدًا للبنية الحديثة.
 
-## "كل IoT يحتاج 5G"
+### "كل IoT يحتاج 5G"
 
 خطأ. Connectivity يجب أن تتبع متطلبات الجهاز.
 
-## "1 ms هو Ping الطبيعي في 5G"
+### "1 ms هو Ping الطبيعي في 5G"
 
 خطأ. الأرقام المعيارية ترتبط بسيناريوهات وطبقات محددة، وليست ضمانًا لأي تطبيق End-to-end.
 
-## "Turbo Coding هو أساس 5G"
+### "Turbo Coding هو أساس 5G"
 
 غير دقيق. NR تعتمد LDPC لبيانات المستخدم وPolar Codes لقنوات تحكم محددة.
 
-# إطار عملي لفهم أداء وصلة 5G
+## إطار عملي لفهم أداء وصلة 5G
 
 عند تحليل شبكة لا تسأل عن "قوة الإشارة" فقط.
 
@@ -901,7 +901,7 @@ Server location
 - MIMO layers متاحة.
 - الشبكة غير مزدحمة.
 
-# الخلاصة
+## الخلاصة
 
 شبكات 5G ليست تقنية واحدة؛ هي مجموعة طبقات تعمل معًا.
 
@@ -1025,10 +1025,3 @@ Path Loss انخفاض متوسط في القدرة مع المسافة والب
 
 10. ITU — IMT-2020  
     https://www.itu.int/en/itu-r/study-groups/rsg5/rwp5d/imt-2020/pages/default.aspx
-
-## مقالات ودراسات ذات صلة في منصة تكنو إنجاز
-
-- [كيف تؤثر شبكات 5G في إنترنت الأشياء؟ السرعة والزمن والتوسع و5G-Advanced](/articles/5g-iot)
-- [ما هو إنترنت الأشياء (IoT)؟ البنية والبروتوكولات والتطبيقات والأمان](/articles/internet-of-things-iot)
-- [UART أم I2C أم SPI أم RS-232؟ دليل اختيار بروتوكول الاتصال للنظم المدمجة](/articles/embedded-serial-protocols)
-

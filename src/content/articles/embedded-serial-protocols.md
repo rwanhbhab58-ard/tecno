@@ -1,17 +1,17 @@
-<!--
-FILE: 02-article.md
-PURPOSE: Published article content
-VERIFICATION DATE: 2026-09-21
--->
-
-SEO Title: UART أم I2C أم SPI أم RS-232؟ دليل اختيار بروتوكول الاتصال للنظم المدمجة
-
-Meta Description: مقارنة عملية بين UART وI2C وSPI وRS-232 في الأنظمة المدمجة: الأسلاك، السرعة، التزامن، العنونة، المسافة، الجهد، الأخطاء، وأفضل استخدام لكل واجهة، مع تحديث I3C.
-
-Suggested Slug: embedded-serial-protocols
-
-# UART أم I2C أم SPI أم RS-232؟ دليل اختيار بروتوكول الاتصال للنظم المدمجة
-
+---
+title: "UART أم I2C أم SPI أم RS-232؟ دليل اختيار بروتوكول الاتصال للنظم المدمجة"
+seoTitle: "UART أم I2C أم SPI أم RS-232؟ دليل اختيار بروتوكول الاتصال للنظم المدمجة"
+description: "مقارنة عملية بين UART وI2C وSPI وRS-232 في الأنظمة المدمجة: الأسلاك، السرعة، التزامن، العنونة، المسافة، الجهد، الأخطاء، وأفضل استخدام لكل واجهة، مع تحديث I3C."
+excerpt: "دليل هندسي مقارن لاختيار واجهات الاتصال التسلسلية في المتحكمات الدقيقة: تحليل تقني للسرعات، عدد الأسلاك، مستويات الجهد، ومصفوفة قرار عملية لاختيار البروتوكول المناسب."
+titleEn: "UART vs I2C vs SPI vs RS-232: Embedded Serial Communication Protocols Guide"
+excerptEn: "A practical engineering guide comparing UART, I2C, SPI, and RS-232/RS-485: wiring efficiency, clocking, signal integrity, and hardware decision matrices."
+category: "أنظمة مدمجة"
+categoryEn: "Embedded Systems"
+publishedAt: 2026-09-21
+cover: "../../assets/articles/embedded-serial-protocols.png"
+tags: ["أنظمة مدمجة", "UART", "I2C", "SPI", "RS232", "متحكمات دقيقة", "إلكترونيات"]
+related: ["internet-of-things-iot", "5g-iot", "digital-twin"]
+---
 **لا يوجد بروتوكول اتصال واحد هو الأفضل لكل نظام مدمج.**  
 الاختيار الصحيح يعتمد على سؤال أبسط بكثير:
 
@@ -42,7 +42,7 @@ RS-232 Transceiver
 RS-232 cable
 ```
 
-# ما المقصود ببروتوكول اتصال في النظام المدمج؟
+## ما المقصود ببروتوكول اتصال في النظام المدمج؟
 
 داخل النظام المدمج نحتاج إلى اتفاق بين جهازين أو أكثر حول كيفية تبادل البيانات.
 
@@ -70,13 +70,13 @@ RS-232 cable
 
 ولهذا فإن مقارنة الأسماء فقط من دون فهم طبقة كل واحدة قد تؤدي إلى تصميم خاطئ.
 
-# قبل المقارنة: Serial لا تعني دائمًا الشيء نفسه
+## قبل المقارنة: Serial لا تعني دائمًا الشيء نفسه
 
 "Serial Communication" تعني أن البتات تنتقل تباعًا عبر خط أو عدد صغير من الخطوط بدل إرسال عدد كبير من البتات بالتوازي.
 
 لكن Serial interfaces تختلف جذريًا.
 
-## اتصال غير متزامن
+### اتصال غير متزامن
 
 لا يوجد Clock line مشتركة.
 
@@ -86,7 +86,7 @@ RS-232 cable
 
 الطرفان يتفقان مسبقًا على Baud Rate وشكل Frame.
 
-## اتصال متزامن
+### اتصال متزامن
 
 يوجد Clock تقود توقيت النقل.
 
@@ -97,7 +97,7 @@ RS-232 cable
 
 وجود Clock يبسط تحديد لحظة أخذ العينة، لكنه يضيف قيود Signal Integrity عند ارتفاع السرعة أو المسافة.
 
-# جدول سريع: UART vs I²C vs SPI vs RS-232
+## جدول سريع: UART vs I²C vs SPI vs RS-232
 
 | الخاصية | UART | I²C | SPI | RS‑232 |
 |---|---|---|---|---|
@@ -116,7 +116,7 @@ RS-232 cable
 
 هذه مقارنة مفاهيمية. لا تستخدم أرقام "حد أقصى" عامة من جدول إنترنت بدل Datasheet الخاصة بالمتحكم والطرفية واللوحة والكابل.
 
-# UART: أبسط طريق بين جهازين
+## UART: أبسط طريق بين جهازين
 
 UART اختصار:
 
@@ -148,7 +148,7 @@ GND ↔ GND
 
 إذا كان Hardware يدعمها ضمن Error tolerance المناسبة.
 
-# كيف يبدو UART Frame؟
+## كيف يبدو UART Frame؟
 
 أحد أشهر الإعدادات:
 
@@ -175,7 +175,7 @@ Stop
 
 ويمكن إضافة Parity في إعدادات أخرى.
 
-# ما دور Start وStop Bits؟
+## ما دور Start وStop Bits؟
 
 لأن الطرفين لا يملكان Clock مشتركة على السلك، يحتاج المستقبل إلى اكتشاف بداية الحرف ثم أخذ Samples وفق Baud Rate المتفق عليها.
 
@@ -188,7 +188,7 @@ Stop bit تعطي نهاية/فترة Idle مطلوبة قبل Frame التال�
 - Framing errors.
 - corrupted bytes.
 
-# ما Parity؟ وما الذي لا تفعله؟
+## ما Parity؟ وما الذي لا تفعله؟
 
 Parity تضيف Bit يمكن استخدامها لاكتشاف بعض أخطاء النقل.
 
@@ -220,7 +220,7 @@ Parity قد تكشف بعض أنماط الأخطاء فقط.
 - timeout.
 - retry.
 
-# Baud Rate أم Bit Rate؟
+## Baud Rate أم Bit Rate؟
 
 المصطلحان ليسا مترادفين في الاتصالات عمومًا.
 
@@ -250,7 +250,7 @@ Parity قد تكشف بعض أنماط الأخطاء فقط.
 
 قبل أي بروتوكول إضافي.
 
-# هل UART لها حد أقصى 115200؟
+## هل UART لها حد أقصى 115200؟
 
 لا.
 
@@ -271,7 +271,7 @@ Parity قد تكشف بعض أنماط الأخطاء فقط.
 
 اقرأ Datasheet للطرفين.
 
-# UART ليست دائمًا TTL 5V
+## UART ليست دائمًا TTL 5V
 
 من الأخطاء الشائعة:
 
@@ -301,7 +301,7 @@ UART peripheral قد تعمل على I/O voltage الخاصة بالشريحة،
 
 بين جهدين مختلفين.
 
-# لماذا UART ممتازة للـDebug؟
+## لماذا UART ممتازة للـDebug؟
 
 لأنها:
 
@@ -323,7 +323,7 @@ Laptop Terminal
 
 ولهذا تبقى من أول الواجهات التي يستخدمها مهندس Firmware عند Bring-up للوحة.
 
-# متى لا تكون UART مناسبة؟
+## متى لا تكون UART مناسبة؟
 
 عندما تحتاج:
 
@@ -334,7 +334,7 @@ Laptop Terminal
 
 هنا غالبًا ننظر إلى I²C أو SPI أو غيرهما.
 
-# RS‑232: ليست UART بجهد أعلى فقط
+## RS‑232: ليست UART بجهد أعلى فقط
 
 RS‑232 معيار تاريخي للاتصال التسلسلي Point-to-Point.
 
@@ -350,7 +350,7 @@ RS-232 electrical transceiver
 
 لكن الفصل بينهما مهم.
 
-## UART side
+### UART side
 
 قد تكون:
 
@@ -358,7 +358,7 @@ RS-232 electrical transceiver
 0 V / 3.3 V
 ```
 
-## RS‑232 side
+### RS‑232 side
 
 تستخدم مستويات موجبة وسالبة، مع عكس دلالة المنطق مقارنة بكثير من UART logic.
 
@@ -372,7 +372,7 @@ RS-232 electrical transceiver
 
 قد يؤدي جهد RS‑232 إلى إتلاف GPIO.
 
-# ما وظيفة MAX232-class Transceiver؟
+## ما وظيفة MAX232-class Transceiver؟
 
 يقوم بوظيفتين أساسيتين:
 
@@ -391,7 +391,7 @@ MCU UART 3.3/5V
 
 بعض Transceivers تحتوي Charge Pump لتوليد الفولتية المطلوبة من Supply واحدة منخفضة.
 
-# هل RS‑232 تحتاج DB‑25؟
+## هل RS‑232 تحتاج DB‑25؟
 
 لا.
 
@@ -412,7 +412,7 @@ GND
 - RTS.
 - CTS.
 
-# DTE وDCE: لماذا تظهر هذه المصطلحات؟
+## DTE وDCE: لماذا تظهر هذه المصطلحات؟
 
 RS‑232 طورت أصلًا لربط:
 
@@ -432,7 +432,7 @@ RS‑232 طورت أصلًا لربط:
 
 لا تعتمد على تسمية "TX" وحدها قبل مراجعة Pinout.
 
-# RTS وCTS
+## RTS وCTS
 
 في Hardware Flow Control التقليدي:
 
@@ -450,7 +450,7 @@ RS‑232 طورت أصلًا لربط:
 - الطرف المقابل.
 - Operating-system serial settings.
 
-# هل طول RS‑232 ثابت عند 15 مترًا؟
+## هل طول RS‑232 ثابت عند 15 مترًا؟
 
 ليست قاعدة صلبة.
 
@@ -469,7 +469,7 @@ RS‑232 طورت أصلًا لربط:
 
 > كلما زادت المسافة أو البيئة الصناعية والضوضاء، فكر أيضًا في واجهات Differential مثل RS‑485 أو CAN بدل دفع RS‑232 خارج ظروفها.
 
-# I²C: جهازان فقط من الأسلاك، وعدة أجهزة على Bus
+## I²C: جهازان فقط من الأسلاك، وعدة أجهزة على Bus
 
 I²C اختصار:
 
@@ -501,7 +501,7 @@ MCU Controller
 
 بخطوط SDA/SCL مشتركة.
 
-# لماذا I²C تحتاج Pull-up Resistors؟
+## لماذا I²C تحتاج Pull-up Resistors؟
 
 خطوط I²C تعمل تقليديًا بأسلوب:
 
@@ -523,7 +523,7 @@ SDA -------- devices
 
 وهذا يسمح لعدة أجهزة بمشاركة الخط دون صراع Push-pull مباشر.
 
-# هل اختيار Pull-up مجرد "4.7 kΩ دائمًا"؟
+## هل اختيار Pull-up مجرد "4.7 kΩ دائمًا"؟
 
 لا.
 
@@ -546,29 +546,29 @@ SDA -------- devices
 - يزيد Current عند LOW.
 - قد يتجاوز الجهاز قدرة السحب.
 
-# ما سرعات I²C الحالية؟
+## ما سرعات I²C الحالية؟
 
 وفق مواصفة NXP UM10204 Rev. 7:
 
-### Standard-mode
+#### Standard-mode
 
 حتى:
 
 **100 kbit/s**
 
-### Fast-mode
+#### Fast-mode
 
 حتى:
 
 **400 kbit/s**
 
-### Fast-mode Plus
+#### Fast-mode Plus
 
 حتى:
 
 **1 Mbit/s**
 
-### High-speed mode
+#### High-speed mode
 
 حتى:
 
@@ -582,7 +582,7 @@ SDA -------- devices
 
 غير صحيح كقاعدة عامة.
 
-# كيف تبدأ I²C Transaction؟
+## كيف تبدأ I²C Transaction؟
 
 في نموذج بسيط:
 
@@ -606,7 +606,7 @@ STOP
 - multi-controller arbitration.
 - Clock stretching في السيناريوهات المدعومة.
 
-# هل عنوان I²C "تعينه Philips لكل جهاز"؟
+## هل عنوان I²C "تعينه Philips لكل جهاز"؟
 
 لا بهذه الصورة.
 
@@ -630,7 +630,7 @@ STOP
 - عدة Controllers.
 - Interface أخرى.
 
-# ما ACK وNACK؟
+## ما ACK وNACK؟
 
 بعد Byte معينة، توجد مرحلة Acknowledge.
 
@@ -649,7 +649,7 @@ STOP
 - PEC.
 - CRC.
 
-# Multi-controller وArbitration
+## Multi-controller وArbitration
 
 I²C ليست محصورة بمتحكم واحد نظريًا.
 
@@ -659,7 +659,7 @@ I²C ليست محصورة بمتحكم واحد نظريًا.
 
 دعم المعيار ≠ سهولة التنفيذ في Platform الخاصة بك.
 
-# Clock Stretching
+## Clock Stretching
 
 بعض Targets قد تبقي SCL منخفضة لإبطاء Controller عندما تحتاج وقتًا إضافيًا.
 
@@ -671,7 +671,7 @@ I²C ليست محصورة بمتحكم واحد نظريًا.
 
 راجع Datasheet بدل افتراض السلوك.
 
-# لماذا طول I²C محدود عمليًا؟
+## لماذا طول I²C محدود عمليًا؟
 
 ليس هناك "1 متر" يصلح كقاعدة لكل I²C.
 
@@ -690,7 +690,7 @@ I²C صممت أساسًا للاتصال بين ICs داخل جهاز/لوحة.
 
 للكابلات الصناعية الطويلة، غالبًا توجد حلول أنسب.
 
-# SPI: سرعة وبساطة على حساب Pins أكثر
+## SPI: سرعة وبساطة على حساب Pins أكثر
 
 SPI اختصار:
 
@@ -718,7 +718,7 @@ CS / SS
 
 الفكرة واحدة: هناك Clock وخط إرسال وخط استقبال واختيار Device.
 
-# لماذا SPI سريعة؟
+## لماذا SPI سريعة؟
 
 بعكس I²C التقليدية:
 
@@ -735,7 +735,7 @@ CS / SS
 - High-rate sensors.
 - FPGAs/peripherals.
 
-# هل SPI لها سرعة قصوى 10 MHz؟
+## هل SPI لها سرعة قصوى 10 MHz؟
 
 لا.
 
@@ -763,7 +763,7 @@ CS / SS
 
 > سرعة SPI يحددها أبطأ عنصر في الرابط وتوقيت اللوحة، لا اسم SPI نفسه.
 
-# SPI Full Duplex
+## SPI Full Duplex
 
 لوجود خطين منفصلين:
 
@@ -785,7 +785,7 @@ then receive data
 
 فتكون Full Duplex كهربائيًا، لكن الاستخدام الفعلي قد يبدو Half-duplex منطقيًا.
 
-# عدة Targets على SPI
+## عدة Targets على SPI
 
 المصدر القديم قد يصف SPI بأنها Point-to-Point.
 
@@ -815,7 +815,7 @@ CS2 → Display
 
 وهنا I²C قد تكون أجمل للحساسات الكثيرة منخفضة البيانات.
 
-# CPOL وCPHA: فخ SPI الشهير
+## CPOL وCPHA: فخ SPI الشهير
 
 SPI لديها Modes تعتمد على:
 
@@ -841,7 +841,7 @@ Mode 3
 
 > CPOL/CPHA + bit order + CS timing.
 
-# هل SPI تحتوي ACK أو Addressing؟
+## هل SPI تحتوي ACK أو Addressing؟
 
 ليست مثل I²C.
 
@@ -863,9 +863,9 @@ SPI الأساسية لا تقدم Bus-level ACK أو Addressing موحدين.
 
 > "SPI" تخبرك كيف تنتقل البتات، لكنها لا تخبرك بالضرورة معنى البايتات.
 
-# UART vs SPI: متى أختار كل واحدة؟
+## UART vs SPI: متى أختار كل واحدة؟
 
-## اختر UART عندما:
+### اختر UART عندما:
 
 - جهازان فقط.
 - Debug console.
@@ -874,7 +874,7 @@ SPI الأساسية لا تقدم Bus-level ACK أو Addressing موحدين.
 - البيانات ليست هائلة.
 - تحتاج كابلًا بسيطًا ضمن مستويات كهربائية مناسبة.
 
-## اختر SPI عندما:
+### اختر SPI عندما:
 
 - Peripheral على PCB.
 - تحتاج Throughput مرتفعًا.
@@ -882,9 +882,9 @@ SPI الأساسية لا تقدم Bus-level ACK أو Addressing موحدين.
 - Pins الإضافية مقبولة.
 - تستطيع التحكم بتوقيت Clock بدقة.
 
-# I²C vs SPI: المقارنة الأشهر
+## I²C vs SPI: المقارنة الأشهر
 
-## I²C
+### I²C
 
 أفضل عادةً عندما:
 
@@ -893,7 +893,7 @@ SPI الأساسية لا تقدم Bus-level ACK أو Addressing موحدين.
 - Bandwidth متوسطة/منخفضة.
 - العنونة مفيدة.
 
-## SPI
+### SPI
 
 أفضل عادةً عندما:
 
@@ -919,7 +919,7 @@ Display
 
 لا يوجد مانع أن تستخدم الاثنين في المشروع نفسه.
 
-# UART vs RS‑232: المقارنة الصحيحة
+## UART vs RS‑232: المقارنة الصحيحة
 
 السؤال:
 
@@ -938,13 +938,13 @@ Display
 
 لذلك RS‑232 ليست منافسًا مباشرًا لـUART في كل حالة.
 
-# كيف أختار البروتوكول؟ Decision Tree
+## كيف أختار البروتوكول؟ Decision Tree
 
 ابدأ بالسؤال الأول:
 
-## هل الطرف داخل PCB نفسها؟
+### هل الطرف داخل PCB نفسها؟
 
-### نعم
+#### نعم
 
 اسأل:
 
@@ -954,7 +954,7 @@ Display
 - عدة Sensors + Pins قليلة → I²C.
 - Module بسيط/Debug → UART.
 
-### لا، يوجد Cable
+#### لا، يوجد Cable
 
 اسأل:
 
@@ -964,29 +964,29 @@ Display
 - معدات Legacy/Industrial Point-to-point → RS‑232 قد يناسب.
 - مسافة أطول/بيئة noisy/multi-drop → انظر أيضًا إلى RS‑485 أو CAN.
 
-# لا تختَر حسب السرعة وحدها
+## لا تختَر حسب السرعة وحدها
 
 هذه معايير أهم كثيرًا:
 
-## 1. عدد الأجهزة
+### 1. عدد الأجهزة
 
 - I²C ممتازة للعديد من Targets.
 - SPI تحتاج CS لكل Target غالبًا.
 - UART Point-to-point عادةً.
 
-## 2. Pins
+### 2. Pins
 
 لو لديك MCU صغيرة:
 
 - I²C توفر Pins.
 - SPI قد تستهلك عدة Chip Selects.
 
-## 3. Bandwidth
+### 3. Bandwidth
 
 - Display/Flash → SPI عادةً.
 - Temperature sensor → I²C كافية غالبًا.
 
-## 4. Latency
+### 4. Latency
 
 SPI يمكن أن تكون مباشرة وسريعة.
 
@@ -994,7 +994,7 @@ I²C لديها Address/ACK overhead.
 
 UART لديها Start/Stop framing.
 
-## 5. Power
+### 5. Power
 
 لا تحكم من اسم البروتوكول فقط.
 
@@ -1006,7 +1006,7 @@ UART لديها Start/Stop framing.
 - sleep modes.
 - peripheral implementation.
 
-## 6. Software ecosystem
+### 6. Software ecosystem
 
 اسأل:
 
@@ -1015,17 +1015,17 @@ UART لديها Start/Stop framing.
 - هل Vendor SDK ناضج؟
 - هل DMA متاح؟
 
-## 7. Debuggability
+### 7. Debuggability
 
 UART هي الأسهل غالبًا في Debug اليدوي.
 
 I²C/SPI تحتاج Logic Analyzer غالبًا لفهم التوقيت.
 
-## 8. EMI / Signal Integrity
+### 8. EMI / Signal Integrity
 
 Clock سريع + traces طويلة قد تسبب مشاكل.
 
-# طبقة الجهد أهم من اسم البروتوكول
+## طبقة الجهد أهم من اسم البروتوكول
 
 قبل وصل جهازين:
 
@@ -1052,9 +1052,9 @@ Sensor I²C تعمل 3.3 V.
 
 البروتوكول المتوافق لا يعني الجهد متوافق.
 
-# Open-drain vs Push-pull
+## Open-drain vs Push-pull
 
-## I²C
+### I²C
 
 Open-drain + Pull-up.
 
@@ -1064,7 +1064,7 @@ Open-drain + Pull-up.
 - rise time RC-limited.
 - wired arbitration possible.
 
-## SPI/UART غالبًا
+### SPI/UART غالبًا
 
 Push-pull.
 
@@ -1076,7 +1076,7 @@ Push-pull.
 
 هذه الفروقات الكهربائية تفسر كثيرًا من الفرق في السرعة والطوبولوجيا.
 
-# Signal Integrity: لماذا تعمل على Breadboard ثم تفشل على المنتج؟
+## Signal Integrity: لماذا تعمل على Breadboard ثم تفشل على المنتج؟
 
 قد تعمل SPI عند 20 MHz على أسلاك قصيرة ثم تفشل مع Ribbon cable.
 
@@ -1092,7 +1092,7 @@ Push-pull.
 - long stubs.
 - impedance discontinuity.
 
-# أعراض Signal Integrity في SPI
+## أعراض Signal Integrity في SPI
 
 - Bits تتغير عشوائيًا عند رفع Clock.
 - تعمل عند 1 MHz وتفشل عند 20 MHz.
@@ -1108,7 +1108,7 @@ Push-pull.
 - Layout أفضل.
 - Scope measurement.
 
-# أعراض I²C سيئة
+## أعراض I²C سيئة
 
 - SDA لا ترتفع إلى HIGH بسرعة.
 - Bus stuck LOW.
@@ -1124,7 +1124,7 @@ Push-pull.
 - clock stretching.
 - topology.
 
-# Logic Analyzer: أداة لا غنى عنها
+## Logic Analyzer: أداة لا غنى عنها
 
 يمكن لـLogic Analyzer Decode:
 
@@ -1157,9 +1157,9 @@ STOP
 
 > استخدم Oscilloscope.
 
-# Logic Analyzer أم Oscilloscope؟
+## Logic Analyzer أم Oscilloscope؟
 
-## Logic Analyzer
+### Logic Analyzer
 
 ممتاز لـ:
 
@@ -1168,7 +1168,7 @@ STOP
 - protocol sequence.
 - timing logic.
 
-## Oscilloscope
+### Oscilloscope
 
 ممتاز لـ:
 
@@ -1180,53 +1180,53 @@ STOP
 
 أفضل Debug أحيانًا يستخدم الاثنين.
 
-# أخطاء تصميم شائعة
+## أخطاء تصميم شائعة
 
-## 1. توصيل UART مباشرة إلى RS‑232
+### 1. توصيل UART مباشرة إلى RS‑232
 
 قد يتلف الدخل أو لا يعمل بسبب مستويات الجهد.
 
-## 2. I²C بدون Pull-ups
+### 2. I²C بدون Pull-ups
 
 الخطوط لن تعمل كما هو متوقع.
 
-## 3. Pull-up غير مناسبة
+### 3. Pull-up غير مناسبة
 
 تسبب Rise time بطيئة أو Current عاليًا.
 
-## 4. SPI Mode خاطئة
+### 4. SPI Mode خاطئة
 
 CPOL/CPHA غير متوافقة.
 
-## 5. افتراض سرعة ثابتة للبروتوكول
+### 5. افتراض سرعة ثابتة للبروتوكول
 
 لا يوجد "SPI = 10 MHz" أو "UART = 115200 max" كقانون.
 
-## 6. Ground غير مشترك في Logic-level interface
+### 6. Ground غير مشترك في Logic-level interface
 
 تحتاج Reference مشتركة في كثير من الروابط Single-ended.
 
-## 7. ربط جهدين مختلفين
+### 7. ربط جهدين مختلفين
 
 Protocol-compatible ≠ electrically compatible.
 
-## 8. نفس I²C address لجهازين
+### 8. نفس I²C address لجهازين
 
 يؤدي إلى Bus conflict على مستوى الاستجابة.
 
-## 9. طول Cable دون حساب
+### 9. طول Cable دون حساب
 
 Bus صممت للوحة قد لا تصلح لمسار طويل.
 
-## 10. Parity كبديل عن CRC
+### 10. Parity كبديل عن CRC
 
 Parity ليست حماية شاملة للرسائل.
 
-# ماذا عن RS‑485 وCAN؟
+## ماذا عن RS‑485 وCAN؟
 
 عند تصميم نظام صناعي أو سيارة أو Cable طويلة، لا تحصر نفسك في البروتوكولات الأربعة.
 
-## RS‑485
+### RS‑485
 
 مفيدة عندما نحتاج:
 
@@ -1237,7 +1237,7 @@ Parity ليست حماية شاملة للرسائل.
 
 لكن RS‑485 تحدد الطبقة الكهربائية أساسًا، وقد تحتاج Protocol أعلى مثل Modbus RTU.
 
-## CAN
+### CAN
 
 مناسبة عندما نحتاج:
 
@@ -1248,7 +1248,7 @@ Parity ليست حماية شاملة للرسائل.
 
 لذلك اختيار UART/I²C/SPI/RS‑232 ليس دائمًا القائمة الكاملة.
 
-# ماذا عن USB؟
+## ماذا عن USB؟
 
 إذا أردت ربط Product حديثة بحاسب:
 
@@ -1268,7 +1268,7 @@ USB
 
 مرة أخرى: الطبقات مهمة.
 
-# التوجه الحديث: I3C
+## التوجه الحديث: I3C
 
 مع زيادة عدد Sensors، ظهرت حاجة إلى Bus تحافظ على بساطة I²C لكن تقدم أداء وميزات أحدث.
 
@@ -1293,7 +1293,7 @@ I3C تستخدم Two-wire interface وتقدم إمكانات مثل:
 
 تذكر MIPI معدلًا نموذجيًا يبلغ 11.1 Mbit/s مع أوضاع High Data Rate أعلى تصل إلى نحو 100 Mbit/s في الخيارات المدعومة.
 
-# هل I3C ستحل محل SPI؟
+## هل I3C ستحل محل SPI؟
 
 ليس بالضرورة.
 
@@ -1313,7 +1313,7 @@ SPI for flash
 UART for debug
 ```
 
-# المصطلحات الحديثة: Controller وTarget
+## المصطلحات الحديثة: Controller وTarget
 
 ستجد في وثائق قديمة:
 
@@ -1328,7 +1328,7 @@ UART for debug
 
 في هذا المقال نستخدم **Controller/Target** كلما أمكن، مع ذكر المصطلحات القديمة فقط عندما تساعد في فهم Datasheets القديمة.
 
-# الأداء الحقيقي: لا تعتمد على Clock Frequency فقط
+## الأداء الحقيقي: لا تعتمد على Clock Frequency فقط
 
 إذا SPI تعمل 20 MHz، هذا لا يعني:
 
@@ -1364,7 +1364,7 @@ UART for debug
 
 وليس Clock فقط.
 
-# مثال 1: Temperature Sensor
+## مثال 1: Temperature Sensor
 
 المتطلبات:
 
@@ -1377,7 +1377,7 @@ UART for debug
 
 **I²C**
 
-# مثال 2: External NOR Flash
+## مثال 2: External NOR Flash
 
 المتطلبات:
 
@@ -1389,7 +1389,7 @@ UART for debug
 
 **SPI/QSPI-class interface** حسب Device.
 
-# مثال 3: GPS/GNSS Module
+## مثال 3: GPS/GNSS Module
 
 المتطلبات:
 
@@ -1401,7 +1401,7 @@ UART for debug
 
 **UART**
 
-# مثال 4: جهاز قياس صناعي قديم
+## مثال 4: جهاز قياس صناعي قديم
 
 المتطلبات:
 
@@ -1414,7 +1414,7 @@ UART for debug
 
 **RS‑232**
 
-# مثال 5: عشرات الحساسات الحديثة
+## مثال 5: عشرات الحساسات الحديثة
 
 إذا المنصة والأجهزة تدعمها:
 
@@ -1425,7 +1425,7 @@ UART for debug
 - in-band interrupts.
 - bandwidth أعلى من I²C التقليدية.
 
-# مصفوفة اختيار عملية
+## مصفوفة اختيار عملية
 
 | الحاجة | الخيار الذي تبدأ بفحصه |
 |---|---|
@@ -1443,7 +1443,7 @@ UART for debug
 
 هذا ليس حكمًا نهائيًا؛ Datasheets والمتطلبات هي الفيصل.
 
-# Checklist قبل اختيار الواجهة
+## Checklist قبل اختيار الواجهة
 
 اكتب هذه القيم:
 
@@ -1467,9 +1467,9 @@ Expected product lifetime:
 
 ثم قارن الخيارات.
 
-# Checklist قبل تشغيل أول Prototype
+## Checklist قبل تشغيل أول Prototype
 
-## UART
+### UART
 
 - [ ] TX ↔ RX Crossed correctly.
 - [ ] Ground shared.
@@ -1480,7 +1480,7 @@ Expected product lifetime:
 - [ ] Voltage compatible.
 - [ ] Not accidentally RS‑232 voltage.
 
-## I²C
+### I²C
 
 - [ ] SDA/SCL correct.
 - [ ] Pull-ups installed.
@@ -1490,7 +1490,7 @@ Expected product lifetime:
 - [ ] Bus speed supported by all devices.
 - [ ] Rise time acceptable.
 
-## SPI
+### SPI
 
 - [ ] SCK correct.
 - [ ] MOSI/SDO and MISO/SDI correct.
@@ -1501,7 +1501,7 @@ Expected product lifetime:
 - [ ] max SCK within Target timing.
 - [ ] CS setup/hold timing respected.
 
-## RS‑232
+### RS‑232
 
 - [ ] Transceiver exists between logic UART and cable.
 - [ ] TX/RX pinout checked.
@@ -1509,7 +1509,7 @@ Expected product lifetime:
 - [ ] RTS/CTS configured if needed.
 - [ ] connector pinout verified.
 
-# الأمن: هذه الواجهات لا تشفر بياناتك تلقائيًا
+## الأمن: هذه الواجهات لا تشفر بياناتك تلقائيًا
 
 UART/I²C/SPI/RS‑232 ليست بروتوكولات أمنية.
 
@@ -1535,29 +1535,29 @@ UART/I²C/SPI/RS‑232 ليست بروتوكولات أمنية.
 - لا تضع Secrets كنص خام في external flash.
 - ضع Threat Model للوصول الفيزيائي.
 
-# الخلاصة
+## الخلاصة
 
 الاختيار بين UART وI²C وSPI وRS‑232 لا يحسمه جدول سرعة واحد.
 
 فكر فيها كأدوات مختلفة:
 
-## UART
+### UART
 
 رابط تسلسلي بسيط وغير متزامن، ممتاز للـDebug والموديولات.
 
-## I²C
+### I²C
 
 Bus ثنائية الأسلاك بعنونة، ممتازة للحساسات والأجهزة المتعددة على PCB.
 
-## SPI
+### SPI
 
 Bus متزامنة سريعة ومنخفضة الـOverhead، ممتازة للذاكرة والشاشات والمكونات عالية البيانات.
 
-## RS‑232
+### RS‑232
 
 واجهة كهربائية Point-to-point للكابلات والأنظمة التقليدية والصناعية، وغالبًا تحتاج Transceiver بين UART المنطقية والخط.
 
-## I3C
+### I3C
 
 تطور حديث للـSensor/Control buses يجمع Two-wire architecture مع Dynamic addressing وميزات أداء وإدارة أكثر تقدمًا.
 
@@ -1644,9 +1644,3 @@ I3C Bus ثنائية الأسلاك طورتها MIPI كخيار حديث للح
 
 8. Analog Devices — RS232 Quick Guide  
    https://www.analog.com/media/en/technical-documentation/product-selector-card/rs232%20quick%20guide.pdf
-
-## مقالات ودراسات ذات صلة في منصة تكنو إنجاز
-
-- [ما هو إنترنت الأشياء (IoT)؟ البنية والبروتوكولات والتطبيقات والأمان](/articles/internet-of-things-iot)
-- [كيف تؤثر شبكات 5G في إنترنت الأشياء؟ السرعة والزمن والتوسع و5G-Advanced](/articles/5g-iot)
-- [التوأم الرقمي: ما هو وكيف يعمل وما أهم تطبيقاته؟](/articles/digital-twin)

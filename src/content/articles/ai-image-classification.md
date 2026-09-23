@@ -1,17 +1,17 @@
-<!--
-FILE: 02-article.md
-PURPOSE: Published article content
-VERIFICATION DATE: 2026-09-21
--->
-
-SEO Title: كيف يعمل تصنيف الصور بالذكاء الاصطناعي؟ من CNN إلى Vision Transformers
-
-Meta Description: دليل عملي لفهم تصنيف الصور بالذكاء الاصطناعي: تجهيز البيانات، CNN وResNet وVision Transformers، Transfer Learning، المقاييس الصحيحة، CLIP وDINOv2، التطبيقات والتحديات.
-
-Suggested Slug: ai-image-classification
-
-# كيف يعمل تصنيف الصور بالذكاء الاصطناعي؟ من CNN إلى Vision Transformers
-
+---
+title: "كيف يعمل تصنيف الصور بالذكاء الاصطناعي؟ من CNN إلى Vision Transformers"
+seoTitle: "كيف يعمل تصنيف الصور بالذكاء الاصطناعي؟ من CNN إلى Vision Transformers"
+description: "دليل عملي لفهم تصنيف الصور بالذكاء الاصطناعي: تجهيز البيانات، CNN وResNet وVision Transformers، Transfer Learning، المقاييس الصحيحة، CLIP وDINOv2، التطبيقات والتحديات."
+excerpt: "دليل معمق في تصنيف الصور الرقمية: من استخراج الميزات التلافيفية عبر CNN إلى معالجة الباتشات باستخدام Vision Transformers وCLIP، مع مقاييس التقييم وتحديات العالم الواقعي."
+titleEn: "AI Image Classification: From Convolutional Neural Networks to Vision Transformers"
+excerptEn: "Comprehensive technical deep dive into image classification: convolution operations, ResNet backbones, Vision Transformers (ViT), multimodal CLIP, and metric evaluation."
+category: "رؤية حاسوبية"
+categoryEn: "Computer Vision"
+publishedAt: 2026-09-21
+cover: "../../assets/articles/ai-image-classification.png"
+tags: ["تصنيف الصور", "رؤية حاسوبية", "CNN", "Vision Transformers", "ResNet", "ذكاء اصطناعي"]
+related: ["facial-expression-recognition-ai", "affective-computing", "next-token-prediction"]
+---
 **تصنيف الصور (Image Classification) هو مهمة في الرؤية الحاسوبية تهدف إلى إسناد فئة أو أكثر إلى صورة كاملة اعتمادًا على محتواها المرئي.**  
 فقد يدخل إلى النموذج صورة، ويخرج مثلًا:
 
@@ -51,11 +51,11 @@ Monitoring
 
 > **النموذج لا "يفهم" الصورة كما يفهمها الإنسان؛ بل يتعلم تمثيلات عددية تساعده على ربط أنماط بصرية بفئات محددة.**
 
-# ما الفرق بين Image Classification وObject Detection وSegmentation؟
+## ما الفرق بين Image Classification وObject Detection وSegmentation؟
 
 هذه المهام تُخلط كثيرًا.
 
-## Image Classification
+### Image Classification
 
 السؤال:
 
@@ -69,7 +69,7 @@ Monitoring
 
 الناتج فئة للصورة كاملة.
 
-## Object Detection
+### Object Detection
 
 السؤال:
 
@@ -89,7 +89,7 @@ Car → box
 Traffic light → box
 ```
 
-## Image Segmentation
+### Image Segmentation
 
 السؤال:
 
@@ -97,7 +97,7 @@ Traffic light → box
 
 الناتج Mask على مستوى Pixels.
 
-## Face Recognition
+### Face Recognition
 
 ليست مجرد Image Classification عامة.
 
@@ -109,7 +109,7 @@ Traffic light → box
 
 لذلك لا ينبغي استخدام نجاح Image Classifier كدليل تلقائي على نجاح Object Detector أو Face Recognition system.
 
-# كيف يرى الحاسوب الصورة؟
+## كيف يرى الحاسوب الصورة؟
 
 الصورة الرقمية عبارة عن مصفوفة قيم.
 
@@ -129,7 +129,7 @@ Height × Width × 3 channels
 
 أما اليوم فالنماذج العميقة تتعلم جزءًا كبيرًا من التمثيل مباشرة من البيانات.
 
-# كيف كان تصنيف الصور يعمل قبل التعلم العميق؟
+## كيف كان تصنيف الصور يعمل قبل التعلم العميق؟
 
 المسار الكلاسيكي كان غالبًا:
 
@@ -157,7 +157,7 @@ Classifier
 - KNN.
 - Random Forest.
 
-## مثال: HOG + SVM
+### مثال: HOG + SVM
 
 HOG يلخص اتجاهات Gradients والحواف.
 
@@ -175,7 +175,7 @@ HOG يلخص اتجاهات Gradients والحواف.
 
 لكنها تعتمد بدرجة أكبر على هندسة Features يدويًا.
 
-# ماذا غيرت CNN؟
+## ماذا غيرت CNN؟
 
 **Convolutional Neural Networks — CNNs** سمحت بتعلم Features أثناء التدريب نفسه.
 
@@ -191,7 +191,7 @@ Human-designed features → classifier
 Image → learned features → classifier
 ```
 
-## الطبقة الالتفافية
+### الطبقة الالتفافية
 
 تطبق Kernels/Filters على مناطق محلية من الصورة.
 
@@ -210,7 +210,7 @@ Image → learned features → classifier
 
 قد تكون مفيدة تعليميًا، لكنها ليست قاعدة ثابتة لكل شبكة وكل Dataset.
 
-# ما دور Pooling؟
+## ما دور Pooling؟
 
 Pooling تقلل الأبعاد المكانية لبعض Feature Maps.
 
@@ -227,7 +227,7 @@ Pooling تقلل الأبعاد المكانية لبعض Feature Maps.
 
 لكن الشبكات الحديثة لا تعتمد جميعها على Pooling التقليدي بالطريقة نفسها؛ بعضها يستخدم Strided Convolutions أو معماريات أخرى.
 
-# هل كل CNN تنتهي بـFully Connected Layers؟
+## هل كل CNN تنتهي بـFully Connected Layers؟
 
 لا.
 
@@ -241,7 +241,7 @@ Pooling تقلل الأبعاد المكانية لبعض Feature Maps.
 
 إذًا المفهوم المهم هو وجود **Classifier Head** يحول Representation إلى Scores للفئات، وليس ضرورة وجود عدة Fully Connected layers.
 
-# ما ResNet؟ ولماذا كانت مهمة؟
+## ما ResNet؟ ولماذا كانت مهمة؟
 
 مع زيادة عمق الشبكات ظهرت مشكلة أن الشبكات الأعمق لا تصبح أسهل في التدريب تلقائيًا.
 
@@ -263,13 +263,13 @@ output = F(x) + x
 
 إنه نتيجة Benchmark محددة، وضمن Metric وبنية وتجربة محددة.
 
-# ماذا جاء بعد CNN؟
+## ماذا جاء بعد CNN؟
 
 CNN ما تزال قوية جدًا، لكن تصنيف الصور الحديث لم يعد قائمًا عليها وحدها.
 
 أحد أهم التحولات كان **Vision Transformer — ViT**.
 
-# كيف تعمل Vision Transformer؟
+## كيف تعمل Vision Transformer؟
 
 فكرة ViT الأصلية بسيطة مفاهيميًا:
 
@@ -303,7 +303,7 @@ Classifier
 
 > CNN وTransformers وغيرها يمكن أن تتعلم Visual Representations فعالة.
 
-# هل Vision Transformer أفضل من CNN دائمًا؟
+## هل Vision Transformer أفضل من CNN دائمًا؟
 
 لا.
 
@@ -323,7 +323,7 @@ ViT أو Foundation Model قد يكون أفضل عندما نملك Pretraining
 
 ولا يوجد "أفضل Architecture" مستقلة عن Use Case.
 
-# ما الفرق بين Closed-set وOpen-vocabulary Classification؟
+## ما الفرق بين Closed-set وOpen-vocabulary Classification؟
 
 التصنيف التقليدي غالبًا **Closed-set**.
 
@@ -340,7 +340,7 @@ Classifier head يتعلم هذه الفئات فقط.
 
 أما نماذج Image-Text الحديثة مثل **CLIP** فقد غيرت طريقة التفكير.
 
-# كيف تعمل CLIP في التصنيف؟
+## كيف تعمل CLIP في التصنيف؟
 
 CLIP تتعلم ربط:
 
@@ -371,7 +371,7 @@ CLIP تتعلم ربط:
 - توزيع البيانات.
 - الانحيازات الموجودة في Pretraining.
 
-# ما DINOv2؟ ولماذا مهم؟
+## ما DINOv2؟ ولماذا مهم؟
 
 DINOv2 مثال على **Self-supervised visual pretraining**.
 
@@ -388,13 +388,13 @@ DINOv2 مثال على **Self-supervised visual pretraining**.
 
 > بدل تدريب Model منفصل من الصفر لكل مشروع، نبدأ أكثر فأكثر من Visual Foundation Model ثم نكيفه للمهمة.
 
-# كيف تبني Image Classification Pipeline؟
+## كيف تبني Image Classification Pipeline؟
 
-## 1. حدد المهمة بدقة
+### 1. حدد المهمة بدقة
 
 هل تريد:
 
-### Single-label Classification؟
+#### Single-label Classification؟
 
 فئة واحدة لكل صورة:
 
@@ -402,7 +402,7 @@ DINOv2 مثال على **Self-supervised visual pretraining**.
 cat OR dog
 ```
 
-### Multi-label Classification؟
+#### Multi-label Classification؟
 
 أكثر من Label للصورة:
 
@@ -418,7 +418,7 @@ helmet
 - Output activation تختلف.
 - Metrics تختلف.
 
-# 2. اجمع البيانات
+## 2. اجمع البيانات
 
 لا يكفي عدد الصور.
 
@@ -434,13 +434,13 @@ helmet
 
 100 ألف صورة منحازة قد تكون أسوأ من Dataset أصغر لكنها ممثلة للمشكلة.
 
-# 3. افصل Train وValidation وTest
+## 3. افصل Train وValidation وTest
 
-## Train
+### Train
 
 لتحديث الأوزان.
 
-## Validation
+### Validation
 
 لاختيار:
 
@@ -449,7 +449,7 @@ helmet
 - Threshold.
 - Model.
 
-## Test
+### Test
 
 للتقييم النهائي.
 
@@ -468,7 +468,7 @@ helmet
 
 بحسب المهمة.
 
-# 4. المعالجة المسبقة
+## 4. المعالجة المسبقة
 
 قد تشمل:
 
@@ -482,7 +482,7 @@ helmet
 
 إذا استخدمت Pretrained model، غالبًا يجب احترام Preprocessing الذي تدرب عليه.
 
-# 5. Data Augmentation
+## 5. Data Augmentation
 
 يمكن أن تشمل:
 
@@ -496,7 +496,7 @@ helmet
 
 هدفها ليس فقط "زيادة عدد الصور"، بل تعريض النموذج لتغيرات منطقية قد يراها وقت التشغيل.
 
-## متى تكون Augmentation خطرة؟
+### متى تكون Augmentation خطرة؟
 
 عندما تغير معنى Label.
 
@@ -510,7 +510,7 @@ helmet
 
 > Augmentation يجب أن تحفظ معنى الفئة، لا أن تكون عشوائية لمجرد زيادة البيانات.
 
-# 6. اختر Baseline
+## 6. اختر Baseline
 
 ابدأ بشيء بسيط.
 
@@ -524,17 +524,17 @@ helmet
 
 الهدف معرفة ما إذا كان التعقيد الجديد يضيف قيمة.
 
-# 7. Transfer Learning أم Training from Scratch؟
+## 7. Transfer Learning أم Training from Scratch؟
 
 في كثير من المشاريع، Transfer Learning هو الخيار العملي.
 
 يوجد أسلوبان شائعان:
 
-## Fixed Feature Extractor
+### Fixed Feature Extractor
 
 تجميد معظم Backbone وتدريب Classification head.
 
-## Fine-tuning
+### Fine-tuning
 
 بدءًا من Pretrained weights، ثم تحديث بعض أو كل طبقات النموذج.
 
@@ -550,7 +550,7 @@ helmet
 - Domain مختلف.
 - نستخدم Learning Rate مناسبًا.
 
-# 8. ماذا يخرج النموذج؟
+## 8. ماذا يخرج النموذج؟
 
 في Multi-class classifier، ينتج غالبًا **Logits**.
 
@@ -574,9 +574,9 @@ helmet
 
 لذلك في تطبيقات عالية المخاطر قد نحتاج **Calibration** بدل تفسير 0.94 كأنها ثقة حقيقية بنسبة 94%.
 
-# كيف نقيس أداء Image Classifier؟
+## كيف نقيس أداء Image Classifier؟
 
-## Accuracy
+### Accuracy
 
 ```text
 correct predictions / all predictions
@@ -607,7 +607,7 @@ Recall للحالات المرضية = 0%
 
 النظام فاشل للهدف الطبي.
 
-# Precision
+## Precision
 
 تجيب:
 
@@ -617,7 +617,7 @@ Recall للحالات المرضية = 0%
 Precision = TP / (TP + FP)
 ```
 
-# Recall
+## Recall
 
 تجيب:
 
@@ -627,7 +627,7 @@ Precision = TP / (TP + FP)
 Recall = TP / (TP + FN)
 ```
 
-# F1 Score
+## F1 Score
 
 المتوسط التوافقي بين Precision وRecall:
 
@@ -637,23 +637,23 @@ F1 = 2 × Precision × Recall / (Precision + Recall)
 
 مفيد عندما نحتاج توازنًا بينهما.
 
-# Macro أم Weighted F1؟
+## Macro أم Weighted F1؟
 
 في Multiclass classification:
 
-## Macro F1
+### Macro F1
 
 تحسب F1 لكل Class ثم تعطيها وزنًا متساويًا.
 
 مفيدة إذا كانت الفئات النادرة مهمة.
 
-## Weighted F1
+### Weighted F1
 
 تزن كل فئة بعدد Samples.
 
 قد تخفي أداء سيئًا على فئة صغيرة.
 
-# Confusion Matrix
+## Confusion Matrix
 
 من أكثر الأدوات قيمة لأنها تكشف **أي فئة يخلطها النموذج مع أي فئة**.
 
@@ -667,7 +667,7 @@ melanoma → benign lesion
 
 وهذه المعلومات أهم من Accuracy واحدة.
 
-# ماذا عن ROC-AUC وPR-AUC؟
+## ماذا عن ROC-AUC وPR-AUC؟
 
 قد تكون مفيدة خصوصًا في Binary Classification.
 
@@ -681,7 +681,7 @@ melanoma → benign lesion
 
 في Dataset شديدة عدم التوازن، Precision-Recall curve قد تكون أكثر إفادة من Accuracy وحدها.
 
-# لا تختبر Dataset فقط؛ اختبر العالم الحقيقي
+## لا تختبر Dataset فقط؛ اختبر العالم الحقيقي
 
 النجاح على Test split لا يكفي.
 
@@ -720,7 +720,7 @@ melanoma → benign lesion
 - Occlusion.
 - Subgroups مهمة.
 
-# ما الفرق بين Confidence وUncertainty؟
+## ما الفرق بين Confidence وUncertainty؟
 
 النموذج قد يخرج:
 
@@ -750,13 +750,13 @@ dog = 0.99
 
 بدل Class خاطئة بثقة كبيرة.
 
-# هل Deep Learning دائمًا أفضل من Classic ML؟
+## هل Deep Learning دائمًا أفضل من Classic ML؟
 
 لا.
 
 المصدر الأكاديمي يقارن بينهما بصورة حادة، لكن الواقع أكثر اعتمادًا على المهمة.
 
-## Classic ML قد يكون أفضل عندما:
+### Classic ML قد يكون أفضل عندما:
 
 - Dataset صغيرة جدًا.
 - Features مفهومة وقوية.
@@ -765,7 +765,7 @@ dog = 0.99
 - Latency شديدة الانخفاض.
 - نحتاج تفسيرًا مباشرًا نسبيًا.
 
-## Deep Learning أفضل غالبًا عندما:
+### Deep Learning أفضل غالبًا عندما:
 
 - البيانات بصرية معقدة.
 - لدينا Pretrained models.
@@ -775,7 +775,7 @@ dog = 0.99
 
 والأهم أن Transfer Learning قلل كثيرًا الفجوة في متطلبات البيانات.
 
-# هل Deep Learning يحتاج ملايين الصور دائمًا؟
+## هل Deep Learning يحتاج ملايين الصور دائمًا؟
 
 لا.
 
@@ -794,9 +794,9 @@ dog = 0.99
 
 الجودة والتمثيل والتشابه مع Domain الأصلي تظل مهمة.
 
-# ما أهم تطبيقات Image Classification؟
+## ما أهم تطبيقات Image Classification؟
 
-## التصوير الطبي
+### التصوير الطبي
 
 قد تستخدم النماذج للمساعدة في:
 
@@ -830,7 +830,7 @@ dog = 0.99
 - Monitoring.
 - Human oversight.
 
-# المركبات والقيادة الآلية
+## المركبات والقيادة الآلية
 
 الرؤية الحاسوبية مهمة للمركبات، لكن **Image Classification وحدها ليست كافية**.
 
@@ -854,7 +854,7 @@ dog = 0.99
 
 لذلك لا يصح تحويل رقم كهذا إلى ادعاء أن أنظمة الرؤية الآلية ستمنع تلقائيًا 94% من الحوادث.
 
-# التصنيع
+## التصنيع
 
 يمكن استخدام التصنيف لـ:
 
@@ -876,7 +876,7 @@ OK / scratch / crack / contamination
 
 لكن إذا كنا نحتاج تحديد مكان العيب، قد يكون Detection أو Segmentation أنسب.
 
-# الزراعة
+## الزراعة
 
 مثل:
 
@@ -892,7 +892,7 @@ OK / scratch / crack / contamination
 - بيئات مختلفة.
 - أصناف نباتات مختلفة.
 
-# الأمن والمراقبة
+## الأمن والمراقبة
 
 يمكن استخدام Classification في:
 
@@ -912,17 +912,17 @@ OK / scratch / crack / contamination
 
 ولا ينبغي اعتبار نموذج عالي Accuracy على Dataset عامة دليلًا على ملاءمته لاستخدام هوية عالي المخاطر.
 
-# ما تحديات Image Classification؟
+## ما تحديات Image Classification؟
 
-## 1. Label Quality
+### 1. Label Quality
 
 إذا كانت Labels خاطئة، النموذج يتعلم ضوضاء.
 
-## 2. Class Imbalance
+### 2. Class Imbalance
 
 قد يتجاهل فئات نادرة.
 
-## 3. Shortcut Learning
+### 3. Shortcut Learning
 
 قد يتعلم النموذج إشارة غير مقصودة.
 
@@ -936,15 +936,15 @@ OK / scratch / crack / contamination
 
 ثم ينهار خارج Dataset.
 
-## 4. Domain Shift
+### 4. Domain Shift
 
 تغير الكاميرا أو الموقع أو السكان قد يقلل الأداء.
 
-## 5. Spurious Correlations
+### 5. Spurious Correlations
 
 قد يرتبط Label بعامل جانبي فقط في بيانات التدريب.
 
-## 6. Adversarial Examples
+### 6. Adversarial Examples
 
 أظهرت أبحاث أن Perturbations مصممة خصيصًا يمكن أن تجعل نماذج تصنف بصورة خاطئة بثقة عالية.
 
@@ -956,7 +956,7 @@ OK / scratch / crack / contamination
 
 والدفاع ليس مشكلة محلولة بالكامل.
 
-# هل Adversarial Training يحل المشكلة؟
+## هل Adversarial Training يحل المشكلة؟
 
 يمكن أن يزيد Robustness ضد عائلات معينة من الهجمات.
 
@@ -972,7 +972,7 @@ OK / scratch / crack / contamination
 
 قبل اختيار الدفاع.
 
-# كيف نفهم قرار النموذج؟
+## كيف نفهم قرار النموذج؟
 
 أدوات مثل **Grad-CAM** يمكنها إنتاج Heatmap تقريبية للمناطق التي ساهمت في Prediction داخل بعض CNN-based architectures.
 
@@ -988,7 +988,7 @@ OK / scratch / crack / contamination
 
 Explainability tool يجب تقييمها هي نفسها.
 
-# كيف تنشر النموذج على Edge؟
+## كيف تنشر النموذج على Edge؟
 
 قد نحتاج تشغيل Classification على:
 
@@ -999,7 +999,7 @@ Explainability tool يجب تقييمها هي نفسها.
 
 يمكن استخدام:
 
-## Quantization
+### Quantization
 
 تقليل Precision العددية مثل:
 
@@ -1007,15 +1007,15 @@ Explainability tool يجب تقييمها هي نفسها.
 FP32 → INT8
 ```
 
-## Pruning
+### Pruning
 
 إزالة بعض الأوزان/البنى قليلة الأهمية وفق طريقة محددة.
 
-## Knowledge Distillation
+### Knowledge Distillation
 
 تدريب Student model أصغر للاستفادة من Teacher أكبر.
 
-## Smaller Backbone
+### Smaller Backbone
 
 أحيانًا أفضل optimization هو اختيار نموذج أصغر من البداية.
 
@@ -1030,7 +1030,7 @@ FP32 → INT8
 
 وليس FLOPs فقط.
 
-# كيف تغير Foundation Models مستقبل التصنيف؟
+## كيف تغير Foundation Models مستقبل التصنيف؟
 
 هناك انتقال من:
 
@@ -1042,15 +1042,15 @@ FP32 → INT8
 
 أمثلة:
 
-## CLIP
+### CLIP
 
 يربط Image ↔ Text ويتيح Zero-shot classification في حالات كثيرة.
 
-## DINOv2
+### DINOv2
 
 يتعلم Visual Features عامة بأسلوب Self-supervised.
 
-## ViT-based pretrained models
+### ViT-based pretrained models
 
 يمكن Fine-tune أو استخدام Features منها.
 
@@ -1061,18 +1061,18 @@ FP32 → INT8
 - Data governance.
 - Domain testing.
 
-# كيف تختار Approach عمليًا؟
+## كيف تختار Approach عمليًا؟
 
 استخدم هذا القرار المبسط:
 
-## Dataset صغيرة + Task واضحة
+### Dataset صغيرة + Task واضحة
 
 ابدأ بـ:
 
 - Pretrained CNN أو ViT.
 - Transfer Learning.
 
-## Edge device صغير
+### Edge device صغير
 
 اختبر:
 
@@ -1080,7 +1080,7 @@ FP32 → INT8
 - Small ViT.
 - Quantized model.
 
-## فئات تتغير باستمرار
+### فئات تتغير باستمرار
 
 فكر في:
 
@@ -1088,7 +1088,7 @@ FP32 → INT8
 - Embedding-based classification.
 - Retrieval-assisted approach.
 
-## مجال طبي/صناعي حساس
+### مجال طبي/صناعي حساس
 
 ركز على:
 
@@ -1099,7 +1099,7 @@ FP32 → INT8
 - Human review.
 - Monitoring.
 
-## لا توجد Labels كافية
+### لا توجد Labels كافية
 
 فكر في:
 
@@ -1109,7 +1109,7 @@ FP32 → INT8
 - Weak supervision.
 - Vision-language models.
 
-# Checklist قبل إطلاق Image Classifier
+## Checklist قبل إطلاق Image Classifier
 
 - [ ] المهمة Classification فعلًا، وليست Detection/Segmentation.
 - [ ] Classes معرفة بوضوح.
@@ -1128,7 +1128,7 @@ FP32 → INT8
 - [ ] Monitoring بعد النشر موجود.
 - [ ] خطة retraining/versioning موجودة.
 
-# الخلاصة
+## الخلاصة
 
 تصنيف الصور لم يعد يعني فقط:
 
@@ -1279,10 +1279,3 @@ Precision تقيس كم Prediction إيجابي كان صحيحًا، بينما
 
 13. C. Shorten, T. M. Khoshgoftaar — A survey on Image Data Augmentation for Deep Learning  
     https://journalofbigdata.springeropen.com/articles/10.1186/s40537-019-0197-0
-
-## مقالات ودراسات ذات صلة في منصة تكنو إنجاز
-
-- [كيف يتعرف الذكاء الاصطناعي على تعابير الوجه؟ شرح FER وFACS وCNN](/articles/facial-expression-recognition-ai)
-- [الحوسبة العاطفية: كيف يحلل الذكاء الاصطناعي التعبير العاطفي؟](/articles/affective-computing)
-- [كيف تتنبأ نماذج الذكاء الاصطناعي بالكلمة التالية؟ من N-gram إلى Transformers](/articles/next-token-prediction)
-

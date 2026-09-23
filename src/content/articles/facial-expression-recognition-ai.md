@@ -1,17 +1,17 @@
-<!--
-FILE: 02-article.md
-PURPOSE: Published article content
-VERIFICATION DATE: 2026-09-21
--->
-
-SEO Title: كيف يتعرف الذكاء الاصطناعي على تعابير الوجه؟ شرح FER وFACS وCNN
-
-Meta Description: دليل تقني لفهم التعرف على تعابير الوجه بالذكاء الاصطناعي: من Face Detection وLandmarks وFACS إلى CNN وقواعد FER2013 وCK+ وAffectNet وRAF-DB، مع التحيز والخصوصية وحدود استنتاج المشاعر.
-
-Suggested Slug: facial-expression-recognition-ai
-
-# كيف يتعرف الذكاء الاصطناعي على تعابير الوجه؟ شرح FER وFACS وCNN
-
+---
+title: "كيف يتعرف الذكاء الاصطناعي على تعابير الوجه؟ شرح FER وFACS وCNN"
+seoTitle: "كيف يتعرف الذكاء الاصطناعي على تعابير الوجه؟ شرح FER وFACS وCNN"
+description: "دليل تقني لفهم التعرف على تعابير الوجه بالذكاء الاصطناعي: من Face Detection وLandmarks وFACS إلى CNN وقواعد FER2013 وCK+ وAffectNet وRAF-DB، مع التحيز والخصوصية وحدود استنتاج المشاعر."
+excerpt: "كيف تحلل الخوارزميات الحركات الدقيقة لعضلات الوجه؟ استعراض لنظام FACS ووحدات العمل Action Units، ومعمارية CNN وVision Transformers، وتحديات الإضاءة والزوايا والأخلاقيات."
+titleEn: "Facial Expression Recognition with AI: CNNs, FACS, and Vision Transformers"
+excerptEn: "A technical exploration of Facial Expression Recognition (FER): FACS action units, landmark tracking, deep CNNs, Vision Transformers, and addressing real-world bias."
+category: "رؤية حاسوبية"
+categoryEn: "Computer Vision"
+publishedAt: 2026-09-21
+cover: "../../assets/articles/facial-expression-recognition-ai.png"
+tags: ["رؤية حاسوبية", "تعابير الوجه", "FER", "FACS", "CNN", "ذكاء اصطناعي", "Vision Transformers"]
+related: ["affective-computing", "ai-image-classification", "emotion-aware-recommendation"]
+---
 **التعرف على تعابير الوجه (Facial Expression Recognition — FER) هو مهمة في الرؤية الحاسوبية تهدف إلى تحليل الحركات والأنماط الظاهرة على الوجه وتحويلها إلى تمثيل رقمي يمكن للنظام تصنيفه أو تقديره.**
 
 لكن هناك تمييز أساسي يجب وضعه منذ البداية:
@@ -58,11 +58,11 @@ Camera
 True Inner Emotion
 ```
 
-# ما الفرق بين Face Detection وFace Recognition وFacial Expression Recognition؟
+## ما الفرق بين Face Detection وFace Recognition وFacial Expression Recognition؟
 
 هذه ثلاث مهام مختلفة كثيرًا رغم أنها تبدأ من صورة وجه.
 
-## Face Detection
+### Face Detection
 
 السؤال:
 
@@ -81,7 +81,7 @@ Image
 Face detected at x1, y1, x2, y2
 ```
 
-## Face Recognition
+### Face Recognition
 
 السؤال:
 
@@ -94,7 +94,7 @@ Face detected at x1, y1, x2, y2
 
 وهذه مهمة **هوية بيومترية**.
 
-## Facial Expression Recognition — FER
+### Facial Expression Recognition — FER
 
 السؤال:
 
@@ -120,7 +120,7 @@ other      0.06
 
 والخلط بينها يؤدي إلى تصميمات خاطئة وتقييمات غير صحيحة.
 
-# هل FER هي نفسها Emotion Recognition؟
+## هل FER هي نفسها Emotion Recognition؟
 
 ليس تمامًا.
 
@@ -149,7 +149,7 @@ other      0.06
 
 لذلك فإن نظام FER مسؤول هندسيًا عن **تحليل تعبير ظاهر**، وليس عن الادعاء بأنه "يعرف ما يشعر به الإنسان".
 
-# ما هو FACS؟
+## ما هو FACS؟
 
 **Facial Action Coding System — FACS** هو نظام لوصف حركات الوجه بطريقة قابلة للترميز.
 
@@ -171,7 +171,7 @@ other      0.06
 
 **Action Units — AUs**
 
-## أمثلة
+### أمثلة
 
 - AU1: Inner Brow Raiser.
 - AU2: Outer Brow Raiser.
@@ -185,7 +185,7 @@ other      0.06
 
 وهذا أكثر دقة علميًا من مساواة كل Action Unit بشعور داخلي ثابت.
 
-## هل AU12 تعني "السعادة"؟
+### هل AU12 تعني "السعادة"؟
 
 لا بهذه البساطة.
 
@@ -203,11 +203,11 @@ AU12 تصف حركة رفع زوايا الفم.
 
 > **Action Unit = حركة وجهية قابلة للرصد، وليست إثباتًا مباشرًا لشعور داخلي.**
 
-# ثلاث طرق لتمثيل تعبيرات الوجه
+## ثلاث طرق لتمثيل تعبيرات الوجه
 
 يمكن تصميم FER بأكثر من Output.
 
-## 1. Categorical Expression Classification
+### 1. Categorical Expression Classification
 
 الفئات الشائعة في كثير من Datasets:
 
@@ -232,7 +232,7 @@ P(anger)
 ...
 ```
 
-## 2. Action Unit Detection
+### 2. Action Unit Detection
 
 بدل اختيار Emotion class، يتنبأ النظام بوجود Action Units:
 
@@ -244,17 +244,17 @@ AU12 = active
 
 وغالبًا تكون المهمة Multi-label لأن عدة AUs قد تظهر في الوقت نفسه.
 
-## 3. Valence / Arousal
+### 3. Valence / Arousal
 
 بدل الفئات المنفصلة، يمكن تمثيل الحالة في فضاء مستمر.
 
-### Valence
+#### Valence
 
 تقريبًا:
 
 - سلبي ↔ إيجابي.
 
-### Arousal
+#### Arousal
 
 تقريبًا:
 
@@ -262,7 +262,7 @@ AU12 = active
 
 هذا مناسب عندما لا نريد إجبار كل تعبير على فئة صلبة واحدة.
 
-# كيف يعمل نظام FER من الكاميرا إلى النتيجة؟
+## كيف يعمل نظام FER من الكاميرا إلى النتيجة؟
 
 يمكن تلخيص Pipeline كالتالي:
 
@@ -290,7 +290,7 @@ Application
 
 كل مرحلة قد تكون مصدر خطأ مستقل.
 
-# 1. Face Detection
+## 1. Face Detection
 
 أولًا يجب تحديد الوجه.
 
@@ -306,7 +306,7 @@ Application
 
 الأنظمة الحديثة تستخدم نماذج تعلم عميق لاكتشاف الوجوه بدل الاعتماد فقط على الطرق الكلاسيكية مثل Viola-Jones.
 
-# 2. Facial Landmarks
+## 2. Facial Landmarks
 
 بعد اكتشاف الوجه يمكن تقدير نقاط مرجعية مثل:
 
@@ -337,7 +337,7 @@ mouth_right       = (x4, y4)
 
 هي فقط قياسات هندسية.
 
-# 3. Face Alignment
+## 3. Face Alignment
 
 إذا كان الوجه مائلًا أو بعيدًا أو rotated، يصبح مقارنة Features أصعب.
 
@@ -355,7 +355,7 @@ scale normalized
 
 لكن Alignment المبالغ فيها قد تخفي بعض الحركة الطبيعية؛ لذلك يجب اختبار Pipeline على بيانات حقيقية.
 
-# 4. Preprocessing
+## 4. Preprocessing
 
 قد يشمل:
 
@@ -377,11 +377,11 @@ scale normalized
 
 إذا جعلت Augmentation الوجه غير واقعي، قد يتعلم النموذج بيانات لا تمثل بيئة التشغيل.
 
-# كيف كانت FER تعمل قبل Deep Learning؟
+## كيف كانت FER تعمل قبل Deep Learning؟
 
 المنهجيات التقليدية تعتمد على استخراج Features يدويًا.
 
-## Geometric Features
+### Geometric Features
 
 مثل:
 
@@ -391,7 +391,7 @@ scale normalized
 - زاوية الحاجب.
 - نسبة اتساع العين.
 
-## Appearance Features
+### Appearance Features
 
 مثل:
 
@@ -421,7 +421,7 @@ Expression class
 - حساسية أكبر للتغيرات غير المتوقعة.
 - صعوبة تمثيل أنماط معقدة.
 
-# كيف غيرت CNN التعرف على تعابير الوجه؟
+## كيف غيرت CNN التعرف على تعابير الوجه؟
 
 CNN تتعلم Visual Features مباشرة من الصور.
 
@@ -458,7 +458,7 @@ Expression probabilities
 
 سيتعلم النموذج هذه القيود أيضًا.
 
-# هل CNN هي البنية الوحيدة الحديثة؟
+## هل CNN هي البنية الوحيدة الحديثة؟
 
 لا.
 
@@ -484,7 +484,7 @@ FER الحديثة يمكن أن تستخدم:
 
 غالبًا تكون جودة البيانات وتعريف Label أهم من تغيير Backbone.
 
-# هل الصورة الثابتة تكفي؟
+## هل الصورة الثابتة تكفي؟
 
 أحيانًا، لكن الفيديو يوفر معلومات إضافية.
 
@@ -521,9 +521,9 @@ Offset
 - Optical flow.
 - Landmark trajectories.
 
-# أهم قواعد بيانات FER
+## أهم قواعد بيانات FER
 
-## FER2013
+### FER2013
 
 ظهرت ضمن تحديات ICML 2013.
 
@@ -552,7 +552,7 @@ Offset
 - صور Web غير مضبوطة.
 - لا تمثل جميع سيناريوهات العالم الحقيقي.
 
-# CK+
+## CK+
 
 **Extended Cohn-Kanade — CK+** Dataset مخبرية كلاسيكية.
 
@@ -573,7 +573,7 @@ Offset
 
 هذه نقطة مهمة عند مقارنة أرقام Accuracy.
 
-# AffectNet
+## AffectNet
 
 AffectNet صُممت لتمثيل Expressions "in the wild".
 
@@ -597,7 +597,7 @@ AffectNet صُممت لتمثيل Expressions "in the wild".
 - label uncertainty.
 - class imbalance.
 
-# RAF-DB
+## RAF-DB
 
 Real-world Affective Faces Database تحتوي:
 
@@ -611,7 +611,7 @@ Real-world Affective Faces Database تحتوي:
 
 الورقة الأصلية لاحظت أن Action Units المرتبطة بالفئات في بيانات العالم الحقيقي أكثر تنوعًا من قواعد البيانات المخبرية.
 
-# مقارنة مبسطة
+## مقارنة مبسطة
 
 | Dataset | الحجم | البيئة | القوة | القيد |
 |---|---:|---|---|---|
@@ -629,7 +629,7 @@ Real-world Affective Faces Database تحتوي:
 - البيئة.
 - Protocol.
 
-# لماذا تحصل نماذج على Accuracy عالية في المختبر ثم تفشل في الواقع؟
+## لماذا تحصل نماذج على Accuracy عالية في المختبر ثم تفشل في الواقع؟
 
 بسبب **Domain Shift**.
 
@@ -652,9 +652,9 @@ Real-world Affective Faces Database تحتوي:
 
 النموذج لم يواجه التوزيع نفسه.
 
-# أهم تحديات FER في الواقع
+## أهم تحديات FER في الواقع
 
-## 1. Head Pose
+### 1. Head Pose
 
 عندما يدير المستخدم رأسه:
 
@@ -662,7 +662,7 @@ Real-world Affective Faces Database تحتوي:
 - تتغير المسافات Perspective.
 - تتغير Landmarks.
 
-## 2. Occlusion
+### 2. Occlusion
 
 مثل:
 
@@ -675,7 +675,7 @@ Real-world Affective Faces Database تحتوي:
 
 أبحاث 2024–2025 ما تزال تعالج Occlusion كأحد التحديات الأساسية، ما يؤكد أن المشكلة ليست "محلولة" بمجرد استخدام Deep Learning.
 
-## 3. Lighting
+### 3. Lighting
 
 الضوء يغيّر:
 
@@ -685,7 +685,7 @@ Real-world Affective Faces Database تحتوي:
 
 وقد يجعل Wrinkles أو حركات دقيقة أكثر أو أقل وضوحًا.
 
-## 4. Subtle Expressions
+### 4. Subtle Expressions
 
 ليست كل التعبيرات "ابتسامة كبيرة" أو "غضب واضح".
 
@@ -696,7 +696,7 @@ Real-world Affective Faces Database تحتوي:
 - جزئيًا.
 - متناقضًا.
 
-## 5. Class Imbalance
+### 5. Class Imbalance
 
 Happiness عادة أسهل وأكثر وفرة في بعض Datasets.
 
@@ -710,7 +710,7 @@ Happiness عادة أسهل وأكثر وفرة في بعض Datasets.
 
 النموذج قد يحصل على Accuracy جيدة لكنه يضعف جدًا على Minority classes.
 
-# لماذا الدقة العامة Accuracy غير كافية؟
+## لماذا الدقة العامة Accuracy غير كافية؟
 
 افترض Dataset:
 
@@ -731,7 +731,7 @@ Fear    200
 - Confusion Matrix.
 - Performance حسب subgroup.
 
-# ما معنى Confidence في FER؟
+## ما معنى Confidence في FER؟
 
 قد يخرج النموذج:
 
@@ -764,7 +764,7 @@ if confidence < threshold:
 
 بدل إجبار النظام على قرار.
 
-# هل يمكن استنتاج المشاعر الداخلية من الوجه بدقة؟
+## هل يمكن استنتاج المشاعر الداخلية من الوجه بدقة؟
 
 هذه هي أهم نقطة في المقال.
 
@@ -813,7 +813,7 @@ Internal Emotional State
 - "camera reads emotions".
 - "detects the true emotion".
 
-# FACS أيضًا لا يساوي Emotion Detector
+## FACS أيضًا لا يساوي Emotion Detector
 
 FACS لا يقول:
 
@@ -833,7 +833,7 @@ AU6 + AU12 = الشخص سعيد داخليًا
 
 > التفسير.
 
-# ما دور السياق؟
+## ما دور السياق؟
 
 انظر إلى تعبير وجه واحد دون Context.
 
@@ -854,9 +854,9 @@ AU6 + AU12 = الشخص سعيد داخليًا
 
 لكن حتى Multimodal system لا يحصل على "حقيقة داخلية" مباشرة؛ بل يملك Signals أكثر.
 
-# ما الفرق بين Facial Expression Model وMultimodal Affect Model؟
+## ما الفرق بين Facial Expression Model وMultimodal Affect Model؟
 
-## Facial Expression Model
+### Facial Expression Model
 
 ```text
 Face
@@ -864,7 +864,7 @@ Face
 Expression probabilities
 ```
 
-## Multimodal Affect Model
+### Multimodal Affect Model
 
 ```text
 Face ─────┐
@@ -884,7 +884,7 @@ Context ──┘
 - Missing modalities.
 - Consent burden.
 
-# التحيز الديموغرافي
+## التحيز الديموغرافي
 
 إذا كانت Dataset لا تمثل السكان الفعليين، قد يتغير الأداء بين مجموعات مختلفة.
 
@@ -908,7 +908,7 @@ performance by subgroup
 
 مع التأكد من أن التحليل نفسه قانوني وأخلاقي.
 
-# هل "المشاعر الست الأساسية" حقيقة نهائية؟
+## هل "المشاعر الست الأساسية" حقيقة نهائية؟
 
 هي إطار مؤثر جدًا في البحث والتعليم وقواعد البيانات.
 
@@ -929,7 +929,7 @@ performance by subgroup
 
 إذًا اختيار Labels هو **قرار نمذجة** وليس اكتشافًا مباشرًا لست حالات بيولوجية منفصلة.
 
-# ماذا عن Privacy؟
+## ماذا عن Privacy؟
 
 FER عبر الكاميرا قد يتعامل مع معلومات شديدة الحساسية.
 
@@ -944,9 +944,9 @@ FER عبر الكاميرا قد يتعامل مع معلومات شديدة ا�
 
 وهذه البيانات قد تسمح بتكوين Profile عن المستخدم.
 
-# Privacy-by-Design لنظام FER
+## Privacy-by-Design لنظام FER
 
-## 1. المعالجة المحلية
+### 1. المعالجة المحلية
 
 يفضل عندما يكون ذلك ممكنًا:
 
@@ -966,7 +966,7 @@ Raw video
 Cloud
 ```
 
-## 2. لا تخزن الفيديو بلا حاجة
+### 2. لا تخزن الفيديو بلا حاجة
 
 إذا كانت المهمة تحتاج نتيجة لحظية فقط:
 
@@ -974,7 +974,7 @@ Cloud
 - استخرج النتيجة.
 - احذف الصورة الخام.
 
-## 3. Data Minimization
+### 3. Data Minimization
 
 لا تجمع:
 
@@ -984,7 +984,7 @@ Cloud
 
 إذا لم تكن ضرورية للمهمة.
 
-## 4. Purpose Limitation
+### 4. Purpose Limitation
 
 إذا وافق المستخدم على:
 
@@ -996,7 +996,7 @@ Cloud
 
 دون أساس واضح وموافقة/أساس قانوني مناسب.
 
-## 5. واضح ماذا يستنتج النظام
+### 5. واضح ماذا يستنتج النظام
 
 يجب ألا يعتقد المستخدم أن:
 
@@ -1004,7 +1004,7 @@ Cloud
 
 بينما النظام يقوم أيضًا بتحليل تعبيرات الوجه.
 
-# ماذا يقول قانون الذكاء الاصطناعي الأوروبي؟
+## ماذا يقول قانون الذكاء الاصطناعي الأوروبي؟
 
 تنظيم الاتحاد الأوروبي للذكاء الاصطناعي يضع قيودًا مباشرة على بعض استخدامات Emotion Recognition.
 
@@ -1020,7 +1020,7 @@ Cloud
 
 والقوانين في دول أخرى قد تختلف، لذلك يلزم Legal review حسب السوق.
 
-# هل الوجه Biometric Data دائمًا؟
+## هل الوجه Biometric Data دائمًا؟
 
 الصورة الوجهية قد تصبح Biometric Data عندما تتم معالجتها تقنيًا لأغراض تسمح أو تؤكد التعرف الفريد على الشخص وفق السياق القانوني.
 
@@ -1042,7 +1042,7 @@ What facial pattern are you displaying?
 
 لكن كلاهما يحتاج Privacy design واضحًا.
 
-# هل FER مناسبة للصحة النفسية؟
+## هل FER مناسبة للصحة النفسية؟
 
 يجب الحذر جدًا.
 
@@ -1062,9 +1062,9 @@ What facial pattern are you displaying?
 
 لكن لا ينبغي تحويل Classifier وجه إلى "تشخيص نفسي".
 
-# كيف تبني FER System أكثر مسؤولية؟
+## كيف تبني FER System أكثر مسؤولية؟
 
-## الخطوة 1: عرّف Output الصحيح
+### الخطوة 1: عرّف Output الصحيح
 
 بدل:
 
@@ -1080,7 +1080,7 @@ What facial pattern are you displaying?
 
 هذا يجبر الفريق على تحديد ما يقيسه فعلًا.
 
-## الخطوة 2: حدد Use Case
+### الخطوة 2: حدد Use Case
 
 هل الهدف:
 
@@ -1093,7 +1093,7 @@ What facial pattern are you displaying?
 
 المخاطر تختلف جذريًا.
 
-## الخطوة 3: اختر Labels بحذر
+### الخطوة 3: اختر Labels بحذر
 
 قد يكون الأفضل:
 
@@ -1103,7 +1103,7 @@ What facial pattern are you displaying?
 
 حسب المهمة.
 
-## الخطوة 4: اجمع Dataset ممثلة
+### الخطوة 4: اجمع Dataset ممثلة
 
 اختبر:
 
@@ -1114,7 +1114,7 @@ What facial pattern are you displaying?
 - camera types.
 - occlusion.
 
-## الخطوة 5: Split حسب الأشخاص
+### الخطوة 5: Split حسب الأشخاص
 
 خطأ شائع:
 
@@ -1128,7 +1128,7 @@ What facial pattern are you displaying?
 subject-independent split
 ```
 
-## الخطوة 6: اختبر Cross-dataset
+### الخطوة 6: اختبر Cross-dataset
 
 مثلًا:
 
@@ -1139,7 +1139,7 @@ Test: Dataset B
 
 هذا يكشف ضعف Generalization أفضل من Test داخل Dataset نفسها.
 
-## الخطوة 7: لا تستخدم Accuracy فقط
+### الخطوة 7: لا تستخدم Accuracy فقط
 
 راقب:
 
@@ -1149,7 +1149,7 @@ Test: Dataset B
 - subgroup metrics.
 - calibration.
 
-## الخطوة 8: أضف Uncertain state
+### الخطوة 8: أضف Uncertain state
 
 ليس مطلوبًا أن يصنف النظام كل Frame.
 
@@ -1162,13 +1162,13 @@ uncertain
 face not reliable
 ```
 
-## الخطوة 9: افصل Identity عن Expression
+### الخطوة 9: افصل Identity عن Expression
 
 إذا لم تحتج Face Recognition:
 
 > لا تبنه.
 
-## الخطوة 10: قلل الاحتفاظ بالبيانات
+### الخطوة 10: قلل الاحتفاظ بالبيانات
 
 خصوصًا:
 
@@ -1176,7 +1176,7 @@ face not reliable
 - video.
 - identity embeddings.
 
-# Static FER أم Video FER؟
+## Static FER أم Video FER؟
 
 | العنصر | صورة ثابتة | فيديو |
 |---|---|---|
@@ -1192,9 +1192,9 @@ face not reliable
 
 إذا كان يحتاج تغير التعبير بمرور الوقت، الفيديو أفضل تقنيًا لكنه أعلى كلفة ومخاطر.
 
-# Landmark-based أم Deep Representation؟
+## Landmark-based أم Deep Representation؟
 
-## Landmark-based
+### Landmark-based
 
 مناسب عندما نريد:
 
@@ -1203,7 +1203,7 @@ face not reliable
 - low compute.
 - AU/motion analysis.
 
-## End-to-end Deep Model
+### End-to-end Deep Model
 
 مناسب عندما:
 
@@ -1211,7 +1211,7 @@ face not reliable
 - لدينا Data.
 - نحتاج تعلم Texture + geometry ضمنيًا.
 
-## Hybrid
+### Hybrid
 
 يجمع:
 
@@ -1224,7 +1224,7 @@ face not reliable
 
 لا يوجد Approach واحد فائز في كل الحالات.
 
-# كيف تختبر FER في العالم الحقيقي؟
+## كيف تختبر FER في العالم الحقيقي؟
 
 أنشئ Test matrix.
 
@@ -1247,7 +1247,7 @@ face not reliable
 - failures.
 - uncertainty.
 
-# ماذا تفعل عندما يفشل النظام؟
+## ماذا تفعل عندما يفشل النظام؟
 
 لا تخفِ الفشل.
 
@@ -1263,13 +1263,13 @@ No decision
 
 هذه أفضل من Prediction عالية الثقة وغير موثوقة.
 
-# مستقبل FER
+## مستقبل FER
 
 الاتجاه ليس نحو "كاميرا تقرأ العقل".
 
 الاتجاه التقني الأكثر واقعية هو:
 
-## نماذج أكثر Robustness
+### نماذج أكثر Robustness
 
 للتعامل مع:
 
@@ -1277,15 +1277,15 @@ No decision
 - Pose.
 - low light.
 
-## نماذج أخف
+### نماذج أخف
 
 لتعمل On-device.
 
-## Temporal Models
+### Temporal Models
 
 لاستخدام Dynamics بدل Frame منفردة.
 
-## Multimodal Fusion
+### Multimodal Fusion
 
 لدمج:
 
@@ -1294,19 +1294,19 @@ No decision
 - نص.
 - فسيولوجيا.
 
-## Action Units وContinuous Affect
+### Action Units وContinuous Affect
 
 بدل الاعتماد فقط على سبع Classes.
 
-## Uncertainty-aware systems
+### Uncertainty-aware systems
 
 تعرف متى لا تتخذ قرارًا.
 
-## Privacy-preserving processing
+### Privacy-preserving processing
 
 معالجة محلية وبيانات أقل.
 
-# العلاقة بالمقالات الأخرى
+## العلاقة بالمقالات الأخرى
 
 هذه الصفحة تتخصص في:
 
@@ -1331,7 +1331,7 @@ recommendation engine
 
 ولهذا يجب إبقاء هذه المواضيع صفحات منفصلة بدل دمجها في مقال واحد ضخم.
 
-# الخلاصة
+## الخلاصة
 
 التعرف على تعابير الوجه بالذكاء الاصطناعي ليس عملية:
 
@@ -1460,10 +1460,3 @@ Dataset من 29,672 صورة في العالم الحقيقي مع Labels تم �
 
 10. Picard — Affective Computing  
     https://mitpress.mit.edu/9780262661157/affective-computing/
-
-## مقالات ودراسات ذات صلة في منصة تكنو إنجاز
-
-- [الحوسبة العاطفية: كيف يحلل الذكاء الاصطناعي التعبير العاطفي؟](/articles/affective-computing)
-- [كيف يعمل تصنيف الصور بالذكاء الاصطناعي؟ من CNN إلى Vision Transformers](/articles/ai-image-classification)
-- [أنظمة التوصية المستجيبة للعواطف والمشاعر](/articles/emotion-aware-recommendation)
-

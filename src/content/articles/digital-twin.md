@@ -1,16 +1,17 @@
-<!--
-FILE: 02-article.md
-PURPOSE: Published article content
--->
-
-SEO Title: ما هو التوأم الرقمي؟ كيف يعمل وتطبيقاته وأبرز تحدياته
-
-Meta Description: دليل شامل لفهم التوأم الرقمي Digital Twin: كيف يعمل، مكوناته، الفرق بينه وبين المحاكاة، وأهم تطبيقاته في الصناعة والمباني والصحة والتحديات التي تواجهه.
-
-Suggested Slug: digital-twin
-
-# التوأم الرقمي: ما هو وكيف يعمل وما أهم تطبيقاته؟
-
+---
+title: "التوأم الرقمي: ما هو وكيف يعمل وما أهم تطبيقاته؟"
+seoTitle: "ما هو التوأم الرقمي؟ كيف يعمل وتطبيقاته وأبرز تحدياته"
+description: "دليل شامل لفهم التوأم الرقمي Digital Twin: كيف يعمل، مكوناته، الفرق بينه وبين المحاكاة، وأهم تطبيقاته في الصناعة والمباني والصحة والتحديات التي تواجهه."
+excerpt: "التوأم الرقمي (Digital Twin) هو تمثيل رقمي قائم على البيانات لكيان أو عملية في العالم الحقيقي، تتم مزامنته مع الواقع بدرجة وتواتر يناسبان الهدف من استخدامه، لمراقبة الأداء واختبار السيناريوهات ودعم القرار."
+titleEn: "Digital Twin: Definition, Architecture, and Enterprise Applications"
+excerptEn: "A Digital Twin is a comprehensive, data-driven virtual representation of real-world entities or processes, synchronized at purpose-driven fidelity for monitoring, predictive analysis, and decision support."
+category: "التحول الرقمي"
+categoryEn: "Digital Transformation"
+publishedAt: 2026-09-20
+cover: "../../assets/articles/digital-twin.jpg"
+tags: ["التوأم الرقمي", "إنترنت الأشياء", "التحول الرقمي", "المحاكاة", "أنظمة ذكية", "Digital Twin"]
+related: ["internet-of-things-iot", "5g-iot", "embedded-serial-protocols"]
+---
 **التوأم الرقمي (Digital Twin) هو تمثيل رقمي قائم على البيانات لكيان أو عملية في العالم الحقيقي، تتم مزامنته مع الواقع بدرجة وتواتر يناسبان الهدف من استخدامه.** ولا يقتصر دوره على عرض شكل الأصل، بل يمكن استخدامه لمراقبة حالته، وتحليل سلوكه، وتجربة السيناريوهات، والتنبؤ بالمشكلات، ودعم اتخاذ القرار.
 
 ويعرّف Digital Twin Consortium التوأم الرقمي بأنه تمثيل افتراضي متكامل قائم على البيانات لكيانات وعمليات في العالم الحقيقي، مع تفاعل متزامن بتواتر ومستوى دقة محددين. هذه الصياغة مهمة لأنها تصحح فكرة شائعة: **ليس مطلوبًا أن يتحدث كل توأم رقمي في الزمن الحقيقي بالمعنى الحرفي**؛ فقد تكون المزامنة بالثواني أو الدقائق أو الساعات أو عند حدث معين، بحسب حالة الاستخدام.
@@ -623,10 +624,3 @@ Digital Twin قد يربط البيانات الرقمية بأصول تشغيل
 
 16. Engineering, Technology & Applied Science Research (2025) — Cloud-based Digital Twin Framework and IoT for Smart Emergency Departments in Hospitals  
     https://etasr.com/index.php/ETASR/article/view/10290
-
-## مقالات ودراسات ذات صلة في منصة تكنو إنجاز
-
-- [ما هو إنترنت الأشياء (IoT)؟ البنية والبروتوكولات والتطبيقات والأمان](/articles/internet-of-things-iot)
-- [كيف تؤثر شبكات 5G في إنترنت الأشياء؟ السرعة والزمن والتوسع و5G-Advanced](/articles/5g-iot)
-- [UART أم I2C أم SPI أم RS-232؟ دليل اختيار بروتوكول الاتصال للنظم المدمجة](/articles/embedded-serial-protocols)
-
