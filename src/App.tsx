@@ -18,7 +18,6 @@ const ProfilePage = lazy(() => import('./ProfilePage'));
 const ContactPage = lazy(() => import('./ContactPage'));
 const AuthPage = lazy(() => import('./AuthPage'));
 const UserProfilePage = lazy(() => import('./UserProfilePage'));
-const LiveProjectsShowcase = lazy(() => import('./components/projects/LiveProjectsShowcase'));
 const ProjectsCatalogSection = lazy(() => import('./components/projects/ProjectsCatalogSection'));
 const FaqSection = lazy(() => import('./components/faq/FaqSection'));
 import OfficeBlogSection from './components/articles/OfficeBlogSection';
@@ -201,7 +200,7 @@ export default function App() {
       setIsAuthOpen(false);
       setIsUserProfileOpen(false);
 
-      if (hash === '#projects') {
+      if (hash === '#projects' || hash.startsWith('#project/')) {
         setCurrentTab('projects');
         setActiveNavIndex(1);
       } else if (hash === '#videos') {
@@ -518,17 +517,8 @@ export default function App() {
           <ContactPage onBack={handleBackFromContact} />
         </Suspense>
       ) : currentTab === 'projects' ? (
-        <div className="tab-page-container">
-          <div className="tab-page-header">
-            <h1 className="tab-page-title">{t.liveProjects.pageTitle}</h1>
-            <p className="tab-page-subtitle">{t.liveProjects.pageSubtitle}</p>
-          </div>
-
+        <div className="tab-page-container" style={{ padding: '0', maxWidth: '100%' }}>
           <Suspense fallback={<div style={{ minHeight: '60vh', backgroundColor: 'var(--bg-main)' }} />}>
-            <LiveProjectsShowcase />
-          </Suspense>
-
-          <Suspense fallback={<div style={{ minHeight: '40vh', backgroundColor: 'var(--bg-main)' }} />}>
             <ProjectsCatalogSection />
           </Suspense>
         </div>
